@@ -102,17 +102,28 @@
                          if (placemarks && placemarks.count > 0) {
                              CLPlacemark *topResult = [placemarks objectAtIndex:0];
                              MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
+
+                             CLLocation *location = [[CLLocation alloc] initWithLatitude:placemark.coordinate.latitude longitude:placemark.coordinate.longitude];
+                             CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
+                             [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+                                 if (placemarks && placemarks.count > 0) {
+                                     CLPlacemark *topResult = [placemarks objectAtIndex:0];
+                                     
+                                     MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
+                                     end = topResult;
+                                     MKCoordinateRegion region = map.region;
+                                     region.center = placemark.region.center;
+                                     region.span.longitudeDelta /= 8.0;
+                                     region.span.latitudeDelta /= 8.0;
+                                     
+                                     [map setRegion:region animated:YES];
+                                     [map addAnnotation:placemark];
+                                     [to setText:placemark.locality];
+                                     [self zoomToFitMapAnnotations:map];
+                                     endPoint = placemark.location;
+                                 }
+                             }];
                              
-                             MKCoordinateRegion region = map.region;
-                             region.center = placemark.region.center;
-                             region.span.longitudeDelta /= 8.0;
-                             region.span.latitudeDelta /= 8.0;
-                             
-                             [map setRegion:region animated:YES];
-                             [map addAnnotation:placemark];
-                             [to setText:placemark.locality];
-                             [self zoomToFitMapAnnotations:map];
-                             endPoint = placemark.location;
                          }
                      }
          ];
@@ -140,11 +151,14 @@
     postRecord[@"time"] = actualTime;
     postRecord[@"end"] = endPoint;
     postRecord[@"start"] = location;
-    postRecord[@"name"] = @"Rob";
+    postRecord[@"name"] = [[NSUserDefaults standardUserDefaults] objectForKey:@"name"];
+    postRecord[@"phone"] = [[NSUserDefaults standardUserDefaults] objectForKey:@"phone"];
     postRecord[@"seats"] = [NSNumber numberWithInt:seats.text.intValue];
     postRecord[@"price"] = [NSNumber numberWithInt:price.text.intValue];
     postRecord[@"plainStart"] = from.text;
     postRecord[@"plainEnd"] = to.text;
+    postRecord[@"zipStart"] = [NSNumber numberWithInt:start.postalCode.intValue];
+    postRecord[@"zipEnd"] = [NSNumber numberWithInt:end.postalCode.intValue];
     CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
     [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
         if(error) {
@@ -162,7 +176,7 @@
         if (placemarks && placemarks.count > 0) {
             CLPlacemark *topResult = [placemarks objectAtIndex:0];
             MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
-            
+            start = placemark;
             MKCoordinateRegion region = map.region;
             region.center = placemark.region.center;
             region.span.longitudeDelta /= 8.0;

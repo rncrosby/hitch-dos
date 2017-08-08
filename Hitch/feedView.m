@@ -15,7 +15,7 @@
 @implementation feedView
 
 - (void)viewDidLoad {
-    [References cardshadow:searchCard];
+    //[References cardshadow:searchCard];
     [References createLine:self.view xPos:0 yPos:searchCard.frame.origin.y+searchCard.frame.size.height inFront:TRUE];
     [References createLine:self.view xPos:0 yPos:menuCard.frame.origin.y inFront:TRUE];
     refreshControl = [[UIRefreshControl alloc] init];
@@ -47,6 +47,33 @@
 }
 
 -(bool)textFieldShouldReturn:(UITextField *)textField {
+    if (textField.tag == 1) {
+        // zip start
+    } else if (textField.tag == 2) {
+        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+        [geocoder geocodeAddressString:textField.text
+                     completionHandler:^(NSArray* placemarks, NSError* error){
+                         if (placemarks && placemarks.count > 0) {
+                             CLPlacemark *topResult = [placemarks objectAtIndex:0];
+                             MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
+                             
+                             CLLocation *location = [[CLLocation alloc] initWithLatitude:placemark.coordinate.latitude longitude:placemark.coordinate.longitude];
+                             CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
+                             [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+                                 if (placemarks && placemarks.count > 0) {
+                                     CLPlacemark *topResult = [placemarks objectAtIndex:0];
+                                     
+                                     MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
+                                     end = topResult;
+                                     [endPoint setText:placemark.locality];
+                                     [self getAllRides:YES];
+                                 }
+                             }];
+                             
+                         }
+                     }
+         ];
+    }
     [textField resignFirstResponder];
     return YES;
 }
@@ -64,6 +91,7 @@
     rideObject *ride = rides[indexPath.row];
     cell.from.text = ride.plainStart;
     cell.to.text = ride.plainEnd;
+    cell.seats.text = [NSString stringWithFormat:@"%i",ride.seats.intValue];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"EEEE, MMMM d"];
     NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
@@ -80,26 +108,47 @@
     didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation {
     if (newLocation != nil) {
+        
+        [manager stopUpdatingLocation];
         [[NSUserDefaults standardUserDefaults] setDouble:newLocation.coordinate.latitude forKey:@"currentLatitude"];
         [[NSUserDefaults standardUserDefaults] setDouble:newLocation.coordinate.longitude forKey:@"currentLongitude"];
-        [self getAllRides];
-        [manager stopUpdatingLocation];
+        [self getAllRides:NO];
+        CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
+        [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+            if (placemarks && placemarks.count > 0) {
+                CLPlacemark *topResult = [placemarks objectAtIndex:0];
+                MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
+                start = placemark;
+                [startPoint setText:placemark.locality];
+            }
+        }];
     }
  
 }
 
--(void)getAllRides {
-    [rides removeAllObjects];
+-(void)getAllRides:(bool)isRestricted{
     rides = [[NSMutableArray alloc] init];
-    [rideRecords removeAllObjects];
     rideRecords = [[NSMutableArray alloc] init];
-    NSString *string = @"TRUEPREDICATE";
+    NSString *string = @"";
+    if (isRestricted == YES) {
+        int lowerZip = start.postalCode.intValue-45;
+        int upperZip = start.postalCode.intValue+45;
+        int upperEndZip = end.postalCode.intValue+45;
+        int lowerEndZip = end.postalCode.intValue-45;
+        string = [NSString stringWithFormat:@"zipStart < %i AND zipStart > %i AND zipEnd < %i AND zipEnd > %i",upperZip,lowerZip,upperEndZip,lowerEndZip];
+    } else {
+        int lowerZip = start.postalCode.intValue-45;
+        int upperZip = start.postalCode.intValue+45;
+        string = [NSString stringWithFormat:@"zipStart < %i AND zipStart > %i",upperZip,lowerZip];
+    }
     CKContainer *defaultContainer = [CKContainer defaultContainer];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:string];
     CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
     CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Rides" predicate:predicate];
     [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         if (!error) {
+            [rides removeAllObjects];
+            [rideRecords removeAllObjects];
                 for (int a = 0; a < results.count; a++) {
                     CKRecord *record = results[a];
                     NSDate *date = [record valueForKey:@"date"];
@@ -113,7 +162,7 @@
                     NSMutableArray *riders = [record valueForKey:@"riders"];
                     CLLocation *start = [record valueForKey:@"start"];
                     CLLocation *end = [record valueForKey:@"end"];
-                    rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd];
+                    rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"phone"]];
                     [rideRecords addObject:results[a]];
                     [rides addObject:ride];
                 }
@@ -127,8 +176,19 @@
     }];
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    dispatch_async(dispatch_get_main_queue(), ^(void){
+        rideView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"rideView"];
+        viewController.ride = rides[indexPath.row];
+        viewController.rideRecord = rideRecords[indexPath.row];
+        [self presentViewController:viewController animated:YES completion:nil];
+    });
+    
+}
+
 -(void)refreshData
 {
-    [self getAllRides];
+    [self getAllRides:NO];
+    [endPoint setText:@""];
 }
 @end

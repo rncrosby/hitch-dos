@@ -24,7 +24,7 @@
     __weak IBOutlet UITextField *seats;
     __weak IBOutlet MKMapView *map;
     __weak IBOutlet UITextField *price;
-    
+    CLPlacemark *start,*end;
 }
 
 - (IBAction)back:(id)sender;

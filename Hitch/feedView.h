@@ -12,9 +12,11 @@
 #import <CoreLocation/CoreLocation.h>
 #import "rideObject.h"
 #import <CloudKit/CloudKit.h>
+#import "rideView.h"
 
 @interface feedView : UIViewController <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,CLLocationManagerDelegate> {
     CLLocationManager *location;
+    CLPlacemark *start,*end;
     NSMutableArray *rides,*rideRecords;
     // SEARCH PANEL
     __weak IBOutlet UITextField *startPoint;

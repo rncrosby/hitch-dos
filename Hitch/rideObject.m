@@ -9,7 +9,7 @@
 #import "rideObject.h"
 
 @implementation rideObject
--(instancetype)initWithType:(CLLocation*)start andEnd:(CLLocation*)end andDate:(NSDate*)date andTime:(NSDate*)time andSeats:(NSNumber*)seats andPrice:(NSNumber*)price andMessages:(NSMutableArray*)messages andRiders:(NSMutableArray*)riders andName:(NSString*)name andPlainStart:(NSString*)plainStart andPlainEnd:(NSString*)plainEnd {
+-(instancetype)initWithType:(CLLocation*)start andEnd:(CLLocation*)end andDate:(NSDate*)date andTime:(NSDate*)time andSeats:(NSNumber*)seats andPrice:(NSNumber*)price andMessages:(NSMutableArray*)messages andRiders:(NSMutableArray*)riders andName:(NSString*)name andPlainStart:(NSString*)plainStart andPlainEnd:(NSString*)plainEnd andPhone:(NSString*)phone{
     self = [super init];
     if(self)
     {
@@ -24,6 +24,7 @@
         self.name = name;
         self.plainStart = plainStart;
         self.plainEnd = plainEnd;
+        self.phone = phone;
     }
     return self;
 }
