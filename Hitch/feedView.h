@@ -31,5 +31,6 @@
     UIRefreshControl *refreshControl;
     __weak IBOutlet UITableView *table;
 }
+- (IBAction)inbox:(id)sender;
 
 @end

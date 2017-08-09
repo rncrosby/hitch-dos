@@ -160,9 +160,10 @@
                     NSNumber *price = [record valueForKey:@"price"];
                     NSMutableArray *messages = [record valueForKey:@"messages"];
                     NSMutableArray *riders = [record valueForKey:@"riders"];
+                    NSMutableArray *requests = [record valueForKey:@"requests"];
                     CLLocation *start = [record valueForKey:@"start"];
                     CLLocation *end = [record valueForKey:@"end"];
-                    rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"phone"]];
+                    rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"phone"] andRequests:requests];
                     [rideRecords addObject:results[a]];
                     [rides addObject:ride];
                 }
@@ -190,5 +191,7 @@
 {
     [self getAllRides:NO];
     [endPoint setText:@""];
+}
+- (IBAction)inbox:(id)sender {
 }
 @end
