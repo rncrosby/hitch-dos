@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13156.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="vQL-M5-Det">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="vQL-M5-Det">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13137.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13147.4"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -109,7 +109,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7zI-38-f05" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-539" y="-677"/>
+            <point key="canvasLocation" x="-1286" y="-8"/>
         </scene>
         <!--Feed View-->
         <scene sceneID="tne-QT-ifu">
@@ -218,7 +218,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-108" y="-7"/>
+            <point key="canvasLocation" x="-670" y="-14"/>
         </scene>
         <!--Inbox View-->
         <scene sceneID="bZ7-PD-43f">
@@ -402,7 +402,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <state key="normal" title="Requests">
-                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
                                             <action selector="showRequests:" destination="zHA-FC-UL5" eventType="touchUpInside" id="MhR-93-amv"/>
@@ -499,18 +499,18 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aJO-jD-OEL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="305.5" y="-14"/>
+            <point key="canvasLocation" x="-98" y="1181"/>
         </scene>
         <!--Ride View-->
         <scene sceneID="f0a-a8-Qv7">
             <objects>
                 <viewController storyboardIdentifier="rideView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Mec-sY-4CI" customClass="rideView" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gyK-5r-Ag9">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="1334"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="3SM-6U-o5I">
-                                <rect key="frame" x="0.0" y="61" width="375" height="606"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="3SM-6U-o5I">
+                                <rect key="frame" x="0.0" y="61" width="375" height="1212"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Hyu-Ee-kir">
@@ -654,10 +654,92 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="O9R-0F-qhB">
-                                        <rect key="frame" x="14" y="507" width="346" height="41"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="58T-o4-O65">
+                                        <rect key="frame" x="21" y="686" width="333" height="469"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JV1-QQ-5ZN">
+                                        <rect key="frame" x="16" y="681" width="343" height="479"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Vm9-6Y-dJC">
+                                        <rect key="frame" x="14" y="681" width="346" height="479"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <inset key="separatorInset" minX="56" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <connections>
+                                            <outlet property="dataSource" destination="Mec-sY-4CI" id="QzV-EC-VNM"/>
+                                            <outlet property="delegate" destination="Mec-sY-4CI" id="eXz-BG-eeh"/>
+                                        </connections>
+                                    </tableView>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="No Riders" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9Fw-A8-3ri">
+                                        <rect key="frame" x="16" y="681" width="344" height="481"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="25"/>
+                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Nee-CV-mDr">
+                                        <rect key="frame" x="0.0" y="1168" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fUg-hH-had">
+                                        <rect key="frame" x="108" y="649" width="61" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        <state key="normal" title="Riders">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showRiders:" destination="Mec-sY-4CI" eventType="touchUpInside" id="dZb-Na-hpN"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Kbp-Wq-uW9">
+                                        <rect key="frame" x="14" y="649" width="93" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        <state key="normal" title="Messages">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showMessages:" destination="Mec-sY-4CI" eventType="touchUpInside" id="PX7-lQ-rle"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" textAlignment="natural" minimumFontSize="17" id="uRR-ce-V0E">
+                                        <rect key="frame" x="16" y="1175" width="298" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                                        <connections>
+                                            <action selector="showKeyboard:" destination="Mec-sY-4CI" eventType="editingDidBegin" id="fGu-Wg-4d7"/>
+                                            <outlet property="delegate" destination="Mec-sY-4CI" id="6Nu-Cj-Uqh"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yn2-QD-iJE">
+                                        <rect key="frame" x="322" y="1175" width="37" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Send"/>
+                                        <connections>
+                                            <action selector="sendGroupMessage:" destination="Mec-sY-4CI" eventType="touchUpInside" id="1Kb-Ek-0KA"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="O9R-0F-qhB">
+                                        <rect key="frame" x="15" y="561" width="346" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="Request Ride">
                                             <color key="titleColor" red="0.10849235209999999" green="0.89640933280000001" blue="0.55391341449999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
@@ -695,6 +777,7 @@
                         </subviews>
                         <color key="backgroundColor" white="0.94999999999999996" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <size key="freeformSize" width="375" height="1334"/>
                     <connections>
                         <outlet property="card" destination="nWe-Pl-o3U" id="0pf-jl-QIv"/>
                         <outlet property="cardShadow" destination="ihO-T0-UFX" id="Qc7-E8-eNM"/>
@@ -708,10 +791,20 @@
                         <outlet property="map" destination="Pkn-b0-odF" id="iYs-iK-qm1"/>
                         <outlet property="mapShadow" destination="Hyu-Ee-kir" id="Mfs-Pv-Btb"/>
                         <outlet property="menuBar" destination="VB2-Ar-fD1" id="owS-dG-Nig"/>
+                        <outlet property="menuBarTitle" destination="KWx-Xo-5E7" id="PV4-Ck-IR6"/>
+                        <outlet property="messagesButton" destination="Kbp-Wq-uW9" id="aBo-9Z-C8e"/>
+                        <outlet property="noRiders" destination="9Fw-A8-3ri" id="kK1-qM-QQ6"/>
                         <outlet property="price" destination="5gx-hh-02d" id="l2V-U9-lwg"/>
                         <outlet property="priceShadow" destination="1eU-C0-evb" id="3bV-v5-ke0"/>
                         <outlet property="requestRide" destination="O9R-0F-qhB" id="oKn-rK-QnN"/>
+                        <outlet property="ridePanel" destination="JV1-QQ-5ZN" id="tma-FW-5RL"/>
+                        <outlet property="ridePanelMessage" destination="Nee-CV-mDr" id="YcP-0R-aKe"/>
+                        <outlet property="ridePanelMessageField" destination="uRR-ce-V0E" id="lb7-N6-rSk"/>
+                        <outlet property="ridePanelSendMessage" destination="yn2-QD-iJE" id="Emn-wJ-m7f"/>
+                        <outlet property="ridePanelShadow" destination="58T-o4-O65" id="1Ri-rJ-Dqx"/>
+                        <outlet property="rideTable" destination="Vm9-6Y-dJC" id="bW9-TT-asb"/>
                         <outlet property="rideTitle" destination="KWx-Xo-5E7" id="Wl7-yi-bQ8"/>
+                        <outlet property="ridersButton" destination="fUg-hH-had" id="cfl-FA-rt1"/>
                         <outlet property="scroll" destination="3SM-6U-o5I" id="nrb-6z-asg"/>
                         <outlet property="seats" destination="3SK-ve-9Zr" id="FMB-22-gnb"/>
                         <outlet property="to" destination="2D7-6o-nxg" id="LoH-Tc-h8t"/>
@@ -719,7 +812,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jIz-Dc-DA2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-200" y="-726"/>
+            <point key="canvasLocation" x="-154.5" y="-778"/>
         </scene>
         <!--Post View-->
         <scene sceneID="86y-cU-AtT">
@@ -893,7 +986,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pC4-bO-AAq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-200" y="807"/>
+            <point key="canvasLocation" x="-671" y="848"/>
         </scene>
     </scenes>
 </document>

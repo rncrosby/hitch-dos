@@ -18,7 +18,6 @@
     rideObject *myDrive;
     CKRecord *myDriveRecord;
     __weak IBOutlet UILabel *menuBar;
-    
     // drive details
     __weak IBOutlet UILabel *driveCard;
     __weak IBOutlet UILabel *driveShadow;

@@ -120,6 +120,7 @@
                 MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
                 start = placemark;
                 [startPoint setText:placemark.locality];
+                [self getAllRides:NO];
             }
         }];
     }

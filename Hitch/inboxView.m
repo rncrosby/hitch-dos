@@ -282,7 +282,10 @@
             [References cornerRadius:cell.picutre radius:cell.picutre.frame.size.width/2];
             [cell setBackgroundColor:[UIColor clearColor]];
             cell.name.text = myDrive.riders[indexPath.row];
-            cell.confirm.hidden = YES;
+            [cell.confirm setBackgroundImage:[UIImage imageNamed:@"phone.png"] forState:UIControlStateNormal];
+            [References tintUIButton:cell.confirm color:[[self view] tintColor]];
+            cell.tag = indexPath.row;
+            [cell.confirm addTarget:self action:@selector(callPerson:) forControlEvents:UIControlEventTouchUpInside];
         }
         
         
@@ -376,6 +379,10 @@
         [References moveUp:scrollButton yChange:50];
         [scroll setContentOffset:CGPointMake(0, 0) animated:YES];
     }
+}
+
+-(void)callPerson:(UIButton*)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",myDrive.riders[sender.tag]]]];
 }
 
 @end

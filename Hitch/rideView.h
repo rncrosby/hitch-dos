@@ -12,11 +12,19 @@
 #import <CoreLocation/CoreLocation.h>
 #import "rideObject.h"
 #import <CloudKit/CloudKit.h>
+#import "driveRequestsCell.h"
+#import "messageCell.h"
 
-@interface rideView : UIViewController <MKMapViewDelegate>{
+@interface rideView : UIViewController <UITableViewDataSource,UITableViewDelegate,MKMapViewDelegate,UITextFieldDelegate> {
+    UIView *line;
+    CGRect keyboard;
+    bool isRideConfirmed;
     MKPolyline *routeLine;
     MKPolylineView *routeLineView;
+    NSMutableArray *messages;
+    NSMutableArray *passengers;
     __weak IBOutlet UILabel *menuBar;
+    __weak IBOutlet UILabel *menuBarTitle;
     __weak IBOutlet UILabel *mapShadow;
     __weak IBOutlet MKMapView *map;
     __weak IBOutlet UILabel *rideTitle;
@@ -38,13 +46,31 @@
     __weak IBOutlet UIButton *contactMessage;
     __weak IBOutlet UIButton *requestRide;
     
+    // ismyride panel
+    __weak IBOutlet UILabel *ridePanel;
+    __weak IBOutlet UILabel *ridePanelShadow;
+    __weak IBOutlet UITableView *rideTable;
     
+    __weak IBOutlet UILabel *ridePanelMessage;
+    __weak IBOutlet UITextField *ridePanelMessageField;
+    __weak IBOutlet UIButton *ridePanelSendMessage;
+    
+    
+    
+    __weak IBOutlet UIButton *ridersButton;
+    __weak IBOutlet UIButton *messagesButton;
+    __weak IBOutlet UILabel *noRiders;
 }
 
 - (IBAction)requestRide:(id)sender;
 @property (nonatomic, retain) rideObject *ride;
 @property (nonatomic, retain) CKRecord *rideRecord;
 - (IBAction)sendMessage:(id)sender;
+- (IBAction)showMessages:(id)sender;
+- (IBAction)showRiders:(id)sender;
+- (IBAction)messageDidStart:(id)sender;
+- (IBAction)sendGroupMessage:(id)sender;
+- (IBAction)showKeyboard:(id)sender;
 
 - (IBAction)back:(id)sender;
 
