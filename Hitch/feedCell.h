@@ -17,5 +17,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *date;
 @property (weak, nonatomic) IBOutlet UILabel *seats;
 @property (weak, nonatomic) IBOutlet UIButton *chevron;
+@property (weak, nonatomic) IBOutlet UILabel *fromTag;
+@property (weak, nonatomic) IBOutlet UILabel *toTag;
+@property (weak, nonatomic) IBOutlet UILabel *leavesTag;
+@property (weak, nonatomic) IBOutlet UILabel *seatsTag;
 
 @end

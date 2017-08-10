@@ -15,6 +15,9 @@
 @implementation startView
 
 - (void)viewDidLoad {
+    [References cornerRadius:card radius:8.0f];
+    [References cardshadow:shadow];
+    [References createLine:self.view xPos:0 yPos:menuBar.frame.origin.y+menuBar.frame.size.height inFront:TRUE];
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
@@ -25,48 +28,8 @@
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
-    CKContainer *defaultContainer = [CKContainer defaultContainer];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"phone = '%@'",[NSString stringWithFormat:@"%@",textField.text]]];
-    CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
-    CKQuery *query = [[CKQuery alloc] initWithRecordType:@"People" predicate:predicate];
-    [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
-        if (!error) {
-            if (results.count == 0) {
-                dispatch_async(dispatch_get_main_queue(), ^(void){
-                    CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
-                    CKRecord *postRecord = [[CKRecord alloc] initWithRecordType:@"People" recordID:recordID];
-                    postRecord[@"phone"] = [NSString stringWithFormat:@"%@",textField.text];
-                    CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
-                    [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
-                        if(error) {
-                            NSLog(@"%@",error.localizedDescription);
-                        } else {
-                            dispatch_async(dispatch_get_main_queue(), ^(void){
-                                [[NSUserDefaults standardUserDefaults] setObject:textField.text forKey:@"phone"];
-                                [[NSUserDefaults standardUserDefaults] setObject:@"John Appleseed" forKey:@"name"];
-                                [[NSUserDefaults standardUserDefaults] synchronize];
-                                feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
-                                [self presentViewController:viewController animated:YES completion:nil];
-                            });
-                            
-                        }
-                    }];
-                    });
-                
-            } else {
-                dispatch_async(dispatch_get_main_queue(), ^(void){
-                [[NSUserDefaults standardUserDefaults] setObject:textField.text forKey:@"phone"];
-                [[NSUserDefaults standardUserDefaults] setObject:@"John Appleseed" forKey:@"name"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
-                [self presentViewController:viewController animated:YES completion:nil];
-                    });
-            }
-        } else {
-            NSLog(@"%@",error.localizedDescription);
-        }
-    }];
     
+    [textField resignFirstResponder];
     return YES;
 }
 /*
@@ -79,4 +42,48 @@
 }
 */
 
+- (IBAction)continueButton:(id)sender {
+    CKContainer *defaultContainer = [CKContainer defaultContainer];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"email = '%@'",[NSString stringWithFormat:@"%@",emailAddress.text]]];
+    CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
+    CKQuery *query = [[CKQuery alloc] initWithRecordType:@"People" predicate:predicate];
+    [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+        if (!error) {
+            if (results.count == 0) {
+                dispatch_async(dispatch_get_main_queue(), ^(void){
+                    CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
+                    CKRecord *postRecord = [[CKRecord alloc] initWithRecordType:@"People" recordID:recordID];
+                    postRecord[@"email"] = [NSString stringWithFormat:@"%@",emailAddress.text];
+                    postRecord[@"name"] = [NSString stringWithFormat:@"%@",name.text];
+                    CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+                    [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
+                        if(error) {
+                            NSLog(@"%@",error.localizedDescription);
+                        } else {
+                            dispatch_async(dispatch_get_main_queue(), ^(void){
+                                [[NSUserDefaults standardUserDefaults] setObject:emailAddress.text forKey:@"email"];
+                                [[NSUserDefaults standardUserDefaults] setObject:name.text forKey:@"name"];
+                                [[NSUserDefaults standardUserDefaults] synchronize];
+                                feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+                                [self presentViewController:viewController animated:YES completion:nil];
+                            });
+                            
+                        }
+                    }];
+                });
+                
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^(void){
+                    [[NSUserDefaults standardUserDefaults] setObject:emailAddress.text forKey:@"email"];
+                    [[NSUserDefaults standardUserDefaults] setObject:name.text forKey:@"name"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+                    [self presentViewController:viewController animated:YES completion:nil];
+                });
+            }
+        } else {
+            NSLog(@"%@",error.localizedDescription);
+        }
+    }];
+}
 @end

@@ -152,7 +152,7 @@
     postRecord[@"end"] = endPoint;
     postRecord[@"start"] = location;
     postRecord[@"name"] = [[NSUserDefaults standardUserDefaults] objectForKey:@"name"];
-    postRecord[@"phone"] = [[NSUserDefaults standardUserDefaults] objectForKey:@"phone"];
+    postRecord[@"email"] = [[NSUserDefaults standardUserDefaults] objectForKey:@"email"];
     postRecord[@"seats"] = [NSNumber numberWithInt:seats.text.intValue];
     postRecord[@"price"] = [NSNumber numberWithInt:price.text.intValue];
     postRecord[@"plainStart"] = from.text;

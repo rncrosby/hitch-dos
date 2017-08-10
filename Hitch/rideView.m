@@ -51,7 +51,7 @@
 }
 
 - (IBAction)sendMessage:(id)sender {
-    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"phone"] isEqualToString:_ride.phone]) {
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"email"] isEqualToString:_ride.phone]) {
         [References toastMessage:@"You can't contact your self" andView:self];
     } else {
         [References toastMessage:@"Soon" andView:self];
@@ -113,11 +113,11 @@
 }
 
 - (IBAction)requestRide:(id)sender {
-    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"phone"] isEqualToString:_ride.phone]) {
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"email"] isEqualToString:_ride.phone]) {
         [References toastMessage:@"You can't contact your self" andView:self];
     } else {
         NSMutableArray *newRequests = [[NSMutableArray alloc] initWithArray:[_rideRecord objectForKey:@"requests"]];
-        [newRequests addObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"phone"]];
+        [newRequests addObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
         _rideRecord[@"requests"] = newRequests;
         CKModifyRecordsOperation *modifyRecords= [[CKModifyRecordsOperation alloc]
                                                   initWithRecordsToSave:[[NSArray alloc] initWithObjects:_rideRecord, nil] recordIDsToDelete:nil];
@@ -136,7 +136,7 @@
 }
 
 -(void)addToMyRides{
-    NSString *string = [NSString stringWithFormat:@"phone = '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"phone"]];
+    NSString *string = [NSString stringWithFormat:@"email = '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
     CKContainer *defaultContainer = [CKContainer defaultContainer];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:string];
     CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];

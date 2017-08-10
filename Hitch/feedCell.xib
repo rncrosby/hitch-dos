@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13156.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13147.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13137.5"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -101,9 +101,13 @@
                 <outlet property="chevron" destination="6vn-Pr-vwP" id="QjA-Id-UWx"/>
                 <outlet property="date" destination="FjD-ou-Vu9" id="kbS-3d-BYf"/>
                 <outlet property="from" destination="8fU-U8-IKA" id="l7E-A5-hGV"/>
+                <outlet property="fromTag" destination="dGB-UB-8Hr" id="zAi-Mq-wHk"/>
+                <outlet property="leavesTag" destination="GZj-2e-yv8" id="QSY-k1-hhA"/>
                 <outlet property="seats" destination="Z2Z-ir-1O6" id="8kT-lz-BsB"/>
+                <outlet property="seatsTag" destination="k1P-ZF-d21" id="0Kl-uX-A3w"/>
                 <outlet property="shadow" destination="se6-Og-df2" id="Y9r-lO-Lcc"/>
                 <outlet property="to" destination="svh-WN-fwQ" id="hjb-6W-m8F"/>
+                <outlet property="toTag" destination="5Qi-5a-gTL" id="BSI-1b-Q1f"/>
             </connections>
             <point key="canvasLocation" x="34.5" y="-45.5"/>
         </tableViewCell>
