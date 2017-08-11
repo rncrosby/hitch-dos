@@ -86,4 +86,14 @@
         }
     }];
 }
+
+- (IBAction)driver:(id)sender {
+    [emailAddress setText:@"driver"];
+    [name setText:@"driver"];
+}
+
+- (IBAction)rider:(id)sender {
+    [emailAddress setText:@"rider"];
+    [name setText:@"rider"];
+}
 @end

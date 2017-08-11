@@ -12,14 +12,17 @@
 #import "rideObject.h"
 #import "driveRequestsCell.h"
 #import "feedCell.h"
+#import "rideView.h"
 
 @interface inboxView : UIViewController <UITableViewDelegate,UITableViewDataSource> {
     NSMutableArray *myRides,*myRideRecords;
     rideObject *myDrive;
     CKRecord *myDriveRecord;
+    UISelectionFeedbackGenerator *selectionFeedback;
     __weak IBOutlet UILabel *menuBar;
     // drive details
     __weak IBOutlet UILabel *driveCard;
+    __weak IBOutlet UIButton *openDriveButton;
     __weak IBOutlet UILabel *driveShadow;
     __weak IBOutlet UILabel *driveFrom;
     __weak IBOutlet UILabel *driveTo;
@@ -50,5 +53,6 @@
 - (IBAction)showRequests:(id)sender;
 - (IBAction)showRiders:(id)sender;
 - (IBAction)scrollButton:(id)sender;
+- (IBAction)openMyDrive:(id)sender;
 
 @end

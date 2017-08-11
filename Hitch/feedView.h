@@ -14,6 +14,7 @@
 #import <CloudKit/CloudKit.h>
 #import "rideView.h"
 #import "feedView.h"
+#import "postView.h"
 
 @interface feedView : UIViewController <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,CLLocationManagerDelegate> {
     CLLocationManager *location;
@@ -26,6 +27,7 @@
     __weak IBOutlet UITextField *startPoint;
     __weak IBOutlet UITextField *endPoint;
     __weak IBOutlet UILabel *searchCard;
+    __weak IBOutlet UILabel *noRides;
     // MENU BAR
     __weak IBOutlet UILabel *menuCard;
     __weak IBOutlet UIButton *postRide;
@@ -38,5 +40,6 @@
 @property (nonatomic, retain) NSString *rideToOpen;
 - (IBAction)inbox:(id)sender;
 - (IBAction)postDrive:(id)sender;
+- (IBAction)more:(id)sender;
 
 @end

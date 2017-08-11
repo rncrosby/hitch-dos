@@ -200,6 +200,7 @@
                 });
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^(void){
+                    openDriveButton.hidden = YES;
                     drivePriceShadow.hidden = YES;
                     drivePrice.hidden = YES;
                     driveRequestsTable.hidden = YES;
@@ -311,7 +312,8 @@
         NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setDateFormat:@"h a"];
         cell.date.text = [NSString stringWithFormat:@"%@ around %@",[dateFormatter stringFromDate:ride.date],[timeFormatter stringFromDate:ride.date]];
-        [References tintUIButton:cell.chevron color:[UIColor darkGrayColor]];
+        [References tintUIButton:cell.chevron color:[[self view] tintColor]];
+        cell.chevron.frame = CGRectMake(cell.chevron.frame.origin.x-10, cell.chevron.frame.origin.y, cell.chevron.frame.size.width, cell.chevron.frame.size.height);
         cell.backgroundColor = [UIColor clearColor];
         cell.fromTag.frame = CGRectMake(cell.fromTag.frame.origin.x, cell.fromTag.frame.origin.y-3, cell.fromTag.frame.size.width, cell.fromTag.frame.size.height);
         cell.toTag.frame = CGRectMake(cell.toTag.frame.origin.x, cell.toTag.frame.origin.y-3, cell.toTag.frame.size.width, cell.toTag.frame.size.height);
@@ -327,6 +329,20 @@
         return cell;
     }
     
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView.tag == 2) {
+        selectionFeedback = [[UISelectionFeedbackGenerator alloc] init];
+        [selectionFeedback prepare];
+        [selectionFeedback selectionChanged];
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            rideView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"rideView"];
+            viewController.ride = myRides[indexPath.row];
+            viewController.rideRecord = myRideRecords[indexPath.row];
+            [self presentViewController:viewController animated:YES completion:nil];
+        });
+    }
 }
 
 -(void)confirmDriveRequest:(UIButton*)sender {
@@ -381,6 +397,16 @@
         [References moveUp:scrollButton yChange:50];
         [scroll setContentOffset:CGPointMake(0, 0) animated:YES];
     }
+}
+
+- (IBAction)openMyDrive:(id)sender {
+    selectionFeedback = [[UISelectionFeedbackGenerator alloc] init];
+    [selectionFeedback prepare];
+    [selectionFeedback selectionChanged];
+    rideView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"rideView"];
+    viewController.ride = myDrive;
+    viewController.rideRecord = myDriveRecord;
+    [self presentViewController:viewController animated:YES completion:nil];
 }
 
 -(void)callPerson:(UIButton*)sender {

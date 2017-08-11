@@ -53,5 +53,6 @@
 +(void)toastMessage:(NSString *)message andView:(UIViewController *)view andClose:(bool)close;
 +(CAGradientLayer*)createGradient:(UIColor*)colorA andColor:(UIColor*)colorB;
 +(void)parallax:(UIView*)view;
++(UIColor*)systemColor:(NSString*)color;
 @end
 

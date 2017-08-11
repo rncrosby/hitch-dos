@@ -77,6 +77,7 @@
         [location requestWhenInUseAuthorization];
     }
     [location startUpdatingLocation];
+    [self getMyDrives];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -182,11 +183,11 @@
         int upperZip = start.postalCode.intValue+45;
         int upperEndZip = end.postalCode.intValue+45;
         int lowerEndZip = end.postalCode.intValue-45;
-        string = [NSString stringWithFormat:@"zipStart < %i AND zipStart > %i AND zipEnd < %i AND zipEnd > %i",upperZip,lowerZip,upperEndZip,lowerEndZip];
+        string = [NSString stringWithFormat:@"zipStart < %i AND zipStart > %i AND zipEnd < %i AND zipEnd > %i AND seats > 0",upperZip,lowerZip,upperEndZip,lowerEndZip];
     } else {
         int lowerZip = start.postalCode.intValue-45;
         int upperZip = start.postalCode.intValue+45;
-        string = [NSString stringWithFormat:@"zipStart < %i AND zipStart > %i",upperZip,lowerZip];
+        string = [NSString stringWithFormat:@"zipStart < %i AND zipStart > %i AND seats > 0",upperZip,lowerZip];
     }
     CKContainer *defaultContainer = [CKContainer defaultContainer];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:string];
@@ -194,6 +195,13 @@
     CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Rides" predicate:predicate];
     [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         if (!error) {
+            if (results.count == 0) {
+                dispatch_async(dispatch_get_main_queue(), ^(void){
+                    noRides.hidden = NO;
+                    [refreshControl endRefreshing];
+                });
+            } else {
+                
             [rides removeAllObjects];
             [rideRecords removeAllObjects];
                 for (int a = 0; a < results.count; a++) {
@@ -215,9 +223,11 @@
                     [rides addObject:ride];
                 }
             dispatch_async(dispatch_get_main_queue(), ^(void){
+                noRides.hidden = YES;
                 [table reloadData];
-                    [refreshControl endRefreshing];
+                [refreshControl endRefreshing];
             });
+        }
         } else {
             NSLog(@"%@",error.localizedDescription);
         }
@@ -237,6 +247,7 @@
                 } else {
                     dispatch_async(dispatch_get_main_queue(), ^(void){
                         canMakeDrive = YES;
+                        
                     });
                 }
             } else {
@@ -270,10 +281,29 @@
     feedback = [[UINotificationFeedbackGenerator alloc] init];
     [feedback prepare];
     if (canMakeDrive == NO) {
+        [References toastMessage:@"You've already posted a drive." andView:self andClose:NO];
         [feedback notificationOccurred:UINotificationFeedbackTypeWarning];
     } else {
-            feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+            postView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"postView"];
             [self presentViewController:viewController animated:YES completion:nil];
     }
+}
+
+- (IBAction)more:(id)sender {
+    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"More" message:@"Note: This page will be updated" preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+    }]];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Sign Out" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        [self dismissViewControllerAnimated:YES completion:^() {
+            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"email"];
+            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"name"];
+        }];
+    }]];
+    
+    
+    // Present action sheet.
+    [self presentViewController:actionSheet animated:YES completion:nil];
 }
 @end

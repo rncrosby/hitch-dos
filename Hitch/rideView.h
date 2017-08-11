@@ -22,6 +22,7 @@
     MKPolyline *routeLine;
     MKPolylineView *routeLineView;
     NSMutableArray *messages;
+    NSMutableArray *riderColorMatch;
     NSMutableArray *passengers;
     __weak IBOutlet UILabel *menuBar;
     __weak IBOutlet UILabel *menuBarTitle;
@@ -45,6 +46,7 @@
     __weak IBOutlet UILabel *contactName;
     __weak IBOutlet UIButton *contactMessage;
     __weak IBOutlet UIButton *requestRide;
+    __weak IBOutlet UILabel *contactInitial;
     
     // ismyride panel
     __weak IBOutlet UILabel *ridePanel;

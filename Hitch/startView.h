@@ -22,6 +22,8 @@
 }
 
 - (IBAction)continueButton:(id)sender;
+- (IBAction)driver:(id)sender;
+- (IBAction)rider:(id)sender;
 
 
 @end

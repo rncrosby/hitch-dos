@@ -42,7 +42,6 @@
     [References cardshadow:ridePanelShadow];
     [References cornerRadius:ridePanel radius:8.0f];
     [References cornerRadius:contactImage radius:contactImage.frame.size.width/2];
-    [contactImage setImage:[UIImage imageNamed:@"user.jpg"]];
     if (_ride.price.intValue > 0) {
         price.text = [NSString stringWithFormat:@"$%i",_ride.price.intValue];
     } else {
@@ -62,6 +61,12 @@
     [References tintUIButton:rideManagerShare color:[[self view] tintColor]];
     [References tintUIButton:rideManagerMap color:[[self view] tintColor]];
     [super viewDidLoad];
+    if (_ride.messages.count > 0) {
+            [rideTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_ride.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
+    riderColorMatch = [[NSMutableArray alloc] initWithArray:_ride.riders];
+    [contactImage setBackgroundColor:[References systemColor:@"BLUE"]];
+    contactInitial.text = [NSString stringWithFormat:@"%c",[_ride.name characterAtIndex:0]];
     // Do any additional setup after loading the view.
 }
 
@@ -94,6 +99,9 @@
     [ridersButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
     [messagesButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
      [rideTable reloadData];
+    if (_ride.messages.count > 0) {
+            [rideTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_ride.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
 }
 
 - (IBAction)showRiders:(id)sender {
@@ -106,19 +114,21 @@
         noRiders.hidden = YES;
         noRiders.text = @"No Riders";
     }
+    
     ridePanelSendMessage.enabled = NO;
     ridePanelMessageField.enabled = NO;
     [ridersButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [messagesButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
      [rideTable reloadData];
+    if (_ride.riders.count > 0) {
+        [rideTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 - (IBAction)messageDidStart:(NSNotification*)notification {
     NSDictionary* keyboardInfo = [notification userInfo];
     NSValue* keyboardFrameBegin = [keyboardInfo valueForKey:UIKeyboardFrameBeginUserInfoKey];
-    if (keyboard.size.height < 1) {
         keyboard = [keyboardFrameBegin CGRectValue];
-    }
     int height = keyboard.size.height;
     if (ridePanelMessage.frame.origin.y> scroll.contentSize.height-50) {
         [References moveUp:ridePanelMessage yChange:height-1];
@@ -320,11 +330,11 @@
         }
     } else if (isRideConfirmed == YES) {
         if (scroll.contentOffset.y == 0) {
-            [References fadeButtonText:requestRide text:@"See Ride Info"];
+            [References fadeButtonText:requestRide text:@"See Drive Info"];
             [scroll setContentOffset:CGPointMake(0, scroll.contentSize.height/2) animated:YES];
             [References moveDown:requestRide yChange:49];
         } else {
-            [References fadeButtonText:requestRide text:@"See Your Ride Messages"];
+            [References fadeButtonText:requestRide text:@"See Your Drive Messages"];
             [References moveUp:requestRide yChange:49];
             [scroll setContentOffset:CGPointMake(0, 0) animated:YES];
         }
@@ -390,6 +400,10 @@
         scroll.frame = CGRectMake(0, menuBar.frame.origin.y+menuBar.frame.size.height, [References screenWidth], [References screenHeight]-menuBar.frame.size.height);
         [References createLine:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y inFront:TRUE];
         menuBarTitle.text = @"Drive Info";
+        if (_ride.messages.count > 0) {
+                    [rideTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_ride.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        }
+
         if (_ride.riders.count == 0) {
             rideTable.hidden = YES;
             noRiders.hidden = NO;
@@ -433,6 +447,7 @@
         return _ride.riders.count;
     } else {
         return _ride.messages.count;
+        
     }
     
 }
@@ -475,7 +490,25 @@
             cell.tag = indexPath.row;
             [cell.confirm addTarget:self action:@selector(callPerson:) forControlEvents:UIControlEventTouchUpInside];
         }
-        
+            for (int a = 0; a < riderColorMatch.count; a++) {
+                if ([_ride.riders[indexPath.row] isEqualToString:riderColorMatch[a]]) {
+                    if (a == 0) {
+                        [cell.picutre setBackgroundColor:[References systemColor:@"RED"]];
+                    }
+                    if (a == 1) {
+                        [cell.picutre setBackgroundColor:[References systemColor:@"YELLOW"]];
+                    }
+                    if (a == 2) {
+                        [cell.picutre setBackgroundColor:[References systemColor:@"ORANGE"]];
+                    }
+                    if (a == 3) {
+                        [cell.picutre setBackgroundColor:[References systemColor:@"LBLUE"]];
+                    }
+                    if (a == 4) {
+                        [cell.picutre setBackgroundColor:[References systemColor:@"LRED"]];
+                    }
+                }
+        }
         return cell;
     } else {
         static NSString *simpleTableIdentifier = @"messageCell";
@@ -497,8 +530,29 @@
         [References cornerRadius:cell.picture radius:cell.picture.frame.size.width/2];
         
         [cell setBackgroundColor:[UIColor clearColor]];
-        
-        
+        if ([messageBody[0] isEqualToString:_ride.name]) {
+            [cell.picture setBackgroundColor:[References systemColor:@"BLUE"]];
+        } else {
+        for (int a = 0; a < riderColorMatch.count; a++) {
+            if ([messageBody[0] isEqualToString:riderColorMatch[a]]) {
+                    if (a == 0) {
+                        [cell.picture setBackgroundColor:[References systemColor:@"RED"]];
+                    }
+                    if (a == 1) {
+                        [cell.picture setBackgroundColor:[References systemColor:@"YELLOW"]];
+                    }
+                if (a == 2) {
+                    [cell.picture setBackgroundColor:[References systemColor:@"ORANGE"]];
+                }
+                if (a == 3) {
+                    [cell.picture setBackgroundColor:[References systemColor:@"LBLUE"]];
+                }
+                if (a == 4) {
+                    [cell.picture setBackgroundColor:[References systemColor:@"LRED"]];
+                }
+                }
+            }
+        }
         return cell;
     }
 }

@@ -423,6 +423,27 @@
     [view addMotionEffect:group];
 }
 
-
++(UIColor*)systemColor:(NSString*)color {
+    if ([color isEqualToString:@"RED"]) {
+        return [self colorFromHexString:@"#FF3B30"];
+    }
+    if ([color isEqualToString:@"BLUE"]) {
+        return [self colorFromHexString:@"#007AFF"];
+    }
+    if ([color isEqualToString:@"YELLOW"]) {
+        return [self colorFromHexString:@"#FFCC00"];
+    }
+    if ([color isEqualToString:@"ORANGE"]) {
+        return [self colorFromHexString:@"#FF9500"];
+    }
+    if ([color isEqualToString:@"LRED"]) {
+        return [self colorFromHexString:@"#FF2D55"];
+    }
+    if ([color isEqualToString:@"LBLUE"]) {
+        return [self colorFromHexString:@"#5AC8FA"];
+    } else {
+        return [UIColor blackColor];
+    }
+}
 @end
 
