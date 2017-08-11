@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="vQL-M5-Det">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13156.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="vQL-M5-Det">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13147.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13137.5"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -181,14 +181,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zJh-jC-JtN">
-                                <rect key="frame" x="135" y="630" width="104" height="30"/>
+                                <rect key="frame" x="135" y="628" width="104" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal" title="Post Ride">
+                                <state key="normal" title="Post Drive">
                                     <color key="titleColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <segue destination="OPJ-nK-oy1" kind="modal" id="ZaU-lS-Y08"/>
+                                    <action selector="postDrive:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cJB-58-2Ho"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cTg-C7-l0R">
@@ -397,8 +397,8 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="eqX-yc-NKV">
-                                        <rect key="frame" x="76" y="193" width="281" height="30"/>
+                                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="eqX-yc-NKV">
+                                        <rect key="frame" x="16" y="193" width="281" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                         <state key="normal" title="Requests">
@@ -408,7 +408,7 @@
                                             <action selector="showRequests:" destination="zHA-FC-UL5" eventType="touchUpInside" id="MhR-93-amv"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="iNR-G8-MIp">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="iNR-G8-MIp">
                                         <rect key="frame" x="14" y="193" width="61" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
@@ -737,14 +737,57 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="O9R-0F-qhB">
-                                        <rect key="frame" x="15" y="561" width="346" height="41"/>
+                                        <rect key="frame" x="15" y="566" width="346" height="36"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="Request Ride">
-                                            <color key="titleColor" red="0.10849235209999999" green="0.89640933280000001" blue="0.55391341449999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="0.018645260479999998" green="0.4776622653" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <action selector="requestRide:" destination="Mec-sY-4CI" eventType="touchUpInside" id="VJB-Kl-6Ky"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="stW-lk-AxR">
+                                        <rect key="frame" x="21" y="512" width="333" height="46"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BB9-2q-Xbx">
+                                        <rect key="frame" x="16" y="507" width="343" height="56"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fPb-WM-G2n">
+                                        <rect key="frame" x="171" y="519" width="33" height="33"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.4756349325" green="0.47564673419999998" blue="0.47564041610000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" backgroundImage="map.png"/>
+                                        <connections>
+                                            <action selector="openDirections:" destination="Mec-sY-4CI" eventType="touchUpInside" id="bsK-4a-1cO"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="oDt-Tk-JPI">
+                                        <rect key="frame" x="278" y="519" width="33" height="33"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.4756349325" green="0.47564673419999998" blue="0.47564041610000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" backgroundImage="trash.png"/>
+                                        <connections>
+                                            <action selector="deleteDrive:" destination="Mec-sY-4CI" eventType="touchUpInside" id="RKa-oy-T9f"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="noi-bv-zk1">
+                                        <rect key="frame" x="64" y="519" width="33" height="33"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.4756349325" green="0.47564673419999998" blue="0.47564041610000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" backgroundImage="share.png"/>
+                                        <connections>
+                                            <action selector="shareRide:" destination="Mec-sY-4CI" eventType="touchUpInside" id="wMM-8v-ej6"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -797,6 +840,11 @@
                         <outlet property="price" destination="5gx-hh-02d" id="l2V-U9-lwg"/>
                         <outlet property="priceShadow" destination="1eU-C0-evb" id="3bV-v5-ke0"/>
                         <outlet property="requestRide" destination="O9R-0F-qhB" id="oKn-rK-QnN"/>
+                        <outlet property="rideManagerCard" destination="BB9-2q-Xbx" id="4sr-iP-1Kg"/>
+                        <outlet property="rideManagerMap" destination="fPb-WM-G2n" id="O99-xh-7Fm"/>
+                        <outlet property="rideManagerShadow" destination="stW-lk-AxR" id="JuN-In-aea"/>
+                        <outlet property="rideManagerShare" destination="noi-bv-zk1" id="8Hf-LI-hKB"/>
+                        <outlet property="rideManagerTrash" destination="oDt-Tk-JPI" id="nTf-oP-bO3"/>
                         <outlet property="ridePanel" destination="JV1-QQ-5ZN" id="tma-FW-5RL"/>
                         <outlet property="ridePanelMessage" destination="Nee-CV-mDr" id="YcP-0R-aKe"/>
                         <outlet property="ridePanelMessageField" destination="uRR-ce-V0E" id="lb7-N6-rSk"/>
@@ -943,7 +991,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Post Ride" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mSo-PB-PPo">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Post Drive" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="mSo-PB-PPo">
                                 <rect key="frame" x="117" y="20" width="141" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
@@ -989,4 +1037,9 @@
             <point key="canvasLocation" x="-671" y="848"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="map.png" width="100" height="100"/>
+        <image name="share.png" width="100" height="100"/>
+        <image name="trash.png" width="100" height="100"/>
+    </resources>
 </document>

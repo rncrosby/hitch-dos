@@ -50,9 +50,17 @@
     }
     [References cornerRadius:price radius:8.0f];
     [References cardshadow:priceShadow];
+    [References cornerRadius:rideManagerCard radius:8.0f];
+    [References cardshadow:rideManagerShadow];
     [self loadMap];
     contactName.text = _ride.name;
     seats.text = [NSString stringWithFormat:@"%i",_ride.seats.intValue];
+    [rideManagerMap setBackgroundColor:[UIColor clearColor]];
+    [rideManagerShare setBackgroundColor:[UIColor clearColor]];
+    [rideManagerTrash setBackgroundColor:[UIColor clearColor]];
+    [References tintUIButton:rideManagerTrash color:[[self view] tintColor]];
+    [References tintUIButton:rideManagerShare color:[[self view] tintColor]];
+    [References tintUIButton:rideManagerMap color:[[self view] tintColor]];
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
@@ -64,9 +72,9 @@
 
 - (IBAction)sendMessage:(id)sender {
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"email"] isEqualToString:_ride.phone]) {
-        [References toastMessage:@"You can't contact your self" andView:self];
+        [References toastMessage:@"You can't contact your self" andView:self andClose:FALSE];
     } else {
-        [References toastMessage:@"Soon" andView:self];
+        [References toastMessage:@"Soon" andView:self andClose:FALSE];
     }
     
 }
@@ -188,6 +196,68 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (IBAction)shareRide:(id)sender {
+    NSString *textToShare;
+    if ([_ride.phone isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]]) {
+        textToShare = @"Check out my drive on Hitch for iOS\n\n";
+    } else if (isRideConfirmed == YES) {
+        textToShare = @"Check out this ride I found on Hitch for iOS\n\n";
+    }
+    NSString *string =[NSString stringWithFormat:@"hitch://openRide/ride?creator=%@",_ride.phone];
+    NSURL *url = [NSURL URLWithString:string];
+    NSArray *objectsToShare = @[textToShare,url];
+    
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+    
+    NSArray *excludeActivities = @[UIActivityTypeAssignToContact,
+                                   UIActivityTypeSaveToCameraRoll,
+                                   UIActivityTypeAddToReadingList,
+                                   UIActivityTypePostToFlickr,
+                                   UIActivityTypePostToVimeo,
+                                   UIActivityTypeAddToReadingList];
+    
+    activityVC.excludedActivityTypes = excludeActivities;
+    [self presentViewController:activityVC animated:YES completion:nil];
+}
+
+- (IBAction)openDirections:(id)sender {
+    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"Open Apple Maps" message:@"Note: Directions are done based on city zip codes to ensure privacy." preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+    }]];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Apple Maps" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+            NSString* directionsURL = [NSString stringWithFormat:@"http://maps.apple.com/?saddr=%f,%f&daddr=%f,%f",_ride.start.coordinate.latitude, _ride.start.coordinate.longitude, _ride.end.coordinate.latitude, _ride.end.coordinate.longitude];
+            [[UIApplication sharedApplication] openURL: [NSURL URLWithString: directionsURL]];
+    }]];
+    
+    
+    // Present action sheet.
+    [self presentViewController:actionSheet animated:YES completion:nil];
+    
+}
+
+- (IBAction)deleteDrive:(id)sender {
+    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"Are you sure?" message:@"All riders will be removed from the drive, and refunds will be made if necessary." preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+    }]];
+    
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        
+        // Distructive button tapped.
+        [self dismissViewControllerAnimated:YES completion:^{
+            [[CKContainer defaultContainer].publicCloudDatabase deleteRecordWithID:_rideRecord.recordID completionHandler:^(CKRecordID *recordID, NSError *error) {
+                [References toastMessage:@"One second..." andView:self andClose:TRUE];
+            }];
+        }];
+    }]];
+    
+    // Present action sheet.
+    [self presentViewController:actionSheet animated:YES completion:nil];
+}
+
 -(void)loadMap {
     MKCoordinateRegion region = map.region;
     region.span.longitudeDelta /= 8.0;
@@ -242,20 +312,20 @@
         if (scroll.contentOffset.y == 0) {
             [References fadeButtonText:requestRide text:@"See Drive Info"];
             [scroll setContentOffset:CGPointMake(0, scroll.contentSize.height/2) animated:YES];
-            [References moveDown:requestRide yChange:50];
+            [References moveDown:requestRide yChange:49];
         } else {
             [References fadeButtonText:requestRide text:@"See Your Drive Messages"];
-            [References moveUp:requestRide yChange:50];
+            [References moveUp:requestRide yChange:49];
             [scroll setContentOffset:CGPointMake(0, 0) animated:YES];
         }
     } else if (isRideConfirmed == YES) {
         if (scroll.contentOffset.y == 0) {
             [References fadeButtonText:requestRide text:@"See Ride Info"];
             [scroll setContentOffset:CGPointMake(0, scroll.contentSize.height/2) animated:YES];
-            [References moveDown:requestRide yChange:50];
+            [References moveDown:requestRide yChange:49];
         } else {
             [References fadeButtonText:requestRide text:@"See Your Ride Messages"];
-            [References moveUp:requestRide yChange:50];
+            [References moveUp:requestRide yChange:49];
             [scroll setContentOffset:CGPointMake(0, 0) animated:YES];
         }
     } else {
@@ -298,7 +368,7 @@
             ^(NSArray * savedRecords, NSArray * deletedRecordIDs, NSError * operationError){
                 //   the completion block code here
                 dispatch_async(dispatch_get_main_queue(), ^(void){
-                    [References toastMessage:@"Ride Requested" andView:self];
+                    [References toastMessage:@"Ride Requested" andView:self andClose:TRUE];
                 });
             };
             CKContainer *defaultContainer = [CKContainer defaultContainer];

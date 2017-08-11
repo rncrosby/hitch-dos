@@ -55,6 +55,11 @@
     __weak IBOutlet UITextField *ridePanelMessageField;
     __weak IBOutlet UIButton *ridePanelSendMessage;
     
+    __weak IBOutlet UILabel *rideManagerCard;
+    __weak IBOutlet UILabel *rideManagerShadow;
+    __weak IBOutlet UIButton *rideManagerTrash;
+    __weak IBOutlet UIButton *rideManagerMap;
+    __weak IBOutlet UIButton *rideManagerShare;
     
     
     __weak IBOutlet UIButton *ridersButton;
@@ -74,6 +79,9 @@
 
 - (IBAction)back:(id)sender;
 
+- (IBAction)shareRide:(id)sender;
+- (IBAction)openDirections:(id)sender;
+- (IBAction)deleteDrive:(id)sender;
 
 
 @end

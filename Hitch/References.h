@@ -50,7 +50,7 @@
 +(NSString *) randomIntWithLength: (int) len;
 +(UIView*)createGradient:(UIColor*)colorA andColor:(UIColor*)colorB withFrame:(CGRect)frame;
 +(void)fadeButtonText:(UIButton*)view text:(NSString*)text;
-+(void)toastMessage:(NSString*)message andView:(UIViewController*)view;
++(void)toastMessage:(NSString *)message andView:(UIViewController *)view andClose:(bool)close;
 +(CAGradientLayer*)createGradient:(UIColor*)colorA andColor:(UIColor*)colorB;
 +(void)parallax:(UIView*)view;
 @end

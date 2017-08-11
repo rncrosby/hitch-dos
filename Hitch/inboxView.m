@@ -194,6 +194,8 @@
                     } else {
                         drivePrice.text = @"Free";
                     }
+                    [showRequests setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
+                    [showRiders setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
                     [driveRequestsTable reloadData];
                 });
             } else {
@@ -346,7 +348,7 @@
     ^(NSArray * savedRecords, NSArray * deletedRecordIDs, NSError * operationError){
         //   the completion block code here
         dispatch_async(dispatch_get_main_queue(), ^(void){
-            [References toastMessage:@"One Second..." andView:self];
+            [References toastMessage:@"One Second..." andView:self andClose:false];
             [self getMyDrive];
         });
     };

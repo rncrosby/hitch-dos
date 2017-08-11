@@ -13,11 +13,15 @@
 #import "rideObject.h"
 #import <CloudKit/CloudKit.h>
 #import "rideView.h"
+#import "feedView.h"
 
 @interface feedView : UIViewController <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,CLLocationManagerDelegate> {
     CLLocationManager *location;
+    bool canMakeDrive;
     CLPlacemark *start,*end;
     NSMutableArray *rides,*rideRecords;
+    UINotificationFeedbackGenerator *feedback;
+    UISelectionFeedbackGenerator *selectionFeedback;
     // SEARCH PANEL
     __weak IBOutlet UITextField *startPoint;
     __weak IBOutlet UITextField *endPoint;
@@ -31,6 +35,8 @@
     UIRefreshControl *refreshControl;
     __weak IBOutlet UITableView *table;
 }
+@property (nonatomic, retain) NSString *rideToOpen;
 - (IBAction)inbox:(id)sender;
+- (IBAction)postDrive:(id)sender;
 
 @end

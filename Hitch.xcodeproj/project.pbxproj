@@ -34,6 +34,9 @@
 		ADE7506D1F3B6E93001556AB /* driveRequestsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE7506B1F3B6E93001556AB /* driveRequestsCell.m */; };
 		ADE7506E1F3B6E93001556AB /* driveRequestsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADE7506C1F3B6E93001556AB /* driveRequestsCell.xib */; };
 		ADE750701F3B72D7001556AB /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = ADE7506F1F3B7096001556AB /* add.png */; };
+		D493EC3E1F3D250C00A02D35 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = D493EC3B1F3D250B00A02D35 /* map.png */; };
+		D493EC3F1F3D250C00A02D35 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = D493EC3C1F3D250C00A02D35 /* share.png */; };
+		D493EC401F3D250C00A02D35 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = D493EC3D1F3D250C00A02D35 /* trash.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +80,9 @@
 		ADE7506B1F3B6E93001556AB /* driveRequestsCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = driveRequestsCell.m; sourceTree = "<group>"; };
 		ADE7506C1F3B6E93001556AB /* driveRequestsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = driveRequestsCell.xib; sourceTree = "<group>"; };
 		ADE7506F1F3B7096001556AB /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
+		D493EC3B1F3D250B00A02D35 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = map.png; path = ../../../Downloads/map.png; sourceTree = "<group>"; };
+		D493EC3C1F3D250C00A02D35 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share.png; path = ../../../Downloads/share.png; sourceTree = "<group>"; };
+		D493EC3D1F3D250C00A02D35 /* trash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = trash.png; path = ../../../Downloads/trash.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +121,9 @@
 			isa = PBXGroup;
 			children = (
 				ADD37EFF1F38D06100285F63 /* Hitch.entitlements */,
+				D493EC3B1F3D250B00A02D35 /* map.png */,
+				D493EC3C1F3D250C00A02D35 /* share.png */,
+				D493EC3D1F3D250C00A02D35 /* trash.png */,
 				ADDCC67F1F3CFA430056C00F /* phone.png */,
 				ADC335391F3A17D90080642C /* user.jpg */,
 				AD96B94E1F37F29B008131BF /* chevron-right.png */,
@@ -232,9 +241,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D493EC3E1F3D250C00A02D35 /* map.png in Resources */,
 				ADDCC6801F3CFB3F0056C00F /* phone.png in Resources */,
 				ADE750701F3B72D7001556AB /* add.png in Resources */,
 				ADC3353A1F3A17E30080642C /* user.jpg in Resources */,
+				D493EC401F3D250C00A02D35 /* trash.png in Resources */,
 				ADD37EFB1F38BFB800285F63 /* chevron-right.png in Resources */,
 				AD96B94F1F37F47A008131BF /* feedView.h in Resources */,
 				AD96B94D1F37F210008131BF /* feedCell.xib in Resources */,
@@ -243,6 +254,7 @@
 				AD96B9371F37F008008131BF /* Assets.xcassets in Resources */,
 				AD96B9351F37F008008131BF /* Main.storyboard in Resources */,
 				ADDCC67E1F3CE75D0056C00F /* messageCell.xib in Resources */,
+				D493EC3F1F3D250C00A02D35 /* share.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

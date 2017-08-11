@@ -90,9 +90,9 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="6vn-Pr-vwP">
-                        <rect key="frame" x="317" y="52" width="50" height="50"/>
+                        <rect key="frame" x="325" y="52" width="50" height="50"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <state key="normal" image="chevron-right.png"/>
+                        <state key="normal" backgroundImage="chevron-right.png"/>
                     </button>
                 </subviews>
             </tableViewCellContentView>

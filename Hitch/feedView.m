@@ -14,6 +14,52 @@
 
 @implementation feedView
 
+-(void)viewDidAppear:(BOOL)animated {
+    if (_rideToOpen.length > 1) {
+        NSString *string = [NSString stringWithFormat:@"email = '%@'",_rideToOpen];
+        CKContainer *defaultContainer = [CKContainer defaultContainer];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:string];
+        CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
+        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Rides" predicate:predicate];
+        [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+            if (!error) {
+                if (results.count > 0) {
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^(void){
+                        
+                        CKRecord *record = results[0];
+                        
+                        NSDate *date = [record valueForKey:@"date"];
+                        NSDate *time = [record valueForKey:@"time"];
+                        NSString *name = [record valueForKey:@"name"];
+                        NSString *plainStart = [record valueForKey:@"plainStart"];
+                        NSString *plainEnd = [record valueForKey:@"plainEnd"];
+                        NSNumber *seats = [record valueForKey:@"seats"];
+                        NSNumber *price = [record valueForKey:@"price"];
+                        NSMutableArray *messages = [record valueForKey:@"messages"];
+                        NSMutableArray *riders = [record valueForKey:@"riders"];
+                        NSMutableArray *requests = [record valueForKey:@"requests"];
+                        CLLocation *start = [record valueForKey:@"start"];
+                        CLLocation *end = [record valueForKey:@"end"];
+                        rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"email"] andRequests:requests];
+                        rideView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"rideView"];
+                        viewController.ride = ride;
+                        viewController.rideRecord = record;
+                        _rideToOpen = @"";
+                        [self presentViewController:viewController animated:YES completion:nil];
+                    });
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^(void){
+                        NSLog(@"error");
+                    });
+                }
+            } else {
+                NSLog(@"%@",error.localizedDescription);
+            }
+        }];
+    }
+}
+
 - (void)viewDidLoad {
     //[References cardshadow:searchCard];
     [References createLine:self.view xPos:0 yPos:searchCard.frame.origin.y+searchCard.frame.size.height inFront:TRUE];
@@ -97,7 +143,7 @@
     NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
     [timeFormatter setDateFormat:@"h a"];
     cell.date.text = [NSString stringWithFormat:@"%@ around %@",[dateFormatter stringFromDate:ride.date],[timeFormatter stringFromDate:ride.date]];
-    [References tintUIButton:cell.chevron color:[UIColor darkGrayColor]];
+    [References tintUIButton:cell.chevron color:[[self view] tintColor]];
     cell.backgroundColor = [UIColor clearColor];
     [References cardshadow:cell.shadow];
     [References cornerRadius:cell.card radius:8.0f];
@@ -178,7 +224,31 @@
     }];
 }
 
+-(void)getMyDrives {
+        NSString *string = [NSString stringWithFormat:@"email = '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
+        CKContainer *defaultContainer = [CKContainer defaultContainer];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:string];
+        CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
+        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Rides" predicate:predicate];
+        [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+            if (!error) {
+                if (results.count > 0) {
+                    canMakeDrive = NO;
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^(void){
+                        canMakeDrive = YES;
+                    });
+                }
+            } else {
+                NSLog(@"%@",error.localizedDescription);
+            }
+        }];
+}
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    selectionFeedback = [[UISelectionFeedbackGenerator alloc] init];
+    [selectionFeedback prepare];
+    [selectionFeedback selectionChanged];
     dispatch_async(dispatch_get_main_queue(), ^(void){
         rideView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"rideView"];
         viewController.ride = rides[indexPath.row];
@@ -194,5 +264,16 @@
     [endPoint setText:@""];
 }
 - (IBAction)inbox:(id)sender {
+}
+
+- (IBAction)postDrive:(id)sender {
+    feedback = [[UINotificationFeedbackGenerator alloc] init];
+    [feedback prepare];
+    if (canMakeDrive == NO) {
+        [feedback notificationOccurred:UINotificationFeedbackTypeWarning];
+    } else {
+            feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+            [self presentViewController:viewController animated:YES completion:nil];
+    }
 }
 @end

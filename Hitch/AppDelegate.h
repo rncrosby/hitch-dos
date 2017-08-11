@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "feedView.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

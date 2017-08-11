@@ -380,7 +380,7 @@
     return hexInt;
 }
 
-+(void)toastMessage:(NSString *)message andView:(UIViewController *)view {
++(void)toastMessage:(NSString *)message andView:(UIViewController *)view andClose:(bool)close{
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
                                                                    message:message
                                                             preferredStyle:UIAlertControllerStyleAlert];
@@ -390,9 +390,14 @@
     int duration = 1.5; // duration in seconds
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, duration * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [alert dismissViewControllerAnimated:YES completion:nil];
+        [alert dismissViewControllerAnimated:YES completion:^() {
+            if (close == TRUE) {
+                [view dismissViewControllerAnimated:YES completion:nil];
+            }
+        }];
     });
 }
+
 
 +(void)parallax:(UIView *)view {
     UIInterpolatingMotionEffect *verticalMotionEffect =
