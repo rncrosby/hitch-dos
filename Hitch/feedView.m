@@ -58,6 +58,14 @@
             }
         }];
     }
+     else {
+        if (endPoint.text.length > 1) {
+             [self getAllRides:YES];
+        } else {
+            [self getAllRides:NO];
+        }
+         [self getMyDrives];
+    }
 }
 
 - (void)viewDidLoad {
@@ -97,29 +105,34 @@
     if (textField.tag == 1) {
         // zip start
     } else if (textField.tag == 2) {
-        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-        [geocoder geocodeAddressString:textField.text
-                     completionHandler:^(NSArray* placemarks, NSError* error){
-                         if (placemarks && placemarks.count > 0) {
-                             CLPlacemark *topResult = [placemarks objectAtIndex:0];
-                             MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
-                             
-                             CLLocation *location = [[CLLocation alloc] initWithLatitude:placemark.coordinate.latitude longitude:placemark.coordinate.longitude];
-                             CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
-                             [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-                                 if (placemarks && placemarks.count > 0) {
-                                     CLPlacemark *topResult = [placemarks objectAtIndex:0];
-                                     
-                                     MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
-                                     end = topResult;
-                                     [endPoint setText:placemark.locality];
-                                     [self getAllRides:YES];
-                                 }
-                             }];
-                             
+        if (textField.text.length > 1) {
+            CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+            [geocoder geocodeAddressString:textField.text
+                         completionHandler:^(NSArray* placemarks, NSError* error){
+                             if (placemarks && placemarks.count > 0) {
+                                 CLPlacemark *topResult = [placemarks objectAtIndex:0];
+                                 MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
+                                 
+                                 CLLocation *location = [[CLLocation alloc] initWithLatitude:placemark.coordinate.latitude longitude:placemark.coordinate.longitude];
+                                 CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
+                                 [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+                                     if (placemarks && placemarks.count > 0) {
+                                         CLPlacemark *topResult = [placemarks objectAtIndex:0];
+                                         
+                                         MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
+                                         end = topResult;
+                                         [endPoint setText:placemark.locality];
+                                         [self getAllRides:YES];
+                                     }
+                                 }];
+                                 
+                             }
                          }
-                     }
-         ];
+             ];
+        } else {
+            [self getAllRides:NO];
+        }
+        
     }
     [textField resignFirstResponder];
     return YES;
@@ -175,6 +188,7 @@
 }
 
 -(void)getAllRides:(bool)isRestricted{
+    noRides.text = @"Finding Rides";
     rides = [[NSMutableArray alloc] init];
     rideRecords = [[NSMutableArray alloc] init];
     NSString *string = @"";
@@ -197,6 +211,8 @@
         if (!error) {
             if (results.count == 0) {
                 dispatch_async(dispatch_get_main_queue(), ^(void){
+                    noRides.text = @"No Rides Found";
+                    table.hidden = YES;
                     noRides.hidden = NO;
                     [refreshControl endRefreshing];
                 });
@@ -224,6 +240,7 @@
                 }
             dispatch_async(dispatch_get_main_queue(), ^(void){
                 noRides.hidden = YES;
+                table.hidden = NO;
                 [table reloadData];
                 [refreshControl endRefreshing];
             });
@@ -281,7 +298,8 @@
     feedback = [[UINotificationFeedbackGenerator alloc] init];
     [feedback prepare];
     if (canMakeDrive == NO) {
-        [References toastMessage:@"You've already posted a drive." andView:self andClose:NO];
+        [References fullScreenToast:@"You've already posted a ride." inView:self withSuccess:NO andClose:NO];
+//        [References toastMessage:@"You've already posted a drive." andView:self andClose:NO];
         [feedback notificationOccurred:UINotificationFeedbackTypeWarning];
     } else {
             postView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"postView"];

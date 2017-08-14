@@ -54,5 +54,6 @@
 +(CAGradientLayer*)createGradient:(UIColor*)colorA andColor:(UIColor*)colorB;
 +(void)parallax:(UIView*)view;
 +(UIColor*)systemColor:(NSString*)color;
++(void)fullScreenToast:(NSString*)text inView:(UIViewController*)view withSuccess:(BOOL)success andClose:(BOOL)close;
 @end
 

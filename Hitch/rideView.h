@@ -67,6 +67,7 @@
     __weak IBOutlet UIButton *ridersButton;
     __weak IBOutlet UIButton *messagesButton;
     __weak IBOutlet UILabel *noRiders;
+    CGFloat keyboardHeight;
 }
 
 - (IBAction)requestRide:(id)sender;
@@ -75,9 +76,7 @@
 - (IBAction)sendMessage:(id)sender;
 - (IBAction)showMessages:(id)sender;
 - (IBAction)showRiders:(id)sender;
-- (IBAction)messageDidStart:(id)sender;
 - (IBAction)sendGroupMessage:(id)sender;
-- (IBAction)showKeyboard:(id)sender;
 
 - (IBAction)back:(id)sender;
 

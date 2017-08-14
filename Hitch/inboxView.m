@@ -277,10 +277,13 @@
         if (showRequests.titleLabel.textColor == [UIColor darkTextColor]) {
             [cell.confirm addTarget:self action:@selector(confirmDriveRequest:) forControlEvents:UIControlEventTouchUpInside];
             cell.confirm.tag = indexPath.row;
+            cell.cancel.tag = indexPath.row;
             [References cornerRadius:cell.picutre radius:cell.picutre.frame.size.width/2];
             [cell setBackgroundColor:[UIColor clearColor]];
             cell.name.text = myDrive.requests[indexPath.row];
             [References tintUIButton:cell.confirm color:[References colorFromHexString:@"#057AFF"]];
+            [References tintUIButton:cell.cancel color:[References colorFromHexString:@"#057AFF"]];
+            [cell.cancel addTarget:self action:@selector(cancelDriveRequest:) forControlEvents:UIControlEventTouchUpInside];
         } else {
             [References cornerRadius:cell.picutre radius:cell.picutre.frame.size.width/2];
             [cell setBackgroundColor:[UIColor clearColor]];
@@ -364,13 +367,63 @@
     ^(NSArray * savedRecords, NSArray * deletedRecordIDs, NSError * operationError){
         //   the completion block code here
         dispatch_async(dispatch_get_main_queue(), ^(void){
-            [References toastMessage:@"One Second..." andView:self andClose:false];
+             [References fullScreenToast:@"Rider confirmed." inView:self withSuccess:YES andClose:NO];
             [self getMyDrive];
         });
     };
     CKContainer *defaultContainer = [CKContainer defaultContainer];
     [[defaultContainer publicCloudDatabase] addOperation:modifyRecords];
 }
+
+-(void)cancelDriveRequest:(UIButton*)sender {
+    [References fullScreenToast:@"Rider rejected." inView:self withSuccess:YES andClose:NO];
+    NSString *name = myDrive.requests[sender.tag];
+    NSMutableArray *newRequests = [[NSMutableArray alloc] initWithArray:myDrive.requests];
+    [newRequests removeObjectAtIndex:sender.tag];
+    myDriveRecord[@"requests"] = newRequests;
+    CKModifyRecordsOperation *modifyRecords= [[CKModifyRecordsOperation alloc]
+                                              initWithRecordsToSave:[[NSArray alloc] initWithObjects:myDriveRecord, nil] recordIDsToDelete:nil];
+    modifyRecords.savePolicy=CKRecordSaveAllKeys;
+    modifyRecords.qualityOfService=NSQualityOfServiceUserInitiated;
+    modifyRecords.modifyRecordsCompletionBlock=
+    ^(NSArray * savedRecords, NSArray * deletedRecordIDs, NSError * operationError){
+        NSString *string = [NSString stringWithFormat:@"email = '%@'",name];
+        CKContainer *defaultContainer = [CKContainer defaultContainer];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:string];
+        CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
+        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"People" predicate:predicate];
+        [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+            if (!error) {
+                if (results.count > 0) {
+                    for (int a = 0; a < results.count; a++) {
+                        CKRecord *record = results[a];
+                        NSMutableArray *rides = [record valueForKey:@"myRides"];
+                        for (int b = 0; b < rides.count; b++) {
+                            if ([rides[b] isEqualToString:myDrive.phone]) {
+                                [rides removeObjectAtIndex:b];
+                            }
+                        }
+                        record[@"myRides"] = rides;
+                        [[CKContainer defaultContainer].publicCloudDatabase saveRecord:record completionHandler:^(CKRecord *record, NSError *error) {
+                            dispatch_async(dispatch_get_main_queue(), ^(void){
+                                
+                                [self getMyDrive];
+                            });
+                        }];
+                    }
+                } else {
+                    
+                }
+            } else {
+                NSLog(@"%@",error.localizedDescription);
+            }
+        }];
+        
+    };
+    CKContainer *defaultContainer = [CKContainer defaultContainer];
+    [[defaultContainer publicCloudDatabase] addOperation:modifyRecords];
+}
+
 - (IBAction)backButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }

@@ -34,6 +34,9 @@
 		ADE7506D1F3B6E93001556AB /* driveRequestsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE7506B1F3B6E93001556AB /* driveRequestsCell.m */; };
 		ADE7506E1F3B6E93001556AB /* driveRequestsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADE7506C1F3B6E93001556AB /* driveRequestsCell.xib */; };
 		ADE750701F3B72D7001556AB /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = ADE7506F1F3B7096001556AB /* add.png */; };
+		D44C48951F40C99E00C69DE1 /* failure.png in Resources */ = {isa = PBXBuildFile; fileRef = D44C48931F40C99D00C69DE1 /* failure.png */; };
+		D44C48961F40C99E00C69DE1 /* success.png in Resources */ = {isa = PBXBuildFile; fileRef = D44C48941F40C99E00C69DE1 /* success.png */; };
+		D44C48981F411D1900C69DE1 /* minus.png in Resources */ = {isa = PBXBuildFile; fileRef = D44C48971F411D1900C69DE1 /* minus.png */; };
 		D493EC3E1F3D250C00A02D35 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = D493EC3B1F3D250B00A02D35 /* map.png */; };
 		D493EC3F1F3D250C00A02D35 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = D493EC3C1F3D250C00A02D35 /* share.png */; };
 		D493EC401F3D250C00A02D35 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = D493EC3D1F3D250C00A02D35 /* trash.png */; };
@@ -80,6 +83,9 @@
 		ADE7506B1F3B6E93001556AB /* driveRequestsCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = driveRequestsCell.m; sourceTree = "<group>"; };
 		ADE7506C1F3B6E93001556AB /* driveRequestsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = driveRequestsCell.xib; sourceTree = "<group>"; };
 		ADE7506F1F3B7096001556AB /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
+		D44C48931F40C99D00C69DE1 /* failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = failure.png; path = ../../../Desktop/failure.png; sourceTree = "<group>"; };
+		D44C48941F40C99E00C69DE1 /* success.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = success.png; path = ../../../Desktop/success.png; sourceTree = "<group>"; };
+		D44C48971F411D1900C69DE1 /* minus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = minus.png; path = ../../../Desktop/minus.png; sourceTree = "<group>"; };
 		D493EC3B1F3D250B00A02D35 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = map.png; path = ../../../Downloads/map.png; sourceTree = "<group>"; };
 		D493EC3C1F3D250C00A02D35 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share.png; path = ../../../Downloads/share.png; sourceTree = "<group>"; };
 		D493EC3D1F3D250C00A02D35 /* trash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = trash.png; path = ../../../Downloads/trash.png; sourceTree = "<group>"; };
@@ -128,6 +134,9 @@
 				ADC335391F3A17D90080642C /* user.jpg */,
 				AD96B94E1F37F29B008131BF /* chevron-right.png */,
 				ADE7506F1F3B7096001556AB /* add.png */,
+				D44C48931F40C99D00C69DE1 /* failure.png */,
+				D44C48971F411D1900C69DE1 /* minus.png */,
+				D44C48941F40C99E00C69DE1 /* success.png */,
 				AD96B9361F37F008008131BF /* Assets.xcassets */,
 				AD96B9381F37F008008131BF /* LaunchScreen.storyboard */,
 				AD96B93B1F37F008008131BF /* Info.plist */,
@@ -248,12 +257,15 @@
 				D493EC401F3D250C00A02D35 /* trash.png in Resources */,
 				ADD37EFB1F38BFB800285F63 /* chevron-right.png in Resources */,
 				AD96B94F1F37F47A008131BF /* feedView.h in Resources */,
+				D44C48961F40C99E00C69DE1 /* success.png in Resources */,
 				AD96B94D1F37F210008131BF /* feedCell.xib in Resources */,
 				ADE7506E1F3B6E93001556AB /* driveRequestsCell.xib in Resources */,
+				D44C48981F411D1900C69DE1 /* minus.png in Resources */,
 				AD96B93A1F37F008008131BF /* LaunchScreen.storyboard in Resources */,
 				AD96B9371F37F008008131BF /* Assets.xcassets in Resources */,
 				AD96B9351F37F008008131BF /* Main.storyboard in Resources */,
 				ADDCC67E1F3CE75D0056C00F /* messageCell.xib in Resources */,
+				D44C48951F40C99E00C69DE1 /* failure.png in Resources */,
 				D493EC3F1F3D250C00A02D35 /* share.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

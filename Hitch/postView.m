@@ -162,9 +162,13 @@
     CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
     [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
         if(error) {
-            NSLog(@"%@",error.localizedDescription);
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+             [References fullScreenToast:@"Something's not right." inView:self withSuccess:NO andClose:NO];
+                });
         } else {
-            [self dismissViewControllerAnimated:YES completion:nil];
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+             [References fullScreenToast:@"Drive successfully posted." inView:self withSuccess:YES andClose:YES];
+            });
         }
     }];
 }

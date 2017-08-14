@@ -12,17 +12,17 @@
 
 @end
 
+#define kHeight 225
+
 @implementation rideView
 
+
+
 - (void)viewDidLoad {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(messageDidStart:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
-    [References ViewToLine:line withView:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y];
+    //[References ViewToLine:line withView:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y];
     [References createLine:self.view xPos:0 yPos:menuBar.frame.origin.y+menuBar.frame.size.height inFront:TRUE];
-    [scroll addSubview:line];
-    [scroll bringSubviewToFront:line];
+    //[scroll addSubview:line];
+    //[scroll bringSubviewToFront:line];
     [self IsMyDrive];
     [self isRidePending];
     [self isRideConfirmed];
@@ -67,7 +67,42 @@
     riderColorMatch = [[NSMutableArray alloc] initWithArray:_ride.riders];
     [contactImage setBackgroundColor:[References systemColor:@"BLUE"]];
     contactInitial.text = [NSString stringWithFormat:@"%c",[_ride.name characterAtIndex:0]];
+    contactInitial.text = [contactInitial.text uppercaseString];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
     // Do any additional setup after loading the view.
+}
+
+- (void)keyboardWillShow:(NSNotification*)notification {
+    NSDictionary *info = [notification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    CGFloat deltaHeight = kbSize.height - keyboardHeight;
+    // Write code to adjust views accordingly using deltaHeight
+    keyboardHeight = kbSize.height-1;
+    [References moveUp:ridePanelMessage yChange:keyboardHeight];
+    [References moveUp:ridePanelMessageField yChange:keyboardHeight];
+    [References moveUp:ridePanelSendMessage yChange:keyboardHeight];
+    [References moveUp:line yChange:keyboardHeight];
+    [References fadeColor:ridePanelMessage color:[References colorFromHexString:@"#D2D5DC"]];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification {
+    NSDictionary *info = [notification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    // Write code to adjust views accordingly using kbSize.height
+    [References moveDown:ridePanelMessage yChange:keyboardHeight];
+    [References moveDown:ridePanelMessageField yChange:keyboardHeight];
+    [References moveDown:ridePanelSendMessage yChange:keyboardHeight];
+    [References moveDown:line yChange:keyboardHeight];
+    [References fadeColor:ridePanelMessage color:[UIColor whiteColor]];
+    keyboardHeight = 0.0f;
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -76,11 +111,7 @@
 }
 
 - (IBAction)sendMessage:(id)sender {
-    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"email"] isEqualToString:_ride.phone]) {
-        [References toastMessage:@"You can't contact your self" andView:self andClose:FALSE];
-    } else {
-        [References toastMessage:@"Soon" andView:self andClose:FALSE];
-    }
+        [References fullScreenToast:@"Coming Soon" inView:self withSuccess:NO andClose:NO];
     
 }
 
@@ -125,20 +156,6 @@
     }
 }
 
-- (IBAction)messageDidStart:(NSNotification*)notification {
-    NSDictionary* keyboardInfo = [notification userInfo];
-    NSValue* keyboardFrameBegin = [keyboardInfo valueForKey:UIKeyboardFrameBeginUserInfoKey];
-        keyboard = [keyboardFrameBegin CGRectValue];
-    int height = keyboard.size.height;
-    if (ridePanelMessage.frame.origin.y> scroll.contentSize.height-50) {
-        [References moveUp:ridePanelMessage yChange:height-1];
-        [References moveUp:ridePanelMessageField yChange:height-1];
-        [References moveUp:ridePanelSendMessage yChange:height-1];
-        [References moveUp:line yChange:height-1];
-        [References fadeColor:ridePanelMessage color:[References colorFromHexString:@"#D2D5DC"]];
-    }
-}
-
 - (IBAction)sendGroupMessage:(id)sender {
     if (ridePanelMessageField.text.length > 0) {
         messages = [[NSMutableArray alloc] initWithArray:[_rideRecord objectForKey:@"messages"]];
@@ -172,33 +189,38 @@
                 [ridePanelMessageField setText:@""];
             });
         };
+        noRiders.hidden = YES;
+        rideTable.hidden = NO;
         CKContainer *defaultContainer = [CKContainer defaultContainer];
         [[defaultContainer publicCloudDatabase] addOperation:modifyRecords];
     }
     
 }
 
-- (IBAction)showKeyboard:(id)sender {
-    int height = keyboard.size.height;
-    if (ridePanelMessage.frame.origin.y> scroll.contentSize.height-50) {
-        [References moveUp:ridePanelMessage yChange:height-1];
-        [References moveUp:ridePanelMessageField yChange:height-1];
-        [References moveUp:ridePanelSendMessage yChange:height-1];
-        [References moveUp:line yChange:height-1];
-        [References fadeColor:ridePanelMessage color:[References colorFromHexString:@"#D2D5DC"]];
-    }
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    
+    return YES;
 }
 
+//- (IBAction)showKeyboard:(id)sender {
+//    if (ridePanelMessage.frame.origin.y> scroll.contentSize.height-50) {
+//        [References moveUp:ridePanelMessage yChange:kHeight-1];
+//        [References moveUp:ridePanelMessageField yChange:kHeight-1];
+//        [References moveUp:ridePanelSendMessage yChange:kHeight-1];
+//        [References moveUp:line yChange:kHeight-1];
+//        [References fadeColor:ridePanelMessage color:[References colorFromHexString:@"#D2D5DC"]];
+//    }
+//}
+
 -(bool)textFieldShouldReturn:(UITextField *)textField {
-    int height = keyboard.size.height;
-    if (ridePanelMessage.frame.origin.y< scroll.contentSize.height-50) {
-        [References moveDown:ridePanelMessage yChange:height-1];
-        [References moveDown:line yChange:height-1];
-        [References moveDown:ridePanelMessageField yChange:height-1];
-        [References moveDown:ridePanelSendMessage yChange:height-1];
-        [References fadeColor:ridePanelMessage color:[UIColor whiteColor]];
-        
-    }
+//    if (ridePanelMessage.frame.origin.y< scroll.contentSize.height-50) {
+//        [References moveDown:ridePanelMessage yChange:kHeight-1];
+//        [References moveDown:line yChange:kHeight-1];
+//        [References moveDown:ridePanelMessageField yChange:kHeight-1];
+//        [References moveDown:ridePanelSendMessage yChange:kHeight-1];
+//        [References fadeColor:ridePanelMessage color:[UIColor whiteColor]];
+//        
+//    }
     [textField resignFirstResponder];
     return YES;
 }
@@ -255,14 +277,43 @@
     }]];
     
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-        
+        [References fullScreenToast:@"Ride Deleted." inView:self withSuccess:YES andClose:YES];
         // Distructive button tapped.
-        [self dismissViewControllerAnimated:YES completion:^{
-            [[CKContainer defaultContainer].publicCloudDatabase deleteRecordWithID:_rideRecord.recordID completionHandler:^(CKRecordID *recordID, NSError *error) {
-                [References toastMessage:@"One second..." andView:self andClose:TRUE];
+        for (int a = 0; a < _ride.riders.count; a++) {
+            NSString *string = [NSString stringWithFormat:@"email = '%@'",_ride.riders[a]];
+            CKContainer *defaultContainer = [CKContainer defaultContainer];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:string];
+            CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
+            CKQuery *query = [[CKQuery alloc] initWithRecordType:@"People" predicate:predicate];
+            [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+                if (!error) {
+                    if (results.count > 0) {
+                        for (int a = 0; a < results.count; a++) {
+                            CKRecord *record = results[a];
+                            NSMutableArray *rides = [record valueForKey:@"myRides"];
+                            for (int b = 0; b < rides.count; b++) {
+                                if ([rides[b] isEqualToString:_ride.phone]) {
+                                    [rides removeObjectAtIndex:b];
+                                }
+                            }
+                            record[@"myRides"] = rides;
+                            [[CKContainer defaultContainer].publicCloudDatabase saveRecord:record completionHandler:^(CKRecord *record, NSError *error) {
+                                
+                            }];
+                        }
+                    } else {
+                        
+                    }
+                } else {
+                    NSLog(@"%@",error.localizedDescription);
+                }
             }];
-        }];
-    }]];
+        }
+            [[CKContainer defaultContainer].publicCloudDatabase deleteRecordWithID:_rideRecord.recordID completionHandler:^(CKRecordID *recordID, NSError *error) {
+                
+
+            }];
+        }]];
     
     // Present action sheet.
     [self presentViewController:actionSheet animated:YES completion:nil];
@@ -378,7 +429,10 @@
             ^(NSArray * savedRecords, NSArray * deletedRecordIDs, NSError * operationError){
                 //   the completion block code here
                 dispatch_async(dispatch_get_main_queue(), ^(void){
-                    [References toastMessage:@"Ride Requested" andView:self andClose:TRUE];
+                     [References fullScreenToast:@"Ride requested, the driver will be notified." inView:self withSuccess:YES andClose:NO];
+                    [requestRide setTitle:@"Ride Request Pending" forState:UIControlStateNormal];
+                    [requestRide setEnabled:NO];
+                    [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
                 });
             };
             CKContainer *defaultContainer = [CKContainer defaultContainer];
@@ -404,14 +458,14 @@
                     [rideTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_ride.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
         }
 
-        if (_ride.riders.count == 0) {
-            rideTable.hidden = YES;
-            noRiders.hidden = NO;
-            noRiders.text = @"No Riders";
-        } else if (_ride.messages.count < 1) {
+        if (_ride.messages.count < 1) {
             rideTable.hidden = YES;
             noRiders.hidden = NO;
             noRiders.text = @"No Messages";
+        } else if (_ride.riders.count == 0) {
+            rideTable.hidden = YES;
+            noRiders.hidden = NO;
+            noRiders.text = @"No Riders";
         }
     }
 }
@@ -420,7 +474,8 @@
     for (int a = 0; a < _ride.requests.count; a++) {
         if ([_ride.requests[a] isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]]) {
             [requestRide setTitle:@"Ride Request Pending" forState:UIControlStateNormal];
-            [requestRide setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
+            [requestRide setEnabled:NO];
+            [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
         }
     }
 }

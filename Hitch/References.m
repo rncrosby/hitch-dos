@@ -445,5 +445,59 @@
         return [UIColor blackColor];
     }
 }
+
++(void)fullScreenToast:(NSString*)text inView:(UIViewController*)view withSuccess:(BOOL)success andClose:(BOOL)close{
+    UILabel *blur = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [self screenWidth], [self screenHeight])];
+    [self blurView:blur];
+    [blur setAlpha:0];
+    [view.view addSubview:blur];
+    UITextView *message = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, [self screenWidth], [self screenHeight])];
+    [message setEditable:NO];
+    message.textContainerInset = UIEdgeInsetsMake(([self screenHeight]/2)-40, 0, [self screenHeight]/2, 0);
+    message.textAlignment = NSTextAlignmentCenter;
+    [message setText:text];
+    [message setTextColor:[UIColor lightGrayColor]];
+    [message setFont:[UIFont systemFontOfSize:16.0f]];
+    [message setBackgroundColor:[UIColor clearColor]];
+    [view.view  addSubview:message];
+    [message setAlpha:0];
+    [view.view bringSubviewToFront:blur];
+    [view.view  bringSubviewToFront:message];
+    UIImage *image;
+    UIImageView *imageView;
+    if (success == YES) {
+        image = [[UIImage imageNamed:@"success.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(([self screenWidth]/2)-25, ([self screenHeight]/2)-100, 50, 50)];
+         [imageView setImage:image];
+    } else {
+        image = [[UIImage imageNamed:@"failure.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(([self screenWidth]/2)-25, ([self screenHeight]/2)-100, 50, 50)];
+        [imageView setImage:image];
+    }
+    imageView.tintColor = [UIColor lightGrayColor];
+    [imageView setAlpha:0];
+    [view.view  addSubview:imageView];
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.5];
+    [blur setAlpha:1.0];
+    [message setAlpha:1.0];
+    [imageView setAlpha:1.0];
+    [UIView commitAnimations];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //Here your non-main thread.
+        [NSThread sleepForTimeInterval:1.0f];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:0.5];
+            [blur setAlpha:0.0];
+            [imageView setAlpha:0];
+            [message setAlpha:0];
+            [UIView commitAnimations];
+            if (close == YES) {
+                [view dismissViewControllerAnimated:YES completion:nil];
+            }
+        });
+    });
+}
 @end
 

@@ -14,4 +14,5 @@
 @property (weak, nonatomic) IBOutlet UIImageView *picutre;
 @property (weak, nonatomic) IBOutlet UILabel *initial;
 @property (weak, nonatomic) IBOutlet UIButton *confirm;
+@property (weak, nonatomic) IBOutlet UIButton *cancel;
 @end
