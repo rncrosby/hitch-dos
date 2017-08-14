@@ -74,6 +74,7 @@
     [References createLine:self.view xPos:0 yPos:menuCard.frame.origin.y inFront:TRUE];
     refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventValueChanged];
+    [References tintUIButton:refreshButton color:[UIColor lightGrayColor]];
     table.refreshControl = refreshControl;
     [super viewDidLoad];
     location = [[CLLocationManager alloc] init];
@@ -214,6 +215,7 @@
                     noRides.text = @"No Rides Found";
                     table.hidden = YES;
                     noRides.hidden = NO;
+                    refreshButton.hidden = NO;
                     [refreshControl endRefreshing];
                 });
             } else {
@@ -240,6 +242,7 @@
                 }
             dispatch_async(dispatch_get_main_queue(), ^(void){
                 noRides.hidden = YES;
+                refreshButton.hidden = YES;
                 table.hidden = NO;
                 [table reloadData];
                 [refreshControl endRefreshing];
@@ -323,5 +326,11 @@
     
     // Present action sheet.
     [self presentViewController:actionSheet animated:YES completion:nil];
+}
+
+- (IBAction)refreshButton:(id)sender {
+    [endPoint setText:@""];
+    [self getAllRides:NO];
+    [self getMyDrives];
 }
 @end

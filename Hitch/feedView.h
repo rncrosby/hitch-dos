@@ -32,6 +32,7 @@
     __weak IBOutlet UILabel *menuCard;
     __weak IBOutlet UIButton *postRide;
     
+    __weak IBOutlet UIButton *refreshButton;
     
     // OTHER VIEWS
     UIRefreshControl *refreshControl;
@@ -41,5 +42,6 @@
 - (IBAction)inbox:(id)sender;
 - (IBAction)postDrive:(id)sender;
 - (IBAction)more:(id)sender;
+- (IBAction)refreshButton:(id)sender;
 
 @end
