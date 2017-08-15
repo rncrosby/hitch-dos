@@ -59,12 +59,6 @@
         }];
     }
      else {
-        if (endPoint.text.length > 1) {
-             [self getAllRides:YES];
-        } else {
-            [self getAllRides:NO];
-        }
-         [self getMyDrives];
     }
 }
 

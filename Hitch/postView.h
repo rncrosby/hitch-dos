@@ -23,6 +23,7 @@
     __weak IBOutlet UITextField *time;
     __weak IBOutlet UITextField *seats;
     __weak IBOutlet MKMapView *map;
+    __weak IBOutlet UILabel *mapShadow;
     __weak IBOutlet UITextField *price;
     CLPlacemark *start,*end;
 }

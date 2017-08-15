@@ -26,9 +26,19 @@
     [References cardshadow:ridesShadow];
     [References cornerRadius:ridesCard radius:8.0f];
     [super viewDidLoad];
+    
     [self getMyDrive];
     [self getMyRides];
     // Do any additional setup after loading the view.
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    openDriveButton.hidden = YES;
+    drivePriceShadow.hidden = YES;
+    drivePrice.hidden = YES;
+    driveRequestsTable.hidden = YES;
+    noRequestsLabel.hidden = NO;
+    noDriveLabel.hidden = NO;
 }
 
 - (void)didReceiveMemoryWarning {

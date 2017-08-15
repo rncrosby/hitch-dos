@@ -16,6 +16,7 @@
 
 - (void)viewDidLoad {
     [References createLine:self.view xPos:0 yPos:menuBar.frame.origin.y+menuBar.frame.size.height inFront:TRUE];
+    [References cardshadow:mapShadow];
     [References cornerRadius:map radius:8.0f];
     [super viewDidLoad];
     location = [[CLLocation alloc] initWithLatitude:[[NSUserDefaults standardUserDefaults] doubleForKey:@"currentLatitude"] longitude:[[NSUserDefaults standardUserDefaults] doubleForKey:@"currentLongitude"]];
