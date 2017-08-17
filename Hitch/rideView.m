@@ -12,14 +12,11 @@
 
 @end
 
-#define kHeight 225
-
 @implementation rideView
 
-
-
 - (void)viewDidLoad {
-    //[References ViewToLine:line withView:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y];
+    NSLog(@"hi");
+        //[References ViewToLine:line withView:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y];
     [References createLine:self.view xPos:0 yPos:menuBar.frame.origin.y+menuBar.frame.size.height inFront:TRUE];
     //[scroll addSubview:line];
     //[scroll bringSubviewToFront:line];
@@ -82,7 +79,6 @@
 - (void)keyboardWillShow:(NSNotification*)notification {
     NSDictionary *info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    CGFloat deltaHeight = kbSize.height - keyboardHeight;
     // Write code to adjust views accordingly using deltaHeight
     keyboardHeight = kbSize.height-1;
     [References moveUp:ridePanelMessage yChange:keyboardHeight];
@@ -94,7 +90,6 @@
 
 - (void)keyboardWillHide:(NSNotification*)notification {
     NSDictionary *info = [notification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     // Write code to adjust views accordingly using kbSize.height
     [References moveDown:ridePanelMessage yChange:keyboardHeight];
     [References moveDown:ridePanelMessageField yChange:keyboardHeight];
@@ -390,22 +385,23 @@
             [scroll setContentOffset:CGPointMake(0, 0) animated:YES];
         }
     } else {
-        NSMutableArray *newRequests = [[NSMutableArray alloc] initWithArray:[_rideRecord objectForKey:@"requests"]];
-        [newRequests addObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
-        _rideRecord[@"requests"] = newRequests;
-        CKModifyRecordsOperation *modifyRecords= [[CKModifyRecordsOperation alloc]
-                                                  initWithRecordsToSave:[[NSArray alloc] initWithObjects:_rideRecord, nil] recordIDsToDelete:nil];
-        modifyRecords.savePolicy=CKRecordSaveAllKeys;
-        modifyRecords.qualityOfService=NSQualityOfServiceUserInitiated;
-        modifyRecords.modifyRecordsCompletionBlock=
-        ^(NSArray * savedRecords, NSArray * deletedRecordIDs, NSError * operationError){
-            //   the completion block code here
-            dispatch_async(dispatch_get_main_queue(), ^(void){
-                [self addToMyRides];
-            });
-        };
-        CKContainer *defaultContainer = [CKContainer defaultContainer];
-        [[defaultContainer publicCloudDatabase] addOperation:modifyRecords];
+        [self tappedApplePay];
+//        NSMutableArray *newRequests = [[NSMutableArray alloc] initWithArray:[_rideRecord objectForKey:@"requests"]];
+//        [newRequests addObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
+//        _rideRecord[@"requests"] = newRequests;
+//        CKModifyRecordsOperation *modifyRecords= [[CKModifyRecordsOperation alloc]
+//                                                  initWithRecordsToSave:[[NSArray alloc] initWithObjects:_rideRecord, nil] recordIDsToDelete:nil];
+//        modifyRecords.savePolicy=CKRecordSaveAllKeys;
+//        modifyRecords.qualityOfService=NSQualityOfServiceUserInitiated;
+//        modifyRecords.modifyRecordsCompletionBlock=
+//        ^(NSArray * savedRecords, NSArray * deletedRecordIDs, NSError * operationError){
+//            //   the completion block code here
+//            dispatch_async(dispatch_get_main_queue(), ^(void){
+//                [self addToMyRides];
+//            });
+//        };
+//        CKContainer *defaultContainer = [CKContainer defaultContainer];
+//        [[defaultContainer publicCloudDatabase] addOperation:modifyRecords];
 }
 }
 
@@ -616,5 +612,120 @@
     NSLog(@"%@",_ride.riders[sender.tag]);
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",_ride.riders[sender.tag]]]];
 }
+
+- (UIButton *)applePayButton {
+    UIButton *button;
+    if ([PKPaymentButton class]) { // Available in iOS 8.3+
+        button = [PKPaymentButton buttonWithType:PKPaymentButtonTypeBuy style:PKPaymentButtonStyleBlack];
+    } else {
+        // TODO: Create and return your own apple pay button
+        // button = ...
+    }
+    button.frame = CGRectMake([References screenWidth]-50, 25, 30, 20);
+    [button addTarget:self action:@selector(tappedApplePay) forControlEvents:UIControlEventTouchUpInside];
     
+    return button;
+}
+
+- (void)paymentAuthorizationViewController:(PKPaymentAuthorizationViewController *)controller didAuthorizePayment:(PKPayment *)payment completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    
+    [self handlePaymentAuthorizationWithPayment:payment completion:completion];
+    
+}
+
+- (void)handlePaymentAuthorizationWithPayment:(PKPayment *)payment completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    [[STPAPIClient sharedClient] createTokenWithPayment:payment completion:^(STPToken *token, NSError *error) {
+        if (error) {
+            completion(PKPaymentAuthorizationStatusFailure);
+            return;
+        }
+        [self createBackendChargeWithToken:token completion:completion];
+    }];
+}
+
+- (void)createBackendChargeWithToken:(STPToken *)token completion:(void (^)(PKPaymentAuthorizationStatus))completion {
+    //We are printing Stripe token here, you can charge the Credit Card using this token from your backend.
+    NSURL *url = [NSURL URLWithString:@"http://198.199.107.22:5000/charge"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    // NSError *actualerror = [[NSError alloc] init];
+    // Parameters
+    NSDictionary *tmp = [[NSDictionary alloc] init];
+    tmp = @{
+            @"token"     : [NSString stringWithFormat:@"%@",token],
+            @"amount"   : [NSString stringWithFormat:@"%i",_ride.price.intValue*100],
+            @"email"    : @"rcros97@me.com"
+            };
+    
+    NSError *error;
+    NSData *postdata = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
+    [request setHTTPBody:postdata];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response,
+                                               NSData *data,
+                                               NSError *error) {
+                               if (error) {
+                                   // Returned Error
+                                   NSLog(@"Unknown Error Occured");
+                               } else {
+                                   NSString *responseBody = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                                   NSLog(@"%@",responseBody);
+                                   completion(PKPaymentAuthorizationStatusSuccess);
+                                   if ([responseBody isEqualToString:@"Success"]) {
+                                       NSMutableArray *newRequests = [[NSMutableArray alloc] initWithArray:[_rideRecord objectForKey:@"requests"]];
+                                       [newRequests addObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
+                                       _rideRecord[@"requests"] = newRequests;
+                                       CKModifyRecordsOperation *modifyRecords= [[CKModifyRecordsOperation alloc]
+                                                                                 initWithRecordsToSave:[[NSArray alloc] initWithObjects:_rideRecord, nil] recordIDsToDelete:nil];
+                                       modifyRecords.savePolicy=CKRecordSaveAllKeys;
+                                       modifyRecords.qualityOfService=NSQualityOfServiceUserInitiated;
+                                       modifyRecords.modifyRecordsCompletionBlock=
+                                       ^(NSArray * savedRecords, NSArray * deletedRecordIDs, NSError * operationError){
+                                           //   the completion block code here
+                                           dispatch_async(dispatch_get_main_queue(), ^(void){
+                                               [self addToMyRides];
+                                           });
+                                       };
+                                       CKContainer *defaultContainer = [CKContainer defaultContainer];
+                                       [[defaultContainer publicCloudDatabase] addOperation:modifyRecords];
+                                   } else {
+                                       completion(PKPaymentAuthorizationStatusFailure);
+                                   }
+                                   
+                               }
+                           }];
+    
+    //Displaying user Thank you message for payment.
+}
+
+- (void)paymentAuthorizationViewControllerDidFinish:(PKPaymentAuthorizationViewController *)controller {
+    //we are going to make all fields blank after user is done paying or canceling paymen
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)tappedApplePay{
+        PKPaymentRequest *paymentRequest = [self paymentRequest:_ride.price.stringValue];
+        PKPaymentAuthorizationViewController *vc = [[PKPaymentAuthorizationViewController alloc] initWithPaymentRequest:paymentRequest];
+        vc.delegate = self;
+        [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (PKPaymentRequest *)paymentRequest:(NSString *)amount {
+    PKPaymentRequest *paymentRequest = [[PKPaymentRequest alloc] init];
+    paymentRequest.merchantIdentifier = @"merchant.hitch";
+    paymentRequest.supportedNetworks = @[PKPaymentNetworkAmex, PKPaymentNetworkVisa, PKPaymentNetworkMasterCard];
+    paymentRequest.merchantCapabilities = PKMerchantCapability3DS;
+    paymentRequest.countryCode = @"US";
+    paymentRequest.currencyCode = @"USD";
+    paymentRequest.paymentSummaryItems =
+    @[
+      [PKPaymentSummaryItem summaryItemWithLabel:@"Ride" amount:[NSDecimalNumber decimalNumberWithString:amount]],
+      ];
+    return paymentRequest;
+}
+
 @end

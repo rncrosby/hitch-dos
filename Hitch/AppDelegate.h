@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "feedView.h"
+#import <Stripe.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6BD26D998D0D83CEF7857773 /* libPods-Hitch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066B3A24DD0F49CC780EAEA /* libPods-Hitch.a */; };
 		AD6CC8B51F42559700FA1E54 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = AD6CC8B31F42527E00FA1E54 /* share.png */; };
 		AD6CC8B61F42559700FA1E54 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = AD6CC8B41F42528400FA1E54 /* map.png */; };
 		AD6CC8B71F42559700FA1E54 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = AD6CC8B21F42527200FA1E54 /* trash.png */; };
@@ -41,9 +42,13 @@
 		ADE7506D1F3B6E93001556AB /* driveRequestsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE7506B1F3B6E93001556AB /* driveRequestsCell.m */; };
 		ADE7506E1F3B6E93001556AB /* driveRequestsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADE7506C1F3B6E93001556AB /* driveRequestsCell.xib */; };
 		ADE750701F3B72D7001556AB /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = ADE7506F1F3B7096001556AB /* add.png */; };
+		ADE8FBB81F435667000D20F9 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADE8FBB71F435667000D20F9 /* PassKit.framework */; };
+		ADE8FBBA1F435906000D20F9 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = ADE8FBB91F435906000D20F9 /* Podfile */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		440C3CFEDCE86FC396D07452 /* Pods-Hitch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hitch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Hitch/Pods-Hitch.debug.xcconfig"; sourceTree = "<group>"; };
+		7066B3A24DD0F49CC780EAEA /* libPods-Hitch.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hitch.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD6CC8AF1F42525400FA1E54 /* failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = failure.png; sourceTree = "<group>"; };
 		AD6CC8B01F42525E00FA1E54 /* success.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = success.png; sourceTree = "<group>"; };
 		AD6CC8B11F42526800FA1E54 /* minus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = minus.png; sourceTree = "<group>"; };
@@ -91,6 +96,9 @@
 		ADE7506B1F3B6E93001556AB /* driveRequestsCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = driveRequestsCell.m; sourceTree = "<group>"; };
 		ADE7506C1F3B6E93001556AB /* driveRequestsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = driveRequestsCell.xib; sourceTree = "<group>"; };
 		ADE7506F1F3B7096001556AB /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
+		ADE8FBB71F435667000D20F9 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
+		ADE8FBB91F435906000D20F9 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		FE5E04B2759573621EBE3E8F /* Pods-Hitch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hitch.release.xcconfig"; path = "Pods/Target Support Files/Pods-Hitch/Pods-Hitch.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,22 +106,34 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADE8FBB81F435667000D20F9 /* PassKit.framework in Frameworks */,
 				ADDCC6791F3CCBD70056C00F /* MobileCoreServices.framework in Frameworks */,
 				ADD37F011F38D06D00285F63 /* CloudKit.framework in Frameworks */,
 				ADD37F031F38D0A400285F63 /* CoreLocation.framework in Frameworks */,
 				ADD37EFE1F38D05400285F63 /* MapKit.framework in Frameworks */,
+				6BD26D998D0D83CEF7857773 /* libPods-Hitch.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A5589B26C10355EAD46093C4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				440C3CFEDCE86FC396D07452 /* Pods-Hitch.debug.xcconfig */,
+				FE5E04B2759573621EBE3E8F /* Pods-Hitch.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		AD96B9211F37F008008131BF = {
 			isa = PBXGroup;
 			children = (
 				AD96B92C1F37F008008131BF /* Hitch */,
 				AD96B92B1F37F008008131BF /* Products */,
 				ADD37EFC1F38D05400285F63 /* Frameworks */,
+				A5589B26C10355EAD46093C4 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -128,6 +148,7 @@
 		AD96B92C1F37F008008131BF /* Hitch */ = {
 			isa = PBXGroup;
 			children = (
+				ADE8FBB91F435906000D20F9 /* Podfile */,
 				ADD37EFF1F38D06100285F63 /* Hitch.entitlements */,
 				ADDCC67F1F3CFA430056C00F /* phone.png */,
 				AD6CC8B31F42527E00FA1E54 /* share.png */,
@@ -177,10 +198,12 @@
 		ADD37EFC1F38D05400285F63 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ADE8FBB71F435667000D20F9 /* PassKit.framework */,
 				ADDCC6781F3CCBD70056C00F /* MobileCoreServices.framework */,
 				ADD37F021F38D0A400285F63 /* CoreLocation.framework */,
 				ADD37F001F38D06D00285F63 /* CloudKit.framework */,
 				ADD37EFD1F38D05400285F63 /* MapKit.framework */,
+				7066B3A24DD0F49CC780EAEA /* libPods-Hitch.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -192,9 +215,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD96B9401F37F008008131BF /* Build configuration list for PBXNativeTarget "Hitch" */;
 			buildPhases = (
+				7B9F1BE23A98BB2CB39B2040 /* [CP] Check Pods Manifest.lock */,
 				AD96B9261F37F008008131BF /* Sources */,
 				AD96B9271F37F008008131BF /* Frameworks */,
 				AD96B9281F37F008008131BF /* Resources */,
+				2145C88B6AB6893B73D9B2F4 /* [CP] Embed Pods Frameworks */,
+				7DCA38EC3376A14D93A4076F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -217,6 +243,9 @@
 					AD96B9291F37F008008131BF = {
 						CreatedOnToolsVersion = 9.0;
 						SystemCapabilities = {
+							com.apple.ApplePay = {
+								enabled = 1;
+							};
 							com.apple.Maps.iOS = {
 								enabled = 1;
 							};
@@ -262,6 +291,7 @@
 				AD6CC8BA1F42559700FA1E54 /* failure.png in Resources */,
 				ADDCC6801F3CFB3F0056C00F /* phone.png in Resources */,
 				ADE750701F3B72D7001556AB /* add.png in Resources */,
+				ADE8FBBA1F435906000D20F9 /* Podfile in Resources */,
 				ADC3353A1F3A17E30080642C /* user.jpg in Resources */,
 				ADD37EFB1F38BFB800285F63 /* chevron-right.png in Resources */,
 				AD96B94F1F37F47A008131BF /* feedView.h in Resources */,
@@ -275,6 +305,60 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2145C88B6AB6893B73D9B2F4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Hitch/Pods-Hitch-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7B9F1BE23A98BB2CB39B2040 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Hitch-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7DCA38EC3376A14D93A4076F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Hitch/Pods-Hitch-resources.sh",
+				"$PODS_CONFIGURATION_BUILD_DIR/Stripe/Stripe.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Hitch/Pods-Hitch-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		AD96B9261F37F008008131BF /* Sources */ = {
@@ -424,6 +508,7 @@
 		};
 		AD96B9411F37F008008131BF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 440C3CFEDCE86FC396D07452 /* Pods-Hitch.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Hitch/Hitch.entitlements;
@@ -438,6 +523,7 @@
 		};
 		AD96B9421F37F008008131BF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FE5E04B2759573621EBE3E8F /* Pods-Hitch.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Hitch/Hitch.entitlements;

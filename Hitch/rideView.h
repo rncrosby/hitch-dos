@@ -14,8 +14,11 @@
 #import <CloudKit/CloudKit.h>
 #import "driveRequestsCell.h"
 #import "messageCell.h"
+#import <PassKit/PassKit.h>
+#import <Stripe.h>
+#import <AFNetworking/AFNetworking.h>
 
-@interface rideView : UIViewController <UITableViewDataSource,UITableViewDelegate,MKMapViewDelegate,UITextFieldDelegate> {
+@interface rideView : UIViewController <PKPaymentAuthorizationViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,MKMapViewDelegate,UITextFieldDelegate> {
     UIView *line;
     CGRect keyboard;
     bool isRideConfirmed;
@@ -69,6 +72,7 @@
     __weak IBOutlet UILabel *noRiders;
     CGFloat keyboardHeight;
 }
+
 
 - (IBAction)requestRide:(id)sender;
 @property (nonatomic, retain) rideObject *ride;

@@ -98,8 +98,31 @@
 
 -(bool)textFieldShouldReturn:(UITextField *)textField {
     if (textField.tag == 1) {
-        // zip start
-    } else if (textField.tag == 2) {
+        if (textField.text.length > 1) {
+            CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+            [geocoder geocodeAddressString:textField.text
+                         completionHandler:^(NSArray* placemarks, NSError* error){
+                             if (placemarks && placemarks.count > 0) {
+                                 CLPlacemark *topResult = [placemarks objectAtIndex:0];
+                                 MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
+                                 
+                                 CLLocation *location = [[CLLocation alloc] initWithLatitude:placemark.coordinate.latitude longitude:placemark.coordinate.longitude];
+                                 CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
+                                 [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+                                     if (placemarks && placemarks.count > 0) {
+                                         CLPlacemark *topResult = [placemarks objectAtIndex:0];
+                                         
+                                         MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
+                                         start = topResult;
+                                         [startPoint setText:placemark.locality];
+                                         [self getAllRides:YES];
+                                     }
+                                 }];
+                                 
+                             }
+                         }
+             ];
+        } } else if (textField.tag == 2) {
         if (textField.text.length > 1) {
             CLGeocoder *geocoder = [[CLGeocoder alloc] init];
             [geocoder geocodeAddressString:textField.text

@@ -16,6 +16,8 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+     [[STPPaymentConfiguration sharedConfiguration] setPublishableKey:@"pk_test_NChUHegmsfKqqrvMQansdJX2"];
+    NSLog(@"Launching...");
     // Override point for customization after application launch.
     return YES;
 }
