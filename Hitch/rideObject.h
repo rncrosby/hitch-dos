@@ -20,9 +20,12 @@
 @property (nonatomic,strong) NSNumber *price;
 @property (nonatomic,strong) NSMutableArray *messages;
 @property (nonatomic,strong) NSMutableArray *riders;
+@property (nonatomic,strong) NSMutableArray *payments;
 @property (nonatomic,strong) NSMutableArray *requests;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *phone;
--(instancetype)initWithType:(CLLocation*)start andEnd:(CLLocation*)end andDate:(NSDate*)date andTime:(NSDate*)time andSeats:(NSNumber*)seats andPrice:(NSNumber*)price andMessages:(NSMutableArray*)messages andRiders:(NSMutableArray*)riders andName:(NSString*)name andPlainStart:(NSString*)plainStart andPlainEnd:(NSString*)plainEnd andPhone:(NSString*)phone andRequests:(NSMutableArray*)requests;
+@property (nonatomic, strong) NSString *rideID;
+
+-(instancetype)initWithType:(CLLocation*)start andEnd:(CLLocation*)end andDate:(NSDate*)date andTime:(NSDate*)time andSeats:(NSNumber*)seats andPrice:(NSNumber*)price andMessages:(NSMutableArray*)messages andRiders:(NSMutableArray*)riders andName:(NSString*)name andPlainStart:(NSString*)plainStart andPlainEnd:(NSString*)plainEnd andPhone:(NSString*)phone andRequests:(NSMutableArray*)requests andPayments:(NSMutableArray*)payments andID:(NSString*)rideID;
 
 @end

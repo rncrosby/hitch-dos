@@ -499,5 +499,12 @@
         });
     });
 }
+
++(NSString*)randomizeString:(NSString*)string {
+    return string;
+}
++(NSString*)normalizeString:(NSString*)string {
+    return string;
+}
 @end
 

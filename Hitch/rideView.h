@@ -17,11 +17,13 @@
 #import <PassKit/PassKit.h>
 #import <Stripe.h>
 #import <AFNetworking/AFNetworking.h>
+#import "FBEncryptorAES.h"
 
 @interface rideView : UIViewController <PKPaymentAuthorizationViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,MKMapViewDelegate,UITextFieldDelegate> {
     UIView *line;
     CGRect keyboard;
-    bool isRideConfirmed;
+    bool isRideConfirmed,isAwaitingPayment;
+    int indexOfPayment;
     MKPolyline *routeLine;
     MKPolylineView *routeLineView;
     NSMutableArray *messages;

@@ -34,14 +34,16 @@
                         NSString *name = [record valueForKey:@"name"];
                         NSString *plainStart = [record valueForKey:@"plainStart"];
                         NSString *plainEnd = [record valueForKey:@"plainEnd"];
+                        NSString *rideID = [record valueForKey:@"rideID"];
                         NSNumber *seats = [record valueForKey:@"seats"];
                         NSNumber *price = [record valueForKey:@"price"];
                         NSMutableArray *messages = [record valueForKey:@"messages"];
                         NSMutableArray *riders = [record valueForKey:@"riders"];
                         NSMutableArray *requests = [record valueForKey:@"requests"];
+                        NSMutableArray *payments = [record valueForKey:@"payments"];
                         CLLocation *start = [record valueForKey:@"start"];
                         CLLocation *end = [record valueForKey:@"end"];
-                        rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"email"] andRequests:requests];
+                        rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"email"] andRequests:requests andPayments:payments andID:rideID];
                         rideView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"rideView"];
                         viewController.ride = ride;
                         viewController.rideRecord = record;
@@ -251,9 +253,11 @@
                     NSMutableArray *messages = [record valueForKey:@"messages"];
                     NSMutableArray *riders = [record valueForKey:@"riders"];
                     NSMutableArray *requests = [record valueForKey:@"requests"];
+                    NSMutableArray *payments = [record valueForKey:@"payments"];
                     CLLocation *start = [record valueForKey:@"start"];
                     CLLocation *end = [record valueForKey:@"end"];
-                    rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"email"] andRequests:requests];
+                    NSString *rideID = [record valueForKey:@"rideID"];
+                    rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"email"] andRequests:requests andPayments:payments andID:rideID];
                     [rideRecords addObject:results[a]];
                     [rides addObject:ride];
                 }
@@ -308,6 +312,7 @@
 
 -(void)refreshData
 {
+    [self getMyDrives];
     [self getAllRides:NO];
     [endPoint setText:@""];
 }

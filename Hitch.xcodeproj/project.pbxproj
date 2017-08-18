@@ -98,6 +98,10 @@
 		ADE7506F1F3B7096001556AB /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
 		ADE8FBB71F435667000D20F9 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		ADE8FBB91F435906000D20F9 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		D432027F1F466AD200F81B89 /* NSData+Base64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		D43202801F466AD200F81B89 /* NSData+Base64.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		D43202811F466AD200F81B89 /* FBEncryptorAES.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBEncryptorAES.h; sourceTree = "<group>"; };
+		D43202821F466AD200F81B89 /* FBEncryptorAES.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBEncryptorAES.m; sourceTree = "<group>"; };
 		FE5E04B2759573621EBE3E8F /* Pods-Hitch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hitch.release.xcconfig"; path = "Pods/Target Support Files/Pods-Hitch/Pods-Hitch.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -191,6 +195,10 @@
 				ADDCC67A1F3CE75D0056C00F /* messageCell.h */,
 				ADDCC67B1F3CE75D0056C00F /* messageCell.m */,
 				ADDCC67C1F3CE75D0056C00F /* messageCell.xib */,
+				D43202811F466AD200F81B89 /* FBEncryptorAES.h */,
+				D43202821F466AD200F81B89 /* FBEncryptorAES.m */,
+				D432027F1F466AD200F81B89 /* NSData+Base64.h */,
+				D43202801F466AD200F81B89 /* NSData+Base64.m */,
 			);
 			path = Hitch;
 			sourceTree = "<group>";
@@ -347,7 +355,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Hitch/Pods-Hitch-resources.sh",
-				"$PODS_CONFIGURATION_BUILD_DIR/Stripe/Stripe.bundle",
+				$PODS_CONFIGURATION_BUILD_DIR/Stripe/Stripe.bundle,
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (

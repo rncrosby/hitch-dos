@@ -78,12 +78,14 @@
                                         NSLog(@"%@",plainEnd);
                                         NSNumber *seats = [record valueForKey:@"seats"];
                                         NSNumber *price = [record valueForKey:@"price"];
+                                        NSString *rideID = [record valueForKey:@"rideID"];
                                         NSMutableArray *messages = [record valueForKey:@"messages"];
                                         NSMutableArray *riders = [record valueForKey:@"riders"];
                                         NSMutableArray *requests = [record valueForKey:@"requests"];
+                                        NSMutableArray *payments = [record valueForKey:@"payments"];
                                         CLLocation *start = [record valueForKey:@"start"];
                                         CLLocation *end = [record valueForKey:@"end"];
-                                        rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"email"] andRequests:requests];
+                                        rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"email"] andRequests:requests andPayments:payments andID:rideID];
                                         [myRideRecords addObject:results[a]];
                                         [myRides addObject:ride];
                                     }
@@ -182,9 +184,11 @@
                 NSMutableArray *messages = [record valueForKey:@"messages"];
                 NSMutableArray *riders = [record valueForKey:@"riders"];
                 NSMutableArray *requests = [record valueForKey:@"requests"];
+                NSMutableArray *payments = [record valueForKey:@"payments"];
                 CLLocation *start = [record valueForKey:@"start"];
                 CLLocation *end = [record valueForKey:@"end"];
-                myDrive = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"email"] andRequests:requests];
+                NSString *rideID = [record valueForKey:@"rideID"];
+                myDrive = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"email"] andRequests:requests andPayments:payments andID:rideID];
                 dispatch_async(dispatch_get_main_queue(), ^(void){
                     noDriveLabel.hidden = YES;
                     driveFrom.text = myDrive.plainStart;
@@ -198,6 +202,7 @@
                     [References cornerRadius:drivePrice radius:8.0f];
                     [References cardshadow:drivePriceShadow];
                     drivePriceShadow.hidden = NO;
+                    openDriveButton.hidden = NO;
                     drivePrice.hidden = NO;
                     if (myDrive.price.intValue > 0) {
                         drivePrice.text = [NSString stringWithFormat:@"$%i",myDrive.price.intValue];
@@ -362,13 +367,10 @@
     NSString *person = myDrive.requests[sender.tag];
     NSMutableArray *newRequests = [[NSMutableArray alloc] initWithArray:myDrive.requests];
     [newRequests removeObjectAtIndex:sender.tag];
-    NSMutableArray *newRiders = [[NSMutableArray alloc] initWithArray:myDrive.riders];
-    [newRiders addObject:person];
-    int newSeatsAvailable = myDrive.seats.intValue;
-    newSeatsAvailable = newSeatsAvailable - 1;
+    NSMutableArray *newPayments = [[NSMutableArray alloc] initWithArray:myDrive.payments];
+    [newPayments addObject:person];
     myDriveRecord[@"requests"] = newRequests;
-    myDriveRecord[@"riders"] = newRiders;
-    myDriveRecord[@"seats"] = [NSNumber numberWithInt:newSeatsAvailable];
+    myDriveRecord[@"payments"] = newPayments;
     CKModifyRecordsOperation *modifyRecords= [[CKModifyRecordsOperation alloc]
                                               initWithRecordsToSave:[[NSArray alloc] initWithObjects:myDriveRecord, nil] recordIDsToDelete:nil];
     modifyRecords.savePolicy=CKRecordSaveAllKeys;
@@ -377,7 +379,7 @@
     ^(NSArray * savedRecords, NSArray * deletedRecordIDs, NSError * operationError){
         //   the completion block code here
         dispatch_async(dispatch_get_main_queue(), ^(void){
-             [References fullScreenToast:@"Rider confirmed." inView:self withSuccess:YES andClose:NO];
+            [References fullScreenToast:@"Rider approved, awaiting payment." inView:self withSuccess:YES andClose:NO];
             [self getMyDrive];
         });
     };
@@ -473,7 +475,7 @@
 }
 
 -(void)callPerson:(UIButton*)sender {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",myDrive.riders[sender.tag]]]];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel:%@",myDrive.riders[sender.tag]]] options:nil completionHandler:nil];
 }
 
 @end

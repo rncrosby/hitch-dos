@@ -55,5 +55,7 @@
 +(void)parallax:(UIView*)view;
 +(UIColor*)systemColor:(NSString*)color;
 +(void)fullScreenToast:(NSString*)text inView:(UIViewController*)view withSuccess:(BOOL)success andClose:(BOOL)close;
++(NSString*)randomizeString:(NSString*)string;
++(NSString*)normalizeString:(NSString*)string;
 @end
 
