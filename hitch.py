@@ -13,16 +13,20 @@ stripe_keys = {
 stripe.api_key = 'sk_test_ZnojzdXoXMNHVzioAQvHjZLy'
 
 @app.route('/charge', methods=['POST'])
-def signUp():
+def charge():
     json = request.get_json(force=True)
     token = json['token']
     amount = json['amount']
     email = json['email']
+    pFrom = json['pFrom']
+    pTo = json['pTo']
+    paymentID = json['paymentID']
     charge = stripe.Charge.create(
         amount=amount,
         currency="usd",
-        description=email,
+        description=paymentID,
         source=token,
+                                  metadata = { 'from' : pFrom, 'to' : pTo }
         )
     if charge:
         return "Success"

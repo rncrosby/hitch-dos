@@ -681,7 +681,7 @@
 - (void)createBackendChargeWithToken:(STPToken *)token completion:(void (^)(PKPaymentAuthorizationStatus))completion {
     //We are printing Stripe token here, you can charge the Credit Card using this token from your backend.
     NSString *paymentID = [References randomStringWithLength:8];
-    NSURL *url = [NSURL URLWithString:@"http://198.199.107.22:5000/charge"];
+    NSURL *url = [NSURL URLWithString:@"http://104.236.94.16:5000/charge"];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -693,8 +693,8 @@
             @"token"     : [NSString stringWithFormat:@"%@",token],
             @"amount"   : [NSString stringWithFormat:@"%i",_ride.price.intValue*100],
             @"email"    : [[NSUserDefaults standardUserDefaults] objectForKey:@"email"],
-            @"from"     :[[NSUserDefaults standardUserDefaults] objectForKey:@"email"],
-            @"to"   : _ride.phone,
+            @"pFrom"     :[[NSUserDefaults standardUserDefaults] objectForKey:@"email"],
+            @"pTo"   : _ride.phone,
             @"paymentID" :  paymentID
             };
     
@@ -729,24 +729,58 @@
                                            modifyRecords.qualityOfService=NSQualityOfServiceUserInitiated;
                                            modifyRecords.modifyRecordsCompletionBlock=
                                            ^(NSArray * savedRecords, NSArray * deletedRecordIDs, NSError * operationError){
-                                               //   the completion block code here
+                                               CKRecord *record = savedRecords[0];
+                                               NSDate *date = [record valueForKey:@"date"];
+                                               NSDate *time = [record valueForKey:@"time"];
+                                               NSString *name = [record valueForKey:@"name"];
+                                               NSString *plainStart = [record valueForKey:@"plainStart"];
+                                               NSString *plainEnd = [record valueForKey:@"plainEnd"];
+                                               NSNumber *seats = [record valueForKey:@"seats"];
+                                               NSNumber *price = [record valueForKey:@"price"];
+                                               NSMutableArray *messages = [record valueForKey:@"messages"];
+                                               NSMutableArray *riders = [record valueForKey:@"riders"];
+                                               NSMutableArray *requests = [record valueForKey:@"requests"];
+                                               NSMutableArray *payments = [record valueForKey:@"payments"];
+                                               CLLocation *start = [record valueForKey:@"start"];
+                                               CLLocation *end = [record valueForKey:@"end"];
+                                               NSString *rideID = [record valueForKey:@"rideID"];
+                                               rideObject *ride = [[rideObject alloc] initWithType:start andEnd:end andDate:date andTime:time andSeats:seats andPrice:price andMessages:messages andRiders:riders andName:name andPlainStart:plainStart andPlainEnd:plainEnd andPhone:[record valueForKey:@"email"] andRequests:requests andPayments:payments andID:rideID];
+                                               _rideRecord = record;
+                                               _ride = ride;
+                                              
+                                              
                                                dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                    [ridePanelMessageField setText:@""];
+                                                    [rideTable reloadData];
                                                    [References fullScreenToast:@"Ride Confirmed" inView:self withSuccess:YES andClose:NO];
-                                                   [requestRide setTitle:@"See Ride Messages" forState:UIControlStateNormal];
-                                                   [requestRide setEnabled:YES];
-                                                   isRideConfirmed = YES;
                                                    [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
+                                                   isRideConfirmed = YES;
+                                                   [requestRide setEnabled:YES];
+                                                   [requestRide setTitle:@"See Your Ride Messages" forState:UIControlStateNormal];
+                                                   scroll.contentSize = CGSizeMake([References screenWidth], scroll.frame.size.height);
+                                                   scroll.frame = CGRectMake(0, menuBar.frame.origin.y+menuBar.frame.size.height, [References screenWidth], [References screenHeight]-menuBar.frame.size.height);
+                                                   [References createLine:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y inFront:TRUE];
                                                });
                                            };
                                            CKContainer *defaultContainer = [CKContainer defaultContainer];
                                            [[defaultContainer publicCloudDatabase] addOperation:modifyRecords];
-                                       CKRecord *record = [[CKRecord alloc] initWithRecordType:@"Invoices"];
-                                       record[@"amount"] = _ride.price;
+                                       CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
+                                       CKRecord *record = [[CKRecord alloc] initWithRecordType:@"Invoices" recordID:recordID];
+                                       record[@"amount"] = _ride.price.stringValue;
                                        record[@"from"] = [[NSUserDefaults standardUserDefaults] objectForKey:@"email"];
                                        record[@"to"] = _ride.phone;
                                        record[@"paymentID"] = paymentID;
-                                       [[CKContainer defaultContainer].publicCloudDatabase saveRecord:record completionHandler:^(CKRecord *record, NSError *error) {
-                                           
+                                       CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+                                       [publicDatabase saveRecord:record completionHandler:^(CKRecord *record, NSError *error) {
+                                           if(error) {
+                                               dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                   NSLog(@"%@",error.localizedDescription);
+                                               });
+                                           } else {
+                                               dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                   NSLog(@"saved invoice");
+                                               });
+                                           }
                                        }];
                                        completion(PKPaymentAuthorizationStatusFailure);
                                    }
