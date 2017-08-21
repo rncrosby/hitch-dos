@@ -60,7 +60,7 @@
                     NSMutableArray *ridesToGet = [record valueForKey:@"myRides"];
                     if (ridesToGet.count > 0) {
                         CKContainer *defaultContainer = [CKContainer defaultContainer];
-                        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(email IN %@)", ridesToGet];
+                        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(rideID IN %@)", ridesToGet];
                         CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
                         CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Rides" predicate:predicate];
                         [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {

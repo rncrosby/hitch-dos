@@ -160,6 +160,7 @@
     postRecord[@"plainEnd"] = to.text;
     postRecord[@"zipStart"] = [NSNumber numberWithInt:start.postalCode.intValue];
     postRecord[@"zipEnd"] = [NSNumber numberWithInt:end.postalCode.intValue];
+    postRecord[@"rideID"] = [References randomStringWithLength:8];
     CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
     [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
         if(error) {

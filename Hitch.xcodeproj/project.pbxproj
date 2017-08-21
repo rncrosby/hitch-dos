@@ -24,6 +24,9 @@
 		AD96B94C1F37F210008131BF /* feedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AD96B94A1F37F210008131BF /* feedCell.m */; };
 		AD96B94D1F37F210008131BF /* feedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD96B94B1F37F210008131BF /* feedCell.xib */; };
 		AD96B94F1F37F47A008131BF /* feedView.h in Resources */ = {isa = PBXBuildFile; fileRef = AD96B9431F37F04D008131BF /* feedView.h */; };
+		AD99BF481F4B417E007F4297 /* transactionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = AD99BF471F4B417E007F4297 /* transactionObject.m */; };
+		AD99BF4C1F4B465A007F4297 /* transactionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AD99BF4A1F4B465A007F4297 /* transactionCell.m */; };
+		AD99BF4D1F4B465A007F4297 /* transactionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AD99BF4B1F4B465A007F4297 /* transactionCell.xib */; };
 		ADC335381F393E260080642C /* rideView.m in Sources */ = {isa = PBXBuildFile; fileRef = ADC335371F393E260080642C /* rideView.m */; };
 		ADC3353A1F3A17E30080642C /* user.jpg in Resources */ = {isa = PBXBuildFile; fileRef = ADC335391F3A17D90080642C /* user.jpg */; };
 		ADC3353D1F3A61770080642C /* startView.m in Sources */ = {isa = PBXBuildFile; fileRef = ADC3353C1F3A61770080642C /* startView.m */; };
@@ -44,6 +47,7 @@
 		ADE750701F3B72D7001556AB /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = ADE7506F1F3B7096001556AB /* add.png */; };
 		ADE8FBB81F435667000D20F9 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADE8FBB71F435667000D20F9 /* PassKit.framework */; };
 		ADE8FBBA1F435906000D20F9 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = ADE8FBB91F435906000D20F9 /* Podfile */; };
+		ADF77D031F476974003DC39F /* historyView.m in Sources */ = {isa = PBXBuildFile; fileRef = ADF77D021F476974003DC39F /* historyView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +74,11 @@
 		AD96B94A1F37F210008131BF /* feedCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = feedCell.m; sourceTree = "<group>"; };
 		AD96B94B1F37F210008131BF /* feedCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = feedCell.xib; sourceTree = "<group>"; };
 		AD96B94E1F37F29B008131BF /* chevron-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron-right.png"; sourceTree = "<group>"; };
+		AD99BF461F4B417E007F4297 /* transactionObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = transactionObject.h; sourceTree = "<group>"; };
+		AD99BF471F4B417E007F4297 /* transactionObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = transactionObject.m; sourceTree = "<group>"; };
+		AD99BF491F4B465A007F4297 /* transactionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = transactionCell.h; sourceTree = "<group>"; };
+		AD99BF4A1F4B465A007F4297 /* transactionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = transactionCell.m; sourceTree = "<group>"; };
+		AD99BF4B1F4B465A007F4297 /* transactionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = transactionCell.xib; sourceTree = "<group>"; };
 		ADC335361F393E260080642C /* rideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rideView.h; sourceTree = "<group>"; };
 		ADC335371F393E260080642C /* rideView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = rideView.m; sourceTree = "<group>"; };
 		ADC335391F3A17D90080642C /* user.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = user.jpg; sourceTree = "<group>"; };
@@ -98,6 +107,8 @@
 		ADE7506F1F3B7096001556AB /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
 		ADE8FBB71F435667000D20F9 /* PassKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PassKit.framework; path = System/Library/Frameworks/PassKit.framework; sourceTree = SDKROOT; };
 		ADE8FBB91F435906000D20F9 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		ADF77D011F476974003DC39F /* historyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = historyView.h; sourceTree = "<group>"; };
+		ADF77D021F476974003DC39F /* historyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = historyView.m; sourceTree = "<group>"; };
 		D432027F1F466AD200F81B89 /* NSData+Base64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		D43202801F466AD200F81B89 /* NSData+Base64.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		D43202811F466AD200F81B89 /* FBEncryptorAES.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBEncryptorAES.h; sourceTree = "<group>"; };
@@ -154,17 +165,8 @@
 			children = (
 				ADE8FBB91F435906000D20F9 /* Podfile */,
 				ADD37EFF1F38D06100285F63 /* Hitch.entitlements */,
-				ADDCC67F1F3CFA430056C00F /* phone.png */,
-				AD6CC8B31F42527E00FA1E54 /* share.png */,
-				AD6CC8B41F42528400FA1E54 /* map.png */,
-				AD6CC8B21F42527200FA1E54 /* trash.png */,
-				ADC335391F3A17D90080642C /* user.jpg */,
-				AD96B94E1F37F29B008131BF /* chevron-right.png */,
-				ADE7506F1F3B7096001556AB /* add.png */,
-				AD6CC8B11F42526800FA1E54 /* minus.png */,
-				AD6CC8B01F42525E00FA1E54 /* success.png */,
-				AD6CC8AF1F42525400FA1E54 /* failure.png */,
-				AD6CC8BB1F425AA400FA1E54 /* refresh.png */,
+				ADF77D001F476943003DC39F /* encrypt */,
+				ADF77CFF1F47692A003DC39F /* images */,
 				AD96B9361F37F008008131BF /* Assets.xcassets */,
 				AD96B9381F37F008008131BF /* LaunchScreen.storyboard */,
 				AD96B93B1F37F008008131BF /* Info.plist */,
@@ -195,10 +197,13 @@
 				ADDCC67A1F3CE75D0056C00F /* messageCell.h */,
 				ADDCC67B1F3CE75D0056C00F /* messageCell.m */,
 				ADDCC67C1F3CE75D0056C00F /* messageCell.xib */,
-				D43202811F466AD200F81B89 /* FBEncryptorAES.h */,
-				D43202821F466AD200F81B89 /* FBEncryptorAES.m */,
-				D432027F1F466AD200F81B89 /* NSData+Base64.h */,
-				D43202801F466AD200F81B89 /* NSData+Base64.m */,
+				ADF77D011F476974003DC39F /* historyView.h */,
+				ADF77D021F476974003DC39F /* historyView.m */,
+				AD99BF461F4B417E007F4297 /* transactionObject.h */,
+				AD99BF471F4B417E007F4297 /* transactionObject.m */,
+				AD99BF491F4B465A007F4297 /* transactionCell.h */,
+				AD99BF4A1F4B465A007F4297 /* transactionCell.m */,
+				AD99BF4B1F4B465A007F4297 /* transactionCell.xib */,
 			);
 			path = Hitch;
 			sourceTree = "<group>";
@@ -214,6 +219,35 @@
 				7066B3A24DD0F49CC780EAEA /* libPods-Hitch.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ADF77CFF1F47692A003DC39F /* images */ = {
+			isa = PBXGroup;
+			children = (
+				ADDCC67F1F3CFA430056C00F /* phone.png */,
+				AD6CC8B31F42527E00FA1E54 /* share.png */,
+				AD6CC8B41F42528400FA1E54 /* map.png */,
+				AD6CC8B21F42527200FA1E54 /* trash.png */,
+				ADC335391F3A17D90080642C /* user.jpg */,
+				AD96B94E1F37F29B008131BF /* chevron-right.png */,
+				ADE7506F1F3B7096001556AB /* add.png */,
+				AD6CC8B11F42526800FA1E54 /* minus.png */,
+				AD6CC8B01F42525E00FA1E54 /* success.png */,
+				AD6CC8AF1F42525400FA1E54 /* failure.png */,
+				AD6CC8BB1F425AA400FA1E54 /* refresh.png */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
+		ADF77D001F476943003DC39F /* encrypt */ = {
+			isa = PBXGroup;
+			children = (
+				D43202811F466AD200F81B89 /* FBEncryptorAES.h */,
+				D43202821F466AD200F81B89 /* FBEncryptorAES.m */,
+				D432027F1F466AD200F81B89 /* NSData+Base64.h */,
+				D43202801F466AD200F81B89 /* NSData+Base64.m */,
+			);
+			path = encrypt;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -300,6 +334,7 @@
 				ADDCC6801F3CFB3F0056C00F /* phone.png in Resources */,
 				ADE750701F3B72D7001556AB /* add.png in Resources */,
 				ADE8FBBA1F435906000D20F9 /* Podfile in Resources */,
+				AD99BF4D1F4B465A007F4297 /* transactionCell.xib in Resources */,
 				ADC3353A1F3A17E30080642C /* user.jpg in Resources */,
 				ADD37EFB1F38BFB800285F63 /* chevron-right.png in Resources */,
 				AD96B94F1F37F47A008131BF /* feedView.h in Resources */,
@@ -376,13 +411,16 @@
 				ADD37F091F39237F00285F63 /* rideObject.m in Sources */,
 				AD96B9451F37F04D008131BF /* feedView.m in Sources */,
 				ADC3353D1F3A61770080642C /* startView.m in Sources */,
+				AD99BF481F4B417E007F4297 /* transactionObject.m in Sources */,
 				ADE7506D1F3B6E93001556AB /* driveRequestsCell.m in Sources */,
 				ADD37EFA1F38BCF900285F63 /* References.m in Sources */,
 				ADDCC67D1F3CE75D0056C00F /* messageCell.m in Sources */,
 				ADD37F061F38D0CE00285F63 /* postView.m in Sources */,
 				ADC335381F393E260080642C /* rideView.m in Sources */,
+				ADF77D031F476974003DC39F /* historyView.m in Sources */,
 				AD96B94C1F37F210008131BF /* feedCell.m in Sources */,
 				AD96B93D1F37F008008131BF /* main.m in Sources */,
+				AD99BF4C1F4B465A007F4297 /* transactionCell.m in Sources */,
 				AD96B92F1F37F008008131BF /* AppDelegate.m in Sources */,
 				ADE750691F3B6044001556AB /* inboxView.m in Sources */,
 			);

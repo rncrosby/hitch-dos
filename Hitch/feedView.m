@@ -16,7 +16,7 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     if (_rideToOpen.length > 1) {
-        NSString *string = [NSString stringWithFormat:@"email = '%@'",_rideToOpen];
+        NSString *string = [NSString stringWithFormat:@"rideID = '%@'",_rideToOpen];
         CKContainer *defaultContainer = [CKContainer defaultContainer];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:string];
         CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
@@ -337,12 +337,15 @@
     
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
     }]];
-    
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Sign Out" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         [self dismissViewControllerAnimated:YES completion:^() {
             [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"email"];
             [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"name"];
         }];
+    }]];
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Transaction History" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        historyView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"historyView"];
+        [self presentViewController:viewController animated:YES completion:nil];
     }]];
     
     

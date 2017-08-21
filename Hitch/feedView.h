@@ -15,6 +15,7 @@
 #import "rideView.h"
 #import "feedView.h"
 #import "postView.h"
+#import "historyView.h"
 
 @interface feedView : UIViewController <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,CLLocationManagerDelegate> {
     CLLocationManager *location;

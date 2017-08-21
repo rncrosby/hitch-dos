@@ -236,7 +236,7 @@
     } else if (isRideConfirmed == YES) {
         textToShare = @"Check out this ride I found on Hitch for iOS\n\n";
     }
-    NSString *string =[NSString stringWithFormat:@"hitch://openRide/ride?creator=%@",_ride.phone];
+    NSString *string =[NSString stringWithFormat:@"hitch://openRide/ride?creator=%@",_ride.rideID];
     NSURL *url = [NSURL URLWithString:string];
     NSArray *objectsToShare = @[textToShare,url];
     
@@ -424,7 +424,7 @@
         if (!error) {
             CKRecord *record = results[0];
             NSMutableArray *newRequests = [[NSMutableArray alloc] initWithArray:[record objectForKey:@"myRides"]];
-            [newRequests addObject:_ride.phone];
+            [newRequests addObject:_ride.rideID];
             record[@"myRides"] = newRequests;
             CKModifyRecordsOperation *modifyRecords= [[CKModifyRecordsOperation alloc]
                                                       initWithRecordsToSave:[[NSArray alloc] initWithObjects:record, nil] recordIDsToDelete:nil];
@@ -691,7 +691,7 @@
     NSDictionary *tmp = [[NSDictionary alloc] init];
     tmp = @{
             @"token"     : [NSString stringWithFormat:@"%@",token],
-            @"amount"   : [NSString stringWithFormat:@"%i",_ride.price.intValue*100],
+            @"amount"   : [NSString stringWithFormat:@"%i",((_ride.price.intValue*100)+50)],
             @"email"    : [[NSUserDefaults standardUserDefaults] objectForKey:@"email"],
             @"pFrom"     :[[NSUserDefaults standardUserDefaults] objectForKey:@"email"],
             @"pTo"   : _ride.phone,
@@ -766,9 +766,10 @@
                                            [[defaultContainer publicCloudDatabase] addOperation:modifyRecords];
                                        CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
                                        CKRecord *record = [[CKRecord alloc] initWithRecordType:@"Invoices" recordID:recordID];
-                                       record[@"amount"] = _ride.price.stringValue;
+                                       record[@"amount"] = [NSString stringWithFormat:@"%i",((_ride.price.intValue*100)+50)];
                                        record[@"from"] = [[NSUserDefaults standardUserDefaults] objectForKey:@"email"];
                                        record[@"to"] = _ride.phone;
+                                       record[@"rideID"] = _ride.rideID;
                                        record[@"paymentID"] = paymentID;
                                        CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
                                        [publicDatabase saveRecord:record completionHandler:^(CKRecord *record, NSError *error) {
