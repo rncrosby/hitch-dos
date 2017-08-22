@@ -96,4 +96,38 @@
     [emailAddress setText:@"rider"];
     [name setText:@"rider"];
 }
+
+- (IBAction)email:(id)sender {
+    NSString *code = [References randomStringWithLength:5];
+    NSURL *url = [NSURL URLWithString:@"http://104.236.94.16:5000/email"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    // NSError *actualerror = [[NSError alloc] init];
+    // Parameters
+    NSDictionary *tmp = [[NSDictionary alloc] init];
+    tmp = @{
+            @"code"     : code,
+            @"email"    : @"rcros97@me.com",
+            @"name"     : @"Rob"
+            };
+    
+    NSError *error;
+    NSData *postdata = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
+    [request setHTTPBody:postdata];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response,
+                                               NSData *data,
+                                               NSError *error) {
+                               if (error) {
+                                   // Returned Error
+                                   NSLog(@"Unknown Error Occured");
+                               } else {
+                                   nil;
+                               }
+                           }];
+    
+}
 @end

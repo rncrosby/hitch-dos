@@ -112,6 +112,14 @@
                                     <action selector="driver:" destination="vQL-M5-Det" eventType="touchUpInside" id="bQJ-ea-q9J"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="lNO-Xk-kNt">
+                                <rect key="frame" x="181" y="371" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="email:" destination="vQL-M5-Det" eventType="touchUpInside" id="o0t-zu-gVx"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.94999999999999996" alpha="1" colorSpace="calibratedWhite"/>
                     </view>

@@ -24,6 +24,7 @@
 - (IBAction)continueButton:(id)sender;
 - (IBAction)driver:(id)sender;
 - (IBAction)rider:(id)sender;
+- (IBAction)email:(id)sender;
 
 
 @end
