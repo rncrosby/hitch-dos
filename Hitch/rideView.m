@@ -502,6 +502,7 @@
     for (int a = 0; a < _ride.payments.count; a++) {
         if ([_ride.payments[a] isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]]) {
             [requestRide setTitle:@"Ride Approved, Pay to Confirm" forState:UIControlStateNormal];
+            [self getTransactions];
             isAwaitingPayment = YES;
             indexOfPayment = a;
             [requestRide setEnabled:YES];
@@ -691,7 +692,7 @@
     NSDictionary *tmp = [[NSDictionary alloc] init];
     tmp = @{
             @"token"     : [NSString stringWithFormat:@"%@",token],
-            @"amount"   : [NSString stringWithFormat:@"%i",((_ride.price.intValue*100)+50)],
+            @"amount"   : [NSString stringWithFormat:@"%i",(((int)amountToCharge*100))],
             @"email"    : [[NSUserDefaults standardUserDefaults] objectForKey:@"email"],
             @"pFrom"     :[[NSUserDefaults standardUserDefaults] objectForKey:@"email"],
             @"pTo"   : _ride.phone,
@@ -766,7 +767,8 @@
                                            [[defaultContainer publicCloudDatabase] addOperation:modifyRecords];
                                        CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
                                        CKRecord *record = [[CKRecord alloc] initWithRecordType:@"Invoices" recordID:recordID];
-                                       record[@"amount"] = [NSString stringWithFormat:@"%i",((_ride.price.intValue*100)+50)];
+                                       record[@"amount"] = [NSString stringWithFormat:@"%i",(_ride.price.intValue)*100];
+                                       record[@"chargeAmount"] = [NSString stringWithFormat:@"%i",(int)amountToCharge*100];
                                        record[@"from"] = [[NSUserDefaults standardUserDefaults] objectForKey:@"email"];
                                        record[@"to"] = _ride.phone;
                                        record[@"rideID"] = _ride.rideID;
@@ -783,7 +785,28 @@
                                                });
                                            }
                                        }];
-                                       completion(PKPaymentAuthorizationStatusFailure);
+                                       if (amountToCharge != _ride.price.intValue+1) {
+                                           balanceDeduction = (_ride.price.intValue+1) - amountToCharge;
+                                           CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
+                                           CKRecord *record = [[CKRecord alloc] initWithRecordType:@"Invoices" recordID:recordID];
+                                           record[@"amount"] = [NSString stringWithFormat:@"%i",(int)balanceDeduction*100];
+                                           record[@"from"] = [[NSUserDefaults standardUserDefaults] objectForKey:@"email"];
+                                           record[@"to"] = @"Hitch";
+                                           record[@"rideID"] = @"Code";
+                                           record[@"paymentID"] = @"Code";
+                                           CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+                                           [publicDatabase saveRecord:record completionHandler:^(CKRecord *record, NSError *error) {
+                                               if(error) {
+                                                   dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                       NSLog(@"%@",error.localizedDescription);
+                                                   });
+                                               } else {
+                                                   dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                       NSLog(@"saved balance");
+                                                   });
+                                               }
+                                           }];
+                                       }
                                    }
                                    
                                }
@@ -812,16 +835,63 @@
     paymentRequest.merchantCapabilities = PKMerchantCapability3DS;
     paymentRequest.countryCode = @"US";
     paymentRequest.currencyCode = @"USD";
-    double cost = _ride.price.doubleValue + 0.50;
+    double cost = _ride.price.doubleValue + 1.00;
+    if (currentBalance > 0) {
+        cost = cost - currentBalance;
+        paymentRequest.paymentSummaryItems =
+        @[
+          [PKPaymentSummaryItem summaryItemWithLabel:@"Ride" amount:[NSDecimalNumber decimalNumberWithString:amount]],
+          [PKPaymentSummaryItem summaryItemWithLabel:@"Hitch Fee" amount:[NSDecimalNumber decimalNumberWithString:@"1"]],
+          [PKPaymentSummaryItem summaryItemWithLabel:@"Current Balance" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"-%.2f",currentBalance]]],
+          [PKPaymentSummaryItem summaryItemWithLabel:@"Total" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f",cost]]]
+          ];
+    } else {
     paymentRequest.paymentSummaryItems =
     @[
-      [PKPaymentSummaryItem summaryItemWithLabel:@"Hitch Fee" amount:[NSDecimalNumber decimalNumberWithString:@"0.50"]],
       [PKPaymentSummaryItem summaryItemWithLabel:@"Ride" amount:[NSDecimalNumber decimalNumberWithString:amount]],
+      [PKPaymentSummaryItem summaryItemWithLabel:@"Hitch Fee" amount:[NSDecimalNumber decimalNumberWithString:@"1"]],
       [PKPaymentSummaryItem summaryItemWithLabel:@"Total" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f",cost]]]
       ];
+    }
+    amountToCharge = cost;
     return paymentRequest;
 }
 
+-(void)getTransactions {
+    [transactions removeAllObjects];
+    transactions = [[NSMutableArray alloc] init];
+    NSString *toPaymentString = [NSString stringWithFormat:@"to == '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
+    CKQuery *toPaymentQuery = [[CKQuery alloc] initWithRecordType:@"Invoices" predicate:[NSPredicate predicateWithFormat:toPaymentString]];
+    [[CKContainer defaultContainer].publicCloudDatabase performQuery:toPaymentQuery
+                                                        inZoneWithID:nil
+                                                   completionHandler:^(NSArray *results, NSError *error) {
+                                                       
+                                                       for (int a = 0; a < results.count; a++) {
+                                                           CKRecord *record = results[a];
+                                                           NSString *amount = [record valueForKey:@"amount"];
+                                                           NSString *chargeAmount = [record valueForKey:@"chargeAmount"];
+                                                           NSDate *date = [record valueForKey:@"createdAt"];
+                                                           double betterAmount = amount.doubleValue * 0.01;
+                                                           double betterCharge = chargeAmount.doubleValue * 0.01;
+                                                           transactionObject *transaction = [[transactionObject alloc] initWithType:[record valueForKey:@"rideID"] andAmount:betterAmount andIsIncome:YES andDate:date isFrom:[record valueForKey:@"from"] isTo:[record valueForKey:@"to"] andChargeAmount:betterCharge];
+                                                           [transactions addObject:transaction];
+                                                       }
+                                                       dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                           [self calculateValue];
+                                                       });
+                                                   }];
+}
 
+-(void)calculateValue {
+    currentBalance = 0;
+    double value = 0;
+    for (int a = 0; a < transactions.count; a++) {
+        transactionObject *transaction = transactions[a];
+        if (transaction.isIncome.boolValue == YES) {
+            value = value + transaction.amount.doubleValue;
+        }
+    }
+    currentBalance = value;
+}
 
 @end

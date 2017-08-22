@@ -39,14 +39,16 @@
                                                        for (int a = 0; a < results.count; a++) {
                                                            CKRecord *record = results[a];
                                                            NSString *amount = [record valueForKey:@"amount"];
+                                                           NSString *chargeAmount = [record valueForKey:@"chargeAmount"];
+                                                           double betterCharge = chargeAmount.doubleValue * 0.01;
                                                            NSDate *date = [record valueForKey:@"createdAt"];
                                                            double betterAmount = amount.doubleValue * 0.01;
-                                                           transactionObject *transaction = [[transactionObject alloc] initWithType:[record valueForKey:@"rideID"] andAmount:betterAmount andIsIncome:YES andDate:date];
+                                                           
+                                                           transactionObject *transaction = [[transactionObject alloc] initWithType:[record valueForKey:@"rideID"] andAmount:betterAmount andIsIncome:YES andDate:date isFrom:[record valueForKey:@"from"] isTo:[record valueForKey:@"to"] andChargeAmount:betterCharge];
                                                            [transactions addObject:transaction];
                                                        }
                                                        dispatch_async(dispatch_get_main_queue(), ^(void){
                                                            [self calculateValue];
-                                                           [table reloadData];
                                                        });
                                                    }];
     NSString *fromPaymentString = [NSString stringWithFormat:@"from == '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
@@ -57,9 +59,11 @@
                                                        for (int a = 0; a < results.count; a++) {
                                                            CKRecord *record = results[a];
                                                            NSString *amount = [record valueForKey:@"amount"];
-                                                           NSDate *date = [record valueForKey:@"createdAt"];
+                                                           NSDate *date = [record objectForKey:@"createdAt"];
                                                            double betterAmount = amount.doubleValue * 0.01;
-                                                           transactionObject *transaction = [[transactionObject alloc] initWithType:[record valueForKey:@"rideID"] andAmount:betterAmount andIsIncome:NO andDate:date];
+                                                           NSString *chargeAmount = [record valueForKey:@"chargeAmount"];
+                                                           double betterCharge = chargeAmount.doubleValue * 0.01;
+                                                           transactionObject *transaction = [[transactionObject alloc] initWithType:[record valueForKey:@"rideID"] andAmount:betterAmount andIsIncome:NO andDate:date isFrom:[record valueForKey:@"from"] isTo:[record valueForKey:@"to"] andChargeAmount:betterCharge];
                                                            [transactions addObject:transaction];
                                                        }
                                                        dispatch_async(dispatch_get_main_queue(), ^(void){
@@ -74,7 +78,7 @@
 }
 
 - (IBAction)withdrawMoney:(id)sender {
-    if (currentBalance < 0) {
+    if (withdrawalBalance <= 0) {
         [References fullScreenToast:@"Insufficient Funds To Withdraw" inView:self withSuccess:FALSE andClose:FALSE];
     } else {
         [References fullScreenToast:@"Coming Soon" inView:self withSuccess:YES andClose:NO];
@@ -82,26 +86,123 @@
 }
 
 - (IBAction)redeemCode:(id)sender {
-    [References fullScreenToast:@"Coming Soon" inView:self withSuccess:YES andClose:NO];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Redeem Code" message:@"Codes give you money to spend in hitch, share your code to earn more money." preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"5 Character Code";
+    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+    }];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Redeem" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        UITextField *code = alertController.textFields.firstObject;
+        if (![code.text isEqualToString:@""]) {
+            NSPredicate *predicate = [NSPredicate predicateWithValue:[NSString stringWithFormat:@"code = '%@'",code.text]];
+            CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Codes" predicate:predicate];
+            [[CKContainer defaultContainer].publicCloudDatabase performQuery:query
+                                                                inZoneWithID:nil
+                                                           completionHandler:^(NSArray *results, NSError *error) {
+                                                               if (results.count > 0) {
+                                                                   dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                                                       for (int a = 0; a < results.count; a++) {
+                                                                           CKRecord *temp = results[a];
+                                                                           if ([[temp valueForKey:@"code"] isEqualToString:code.text]) {
+                                                                               if ([self haveUsedCode:code.text] == FALSE) {
+                                                                                   redemptionCode = temp;
+                                                                                   [References fullScreenToast:@"Code Redeemed" inView:self withSuccess:YES andClose:NO];
+                                                                                   NSNumber *amount = [temp valueForKey:@"value"];
+                                                                                   [self redeemCodeTransaction:amount.doubleValue andCode:code.text];
+                                                                                   a = (int)results.count;
+                                                                               } else {
+                                                                                   [References fullScreenToast:@"You've Already Redeemed This Code" inView:self withSuccess:NO andClose:NO];
+                                                                                   a = (int)results.count;
+                                                                               }
+                                                                           }
+                                                                           if (a == results.count-1) {
+                                                                               [References fullScreenToast:@"Code Not Available" inView:self withSuccess:NO andClose:NO];
+                                                                           }
+                                                                       }
+                                                                   });
+                                                                   
+                                                               }
+                                                           }];
+        }
+        
+    }];
+    
+    [alertController addAction:cancelAction];
+    [alertController addAction:okAction];
+    [self presentViewController:alertController animated: YES completion: nil];
+}
+
+-(void)redeemCodeTransaction:(double)amount andCode:(NSString*)code{
+    CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
+    CKRecord *record = [[CKRecord alloc] initWithRecordType:@"Invoices" recordID:recordID];
+    int value = (int)amount;
+    record[@"amount"] = [NSString stringWithFormat:@"%i",value*100];
+    record[@"from"] = @"Hitch";
+    record[@"to"] = [[NSUserDefaults standardUserDefaults] objectForKey:@"email"];
+    record[@"rideID"] = code;
+    record[@"paymentID"] = code;
+    CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+    [publicDatabase saveRecord:record completionHandler:^(CKRecord *record, NSError *error) {
+        if(error) {
+            NSLog(@"%@",error.localizedDescription);
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                [References fullScreenToast:@"Something Isn't Right" inView:self withSuccess:NO andClose:NO];
+            });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                [self getTransactions];
+            });
+            
+            
+        }
+    }];
+}
+
+-(bool)haveUsedCode:(NSString*)code {
+    for (int a = 0; a < transactions.count; a++) {
+        transactionObject *object = transactions[a];
+        if ([object.rideID isEqualToString:code]) {
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 -(void)calculateValue {
+    currentBalance = 0;
+    withdrawalBalance = 0;
     double value = 0;
     for (int a = 0; a < transactions.count; a++) {
         transactionObject *transaction = transactions[a];
         if (transaction.isIncome.boolValue == YES) {
             value = value + transaction.amount.doubleValue;
+            if ([transaction.from isEqualToString:@"Hitch"]) {
+                nil;
+            } else {
+                withdrawalBalance = withdrawalBalance + transaction.amount.doubleValue;
+            }
         } else {
-            value = value - transaction.amount.doubleValue;
+            if ([transaction.to isEqualToString:@"Hitch"]) {
+                value = value - fabs(transaction.amount.doubleValue);
+            }
         }
-
     }
-    if (value < 0) {
-        accountValue.text = [NSString stringWithFormat:@"-$%.2f",fabs(value)];
-    } else {
-        accountValue.text = [NSString stringWithFormat:@"$%.2f",value];
-    }
+    withdrawalBalancelabel.text = [NSString stringWithFormat:@"$%.2f",withdrawalBalance];
+    accountValue.text = [NSString stringWithFormat:@"$%.2f",value];
     currentBalance = value;
+    NSMutableArray *betterTransactions = [[NSMutableArray alloc] init];
+    for (int a = 0; a < transactions.count; a++) {
+        transactionObject *object = transactions[a];
+        if ([object.from isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]] && [object.to isEqualToString:@"Hitch"]) {
+            nil;
+        } else {
+            [betterTransactions addObject:object];
+        }
+    }
+    [transactions removeAllObjects];
+    [transactions addObjectsFromArray:betterTransactions];
+    [table reloadData];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -124,14 +225,11 @@
     }
     transactionObject *transaction = transactions[indexPath.row];
     if (transaction.isIncome.boolValue == YES) {
+        cell.amount.text = [NSString stringWithFormat:@"$%.2f",transaction.amount.doubleValue];
         [cell.card setBackgroundColor:[References colorFromHexString:@"#1CE58D"]];
     } else {
         [cell.card setBackgroundColor:[References colorFromHexString:@"#FF3824"]];
-    }
-    if (transaction.amount.doubleValue < 0) {
-        cell.amount.text = [NSString stringWithFormat:@"-$%.2f",fabs(transaction.amount.doubleValue)];
-    } else {
-        cell.amount.text = [NSString stringWithFormat:@"$%.2f",transaction.amount.doubleValue];
+        cell.amount.text = [NSString stringWithFormat:@"$%.2f",transaction.chargeAmount.doubleValue];
     }
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"EEEE, MMMM d"];

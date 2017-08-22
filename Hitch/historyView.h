@@ -14,11 +14,13 @@
 
 @interface historyView : UIViewController <UITableViewDelegate,UITableViewDataSource> {
     NSMutableArray *transactions;
+    CKRecord *redemptionCode;
     __weak IBOutlet UILabel *menuBar;
     __weak IBOutlet UILabel *accountValue;
+    __weak IBOutlet UILabel *withdrawalBalancelabel;
     __weak IBOutlet UITableView *table;
     __weak IBOutlet UILabel *bottomBar;
-    double currentBalance;
+    double currentBalance, withdrawalBalance;
 }
 - (IBAction)backButton:(id)sender;
 - (IBAction)withdrawMoney:(id)sender;

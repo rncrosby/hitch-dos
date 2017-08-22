@@ -18,13 +18,18 @@
 #import <Stripe.h>
 #import <AFNetworking/AFNetworking.h>
 #import "FBEncryptorAES.h"
+#import "transactionObject.h"
 
 @interface rideView : UIViewController <PKPaymentAuthorizationViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,MKMapViewDelegate,UITextFieldDelegate> {
     UIView *line;
     CGRect keyboard;
     bool isRideConfirmed,isAwaitingPayment;
+    double amountToCharge;
+    double balanceDeduction;
+    double currentBalance;
     int indexOfPayment;
     MKPolyline *routeLine;
+    NSMutableArray *transactions;
     MKPolylineView *routeLineView;
     NSMutableArray *messages;
     NSMutableArray *riderColorMatch;

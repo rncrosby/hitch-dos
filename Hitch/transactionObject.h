@@ -14,7 +14,10 @@
 @property (nonatomic, strong) NSNumber* amount;
 @property (nonatomic, strong) NSNumber* isIncome;
 @property (nonatomic, strong) NSDate* date;
+@property (nonatomic, strong) NSString* from;
+@property (nonatomic, strong) NSString* to;
+@property (nonatomic, strong) NSNumber *chargeAmount;
 
--(instancetype)initWithType:(NSString*)rideID andAmount:(double)amount andIsIncome:(BOOL)isIncome andDate:(NSDate*)date;
+-(instancetype)initWithType:(NSString*)rideID andAmount:(double)amount andIsIncome:(BOOL)isIncome andDate:(NSDate*)date isFrom:(NSString*)from isTo:(NSString*)to andChargeAmount:(double)chargeAmount;
 
 @end

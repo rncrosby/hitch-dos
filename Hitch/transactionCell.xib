@@ -19,7 +19,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kD4-cN-iOO">
-                        <rect key="frame" x="13" y="10" width="349" height="103"/>
+                        <rect key="frame" x="13" y="10" width="349" height="98"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -65,7 +65,7 @@
                 <outlet property="rideID" destination="y1a-7k-0ZJ" id="l00-sU-IpM"/>
                 <outlet property="shadow" destination="kD4-cN-iOO" id="Ah4-Yx-LzL"/>
             </connections>
-            <point key="canvasLocation" x="33.5" y="19.5"/>
+            <point key="canvasLocation" x="-478" y="-5"/>
         </tableViewCell>
     </objects>
 </document>
