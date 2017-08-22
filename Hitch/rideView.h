@@ -77,6 +77,8 @@
     __weak IBOutlet UIButton *ridersButton;
     __weak IBOutlet UIButton *messagesButton;
     __weak IBOutlet UILabel *noRiders;
+    NSTimer *calculateValues;
+    bool incomeDone;
     CGFloat keyboardHeight;
 }
 

@@ -20,6 +20,8 @@
     __weak IBOutlet UILabel *withdrawalBalancelabel;
     __weak IBOutlet UITableView *table;
     __weak IBOutlet UILabel *bottomBar;
+    NSTimer *calculateValues;
+    bool incomeDone,OutDone;
     double currentBalance, withdrawalBalance;
 }
 - (IBAction)backButton:(id)sender;

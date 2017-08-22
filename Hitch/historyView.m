@@ -28,6 +28,13 @@
 }
 
 -(void)getTransactions {
+    incomeDone = false;
+    OutDone = false;
+    calculateValues = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                     target:self
+                                   selector:@selector(calculateValue)
+                                   userInfo:nil
+                                    repeats:YES];
     [transactions removeAllObjects];
     transactions = [[NSMutableArray alloc] init];
     NSString *toPaymentString = [NSString stringWithFormat:@"to == '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
@@ -47,8 +54,9 @@
                                                            transactionObject *transaction = [[transactionObject alloc] initWithType:[record valueForKey:@"rideID"] andAmount:betterAmount andIsIncome:YES andDate:date isFrom:[record valueForKey:@"from"] isTo:[record valueForKey:@"to"] andChargeAmount:betterCharge];
                                                            [transactions addObject:transaction];
                                                        }
+                                                       
                                                        dispatch_async(dispatch_get_main_queue(), ^(void){
-                                                           [self calculateValue];
+                                                           incomeDone = true;
                                                        });
                                                    }];
     NSString *fromPaymentString = [NSString stringWithFormat:@"from == '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
@@ -67,8 +75,7 @@
                                                            [transactions addObject:transaction];
                                                        }
                                                        dispatch_async(dispatch_get_main_queue(), ^(void){
-                                                           [self calculateValue];
-                                                           [table reloadData];
+                                                           OutDone = true;
                                                        });
                                                    }];
 }
@@ -170,39 +177,43 @@
 }
 
 -(void)calculateValue {
-    currentBalance = 0;
-    withdrawalBalance = 0;
-    double value = 0;
-    for (int a = 0; a < transactions.count; a++) {
-        transactionObject *transaction = transactions[a];
-        if (transaction.isIncome.boolValue == YES) {
-            value = value + transaction.amount.doubleValue;
-            if ([transaction.from isEqualToString:@"Hitch"]) {
+    if (incomeDone == true && OutDone == true) {
+        [calculateValues invalidate];
+        currentBalance = 0;
+        withdrawalBalance = 0;
+        double value = 0;
+        for (int a = 0; a < transactions.count; a++) {
+            transactionObject *transaction = transactions[a];
+            if (transaction.isIncome.boolValue == YES) {
+                value = value + transaction.amount.doubleValue;
+                if ([transaction.from isEqualToString:@"Hitch"]) {
+                    nil;
+                } else {
+                    withdrawalBalance = withdrawalBalance + transaction.amount.doubleValue;
+                }
+            } else {
+                if ([transaction.to isEqualToString:@"Hitch"]) {
+                    value = value - fabs(transaction.amount.doubleValue);
+                }
+            }
+        }
+        withdrawalBalancelabel.text = [NSString stringWithFormat:@"$%.2f",withdrawalBalance];
+        accountValue.text = [NSString stringWithFormat:@"$%.2f",value];
+        currentBalance = value;
+        NSMutableArray *betterTransactions = [[NSMutableArray alloc] init];
+        for (int a = 0; a < transactions.count; a++) {
+            transactionObject *object = transactions[a];
+            if ([object.from isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]] && [object.to isEqualToString:@"Hitch"]) {
                 nil;
             } else {
-                withdrawalBalance = withdrawalBalance + transaction.amount.doubleValue;
-            }
-        } else {
-            if ([transaction.to isEqualToString:@"Hitch"]) {
-                value = value - fabs(transaction.amount.doubleValue);
+                [betterTransactions addObject:object];
             }
         }
+        [transactions removeAllObjects];
+        [transactions addObjectsFromArray:betterTransactions];
+        [table reloadData];
     }
-    withdrawalBalancelabel.text = [NSString stringWithFormat:@"$%.2f",withdrawalBalance];
-    accountValue.text = [NSString stringWithFormat:@"$%.2f",value];
-    currentBalance = value;
-    NSMutableArray *betterTransactions = [[NSMutableArray alloc] init];
-    for (int a = 0; a < transactions.count; a++) {
-        transactionObject *object = transactions[a];
-        if ([object.from isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]] && [object.to isEqualToString:@"Hitch"]) {
-            nil;
-        } else {
-            [betterTransactions addObject:object];
-        }
-    }
-    [transactions removeAllObjects];
-    [transactions addObjectsFromArray:betterTransactions];
-    [table reloadData];
+    
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

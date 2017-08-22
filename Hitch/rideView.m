@@ -466,6 +466,7 @@
 -(void)IsMyDrive {
     if ([_ride.phone isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]]) {
         isRideConfirmed = YES;
+        [rideManagerTrash setEnabled:YES];
         [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
         [requestRide setTitle:@"See Your Drive Messages" forState:UIControlStateNormal];
         scroll.contentSize = CGSizeMake([References screenWidth], scroll.frame.size.height);
@@ -494,6 +495,7 @@
             [requestRide setTitle:@"Ride Request Pending" forState:UIControlStateNormal];
             [requestRide setEnabled:NO];
             [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
+            [rideManagerTrash setEnabled:NO];
         }
     }
 }
@@ -507,6 +509,7 @@
             indexOfPayment = a;
             [requestRide setEnabled:YES];
             [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
+            [rideManagerTrash setEnabled:NO];
         }
     }
 }
@@ -517,6 +520,7 @@
             [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
             isRideConfirmed = YES;
             [requestRide setEnabled:YES];
+            [rideManagerTrash setEnabled:NO];
             [requestRide setTitle:@"See Your Ride Messages" forState:UIControlStateNormal];
             scroll.contentSize = CGSizeMake([References screenWidth], scroll.frame.size.height);
             scroll.frame = CGRectMake(0, menuBar.frame.origin.y+menuBar.frame.size.height, [References screenWidth], [References screenHeight]-menuBar.frame.size.height);
@@ -858,6 +862,12 @@
 }
 
 -(void)getTransactions {
+    incomeDone = false;
+    calculateValues = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                       target:self
+                                                     selector:@selector(calculateValue)
+                                                     userInfo:nil
+                                                      repeats:YES];
     [transactions removeAllObjects];
     transactions = [[NSMutableArray alloc] init];
     NSString *toPaymentString = [NSString stringWithFormat:@"to == '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
@@ -877,12 +887,14 @@
                                                            [transactions addObject:transaction];
                                                        }
                                                        dispatch_async(dispatch_get_main_queue(), ^(void){
-                                                           [self calculateValue];
+                                                           incomeDone = true;
                                                        });
                                                    }];
 }
 
 -(void)calculateValue {
+    if (incomeDone == true) {
+        [calculateValues invalidate];
     currentBalance = 0;
     double value = 0;
     for (int a = 0; a < transactions.count; a++) {
@@ -892,6 +904,7 @@
         }
     }
     currentBalance = value;
+    }
 }
 
 @end
