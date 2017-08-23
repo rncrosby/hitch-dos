@@ -41,6 +41,7 @@
 +(void)fadeColor:(UIView*)view color:(UIColor*)color;
 +(void)fadeButtonTextColor:(UIButton*)view color:(UIColor*)color;
 +(void)fadeButtonColor:(UIButton*)view color:(UIColor*)color;
++(void)fadeLabelTextColor:(UILabel*)view color:(UIColor*)color;
 +(void)tintUIButton:(UIButton*)button color:(UIColor*)color;
 +(void)createLine:(UIView*)superview  xPos:(int)xPos yPos:(int)yPos inFront:(bool)inFront;
 +(void)ViewToLine:(UIView*)superview withView:(UIView*)view xPos:(int)xPos yPos:(int)yPos;

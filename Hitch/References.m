@@ -258,6 +258,12 @@
     } completion:NULL];
 }
 
++(void)fadeLabelTextColor:(UILabel*)view color:(UIColor*)color {
+    [UIView animateWithDuration:0.5 animations:^{
+        [view setTextColor:color];
+    } completion:NULL];
+}
+
 +(void)fadeButtonText:(UIButton*)view text:(NSString*)text{
     [UIView animateWithDuration:0.5 animations:^{
         [view setTitle:text forState:UIControlStateNormal];

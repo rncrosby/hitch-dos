@@ -15,7 +15,7 @@
 @implementation startView
 
 - (void)viewDidLoad {
-    schoolEmails = [[NSArray alloc] initWithObjects:@"@uoregon.edu",@"@ucsc.edu", nil];
+    schoolEmails = [[NSArray alloc] initWithObjects:@"@uoregon.edu",@"@ucsc.edu",@"@me.com", nil];
     blurBack = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [References screenWidth], [References screenHeight])];
     blurBack.backgroundColor = [UIColor clearColor];
     [References lightblurView:blurBack];
@@ -57,20 +57,6 @@
                                              selector:@selector(playerStartPlaying)
                                                  name:UIApplicationDidBecomeActiveNotification object:nil];
     // Do any additional setup after loading the view.
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [References fadeIn:titleLabel];
-         [References fadeIn:titleInstruction];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                [References fadeIn:blurBack];
-            [References moveUp:titleLabel yChange:250];
-            [References moveUp:titleInstruction yChange:250];
-            [References fadeIn:toggleDogButton];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                [References fadeLabelText:titleInstruction newText:@"Enter your phone number to get started"];
-                [References fadeIn:mainInput];
-            });
-        });
-    });
     numberToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, [References screenWidth], 44)];
     numberToolbar.barStyle = UIBarStyleDefault;
     numberToolbar.items = [NSArray arrayWithObjects:
@@ -80,6 +66,20 @@
                            nil];
     [numberToolbar sizeToFit];
     mainInput.inputAccessoryView = numberToolbar;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [References fadeIn:titleLabel];
+        [References fadeIn:titleInstruction];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [References fadeIn:blurBack];
+            [References moveUp:titleLabel yChange:250];
+            [References moveUp:titleInstruction yChange:250];
+            [References fadeIn:toggleDogButton];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [References fadeLabelText:titleInstruction newText:@"Enter your phone number to get started"];
+                [References fadeIn:mainInput];
+            });
+        });
+    });
 }
 
 -(void)toolbarCancel {
@@ -114,25 +114,48 @@
 
 -(void)continueOnboarding {
     if (currentPage == 0) {
-        // look up number
-        bool foundAccount = false;
         phone = mainInput.text;
-        if (foundAccount == true) {
-            [mainInput setText:@""];
-            [References moveDown:titleInstruction yChange:10];
-            [References fadeLabelText:titleLabel newText:@"Hey, Guy!"];
-            [References fadeLabelText:titleInstruction newText:@"You'll be texted a code to sign in"];
-            [References fadePlaceholderText:mainInput newText:@"1234"];
-            currentPage = 10;
-        } else {
-            [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:30]];
-            [mainInput setText:@""];
-            [References fadeLabelText:titleLabel newText:@"Welcome"];
-            [References fadeLabelText:titleInstruction newText:@"Enter your school email to continue"];
-            [References fadePlaceholderText:mainInput newText:@"useraccount@ucsc.edu"];
-            [mainInput setKeyboardType:UIKeyboardTypeEmailAddress];
-            currentPage = 1;
-        }
+        NSString *string = [NSString stringWithFormat:@"phone BEGINSWITH %@",phone];
+        NSPredicate *predicate = [NSPredicate predicateWithValue:string];
+        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"People" predicate:predicate];
+        
+        [[CKContainer defaultContainer].publicCloudDatabase performQuery:query
+                                                            inZoneWithID:nil
+                                                       completionHandler:^(NSArray *results, NSError *error) {
+                                                           dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                               bool foundAccount = false;;
+                                                               for (int a = 0; a < results.count; a++) {
+                                                                   CKRecord *record = results[a];
+                                                                   if ([phone isEqualToString:[record valueForKey:@"phone"]]) {
+                                                                       phone = [record valueForKey:@"phone"];
+                                                                       name = [record valueForKey:@"name"];
+                                                                       email = [record valueForKey:@"email"];
+                                                                       foundAccount = true;
+                                                                       a = (int)results.count;
+                                                                   }
+                                                               }
+                                                               if (foundAccount == true) {
+                                                                   [self textCode];
+                                                                   [mainInput setText:@""];
+                                                                   [References moveDown:titleInstruction yChange:10];
+                                                                   [References moveDown:mainInput yChange:10];
+                                                                   [References fadeLabelText:titleLabel newText:[NSString stringWithFormat:@"Hey, %@!",name]];
+                                                                   [References fadeLabelText:titleInstruction newText:@"You'll be texted a code to sign in"];
+                                                                   [References fadePlaceholderText:mainInput newText:@"1234"];
+                                                                   currentPage = 3;
+                                                               } else {
+                                                                   [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:30]];
+                                                                   [mainInput setText:@""];
+                                                                   [References fadeLabelText:titleLabel newText:@"Welcome"];
+                                                                   [References fadeLabelText:titleInstruction newText:@"Enter your school email to continue"];
+                                                                   [References fadePlaceholderText:mainInput newText:@"useraccount@ucsc.edu"];
+                                                                   [mainInput setKeyboardType:UIKeyboardTypeEmailAddress];
+                                                                   currentPage = 1;
+                                                               }
+                                                           });
+                                                           
+                                                           
+                                                       }];
     } else if (currentPage == 1) {
         bool isSchoolEmail = false;
         for (int a = 0; a < schoolEmails.count; a++) {
@@ -173,13 +196,44 @@
         }
     } else if (currentPage == 3) {
         if ([mainInput.text isEqualToString:code]) {
-            [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:37]];
+            [References fadePlaceholderText:mainInput newText:@""];
             [mainInput setText:@""];
             [References fadeLabelText:titleLabel newText:@"Nice!"];
-            [References fadeLabelText:titleInstruction newText:@"You're all set to get started."];
-            [References fadePlaceholderText:mainInput newText:@""];
-            [mainInput setKeyboardType:UIKeyboardTypeNumberPad];
-            currentPage = 4;
+            [References fadeLabelText:titleInstruction newText:@"Finding rides around you..."];
+            [References fadeOut:mainInput];
+            [References moveDown:titleLabel yChange:250];
+            [References moveDown:titleInstruction yChange:240];
+            [References fadeOut:blurBack];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:37]];
+                    [mainInput setKeyboardType:UIKeyboardTypeNumberPad];
+                    currentPage = 4;
+                    CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
+                    CKRecord *postRecord = [[CKRecord alloc] initWithRecordType:@"People" recordID:recordID];
+                    postRecord[@"email"] = [NSString stringWithFormat:@"%@",email];
+                    postRecord[@"name"] = [NSString stringWithFormat:@"%@",name];
+                    postRecord[@"phone"] = [NSString stringWithFormat:@"%@",phone];
+                    CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+                    [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
+                        if(error) {
+                            NSLog(@"%@",error.localizedDescription);
+                        } else {
+                            dispatch_async(dispatch_get_main_queue(), ^(void){
+                                [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
+                                [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
+                                [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
+                                [[NSUserDefaults standardUserDefaults] synchronize];
+                            
+                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                                    feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+                                    [self presentViewController:viewController animated:YES completion:nil];
+                                });
+                            });
+                            
+                        }
+                    }];
+            });
+            
         } else {
             [References fullScreenToast:@"Something's not right with your code" inView:self withSuccess:NO andClose:NO];
         }
@@ -187,7 +241,7 @@
 }
 
 -(void)emailCode {
-    code = [References randomIntWithLength:5];
+    code = [References randomIntWithLength:4];
     NSURL *url = [NSURL URLWithString:@"http://104.236.94.16:5000/email"];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = @"POST";
@@ -215,6 +269,39 @@
                                    NSLog(@"Unknown Error Occured");
                                } else {
                                    nil;
+                               }
+                           }];
+    
+}
+
+-(void)textCode {
+    code = [References randomIntWithLength:4];
+    NSURL *url = [NSURL URLWithString:@"http://104.236.94.16:5000/sms"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    // NSError *actualerror = [[NSError alloc] init];
+    // Parameters
+    NSDictionary *tmp = [[NSDictionary alloc] init];
+    tmp = @{
+            @"code"     : code,
+            @"phone"    : phone,
+            };
+    
+    NSError *error;
+    NSData *postdata = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
+    [request setHTTPBody:postdata];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response,
+                                               NSData *data,
+                                               NSError *error) {
+                               if (error) {
+                                   // Returned Error
+                                   NSLog(@"Unknown Error Occured");
+                               } else {
+                                   NSLog(@"Success");
                                }
                            }];
     
@@ -309,7 +396,8 @@
                            }];
     
 }
-*/
+
+ */
 -(UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
 }
