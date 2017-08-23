@@ -15,11 +15,50 @@
 @implementation startView
 
 - (void)viewDidLoad {
-    [References cornerRadius:card radius:8.0f];
-    [References cardshadow:shadow];
-    [References createLine:self.view xPos:0 yPos:menuBar.frame.origin.y+menuBar.frame.size.height inFront:TRUE];
+//    [References cornerRadius:card radius:8.0f];
+//    [References cardshadow:shadow];
+//    [References createLine:self.view xPos:0 yPos:menuBar.frame.origin.y+menuBar.frame.size.height inFront:TRUE];
     [super viewDidLoad];
+    NSError *sessionError = nil;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:&sessionError];
+    [[AVAudioSession sharedInstance] setActive:YES error:&sessionError];
+    bgVideo = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [References screenWidth], [References screenHeight])];
+    bgVideo.alpha = 0.7;
+    //Set up player
+    NSURL *movieURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"vid" ofType:@"mp4"]];
+    AVAsset *avAsset = [AVAsset assetWithURL:movieURL];
+    AVPlayerItem *avPlayerItem =[[AVPlayerItem alloc]initWithAsset:avAsset];
+    avPlayerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmVarispeed;
+    self.avplayer = [[AVPlayer alloc]initWithPlayerItem:avPlayerItem];
+    AVPlayerLayer *avPlayerLayer =[AVPlayerLayer playerLayerWithPlayer:self.avplayer];
+    [avPlayerLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    [self.avplayer setRate:0.1f];
+    [avPlayerLayer setFrame:[[UIScreen mainScreen] bounds]];
+    [bgVideo.layer addSublayer:avPlayerLayer];
+    [self.view addSubview:bgVideo];
+    [self.view sendSubviewToBack:bgVideo];
+    //Config player
+    [self.avplayer seekToTime:kCMTimeZero];
+    [self.avplayer setVolume:0.0f];
+    [self.avplayer setActionAtItemEnd:AVPlayerActionAtItemEndNone];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidReachEnd:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:[self.avplayer currentItem]];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerStartPlaying)
+                                                 name:UIApplicationDidBecomeActiveNotification object:nil];
     // Do any additional setup after loading the view.
+}
+
+- (void)playerItemDidReachEnd:(NSNotification *)notification {
+    AVPlayerItem *p = [notification object];
+    [p seekToTime:kCMTimeZero];
+}
+
+- (void)playerStartPlaying
+{
+    [self.avplayer play];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -129,5 +168,9 @@
                                }
                            }];
     
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 @end
