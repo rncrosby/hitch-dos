@@ -15,6 +15,14 @@
 @implementation startView
 
 - (void)viewDidLoad {
+    schoolEmails = [[NSArray alloc] initWithObjects:@"@uoregon.edu",@"@ucsc.edu", nil];
+    blurBack = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [References screenWidth], [References screenHeight])];
+    blurBack.backgroundColor = [UIColor clearColor];
+    [References lightblurView:blurBack];
+    blurBack.hidden = YES;
+    [self.view addSubview:blurBack];
+    [self.view sendSubviewToBack:blurBack];
+    currentPage = 0;
 //    [References cornerRadius:card radius:8.0f];
 //    [References cardshadow:shadow];
 //    [References createLine:self.view xPos:0 yPos:menuBar.frame.origin.y+menuBar.frame.size.height inFront:TRUE];
@@ -22,10 +30,10 @@
     NSError *sessionError = nil;
     [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:&sessionError];
     [[AVAudioSession sharedInstance] setActive:YES error:&sessionError];
-    bgVideo = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [References screenWidth], [References screenHeight])];
+    bgVideo = [[UIView alloc] initWithFrame:CGRectMake(-100, 0, [References screenWidth]+200, [References screenHeight])];
     bgVideo.alpha = 0.7;
     //Set up player
-    NSURL *movieURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"vid" ofType:@"mp4"]];
+    NSURL *movieURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"dog" ofType:@"mp4"]];
     AVAsset *avAsset = [AVAsset assetWithURL:movieURL];
     AVPlayerItem *avPlayerItem =[[AVPlayerItem alloc]initWithAsset:avAsset];
     avPlayerItem.audioTimePitchAlgorithm = AVAudioTimePitchAlgorithmVarispeed;
@@ -33,7 +41,7 @@
     AVPlayerLayer *avPlayerLayer =[AVPlayerLayer playerLayerWithPlayer:self.avplayer];
     [avPlayerLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [self.avplayer setRate:0.1f];
-    [avPlayerLayer setFrame:[[UIScreen mainScreen] bounds]];
+    [avPlayerLayer setFrame:bgVideo.frame];
     [bgVideo.layer addSublayer:avPlayerLayer];
     [self.view addSubview:bgVideo];
     [self.view sendSubviewToBack:bgVideo];
@@ -49,6 +57,38 @@
                                              selector:@selector(playerStartPlaying)
                                                  name:UIApplicationDidBecomeActiveNotification object:nil];
     // Do any additional setup after loading the view.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [References fadeIn:titleLabel];
+         [References fadeIn:titleInstruction];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [References fadeIn:blurBack];
+            [References moveUp:titleLabel yChange:250];
+            [References moveUp:titleInstruction yChange:250];
+            [References fadeIn:toggleDogButton];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                [References fadeLabelText:titleInstruction newText:@"Enter your phone number to get started"];
+                [References fadeIn:mainInput];
+            });
+        });
+    });
+    numberToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, [References screenWidth], 44)];
+    numberToolbar.barStyle = UIBarStyleDefault;
+    numberToolbar.items = [NSArray arrayWithObjects:
+                           [[UIBarButtonItem alloc]initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(toolbarCancel)],
+                           [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+                           [[UIBarButtonItem alloc]initWithTitle:@"Next" style:UIBarButtonItemStyleDone target:self action:@selector(toolbarEmter)],
+                           nil];
+    [numberToolbar sizeToFit];
+    mainInput.inputAccessoryView = numberToolbar;
+}
+
+-(void)toolbarCancel {
+    [mainInput resignFirstResponder];
+}
+
+-(void)toolbarEmter {
+    [self continueOnboarding];
+    [mainInput resignFirstResponder];
 }
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
@@ -67,9 +107,117 @@
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
-    
+    [self continueOnboarding];
     [textField resignFirstResponder];
     return YES;
+}
+
+-(void)continueOnboarding {
+    if (currentPage == 0) {
+        // look up number
+        bool foundAccount = false;
+        phone = mainInput.text;
+        if (foundAccount == true) {
+            [mainInput setText:@""];
+            [References moveDown:titleInstruction yChange:10];
+            [References fadeLabelText:titleLabel newText:@"Hey, Guy!"];
+            [References fadeLabelText:titleInstruction newText:@"You'll be texted a code to sign in"];
+            [References fadePlaceholderText:mainInput newText:@"1234"];
+            currentPage = 10;
+        } else {
+            [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:30]];
+            [mainInput setText:@""];
+            [References fadeLabelText:titleLabel newText:@"Welcome"];
+            [References fadeLabelText:titleInstruction newText:@"Enter your school email to continue"];
+            [References fadePlaceholderText:mainInput newText:@"useraccount@ucsc.edu"];
+            [mainInput setKeyboardType:UIKeyboardTypeEmailAddress];
+            currentPage = 1;
+        }
+    } else if (currentPage == 1) {
+        bool isSchoolEmail = false;
+        for (int a = 0; a < schoolEmails.count; a++) {
+            if ([mainInput.text containsString:schoolEmails[a]]) {
+                isSchoolEmail = true;
+                break;
+            }
+        }
+        if (isSchoolEmail == true) {
+            email = mainInput.text;
+            [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:37]];
+            [mainInput setText:@""];
+            [References moveDown:titleInstruction yChange:5];
+            [References moveDown:mainInput yChange:5];
+            [References fadeLabelText:titleLabel newText:@"Hi _____!"];
+            [References fadeLabelText:titleInstruction newText:@"Now we just need a name to call you."];
+            [References fadePlaceholderText:mainInput newText:@"Ron"];
+            [mainInput setKeyboardType:UIKeyboardTypeAlphabet];
+            currentPage = 2;
+        } else {
+            [References fullScreenToast:@"Sorry, your school isnt currently supported." inView:self withSuccess:NO andClose:NO];
+        }
+    } else if (currentPage == 2) {
+        if (mainInput.text.length > 0) {
+            [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:37]];
+            name = mainInput.text;
+            [mainInput setText:@""];
+            [References moveUp:titleInstruction yChange:5];
+            [References moveUp:mainInput yChange:5];
+            [References fadeLabelText:titleLabel newText:[NSString stringWithFormat:@"Hi %@!",name]];
+            [References fadeLabelText:titleInstruction newText:@"We're emailing you a code to verify your school"];
+            [References fadePlaceholderText:mainInput newText:@"1234"];
+            [mainInput setKeyboardType:UIKeyboardTypeNumberPad];
+            currentPage = 3;
+            [self emailCode];
+        } else {
+             [References fullScreenToast:@"Something's not right with your name" inView:self withSuccess:NO andClose:NO];
+        }
+    } else if (currentPage == 3) {
+        if ([mainInput.text isEqualToString:code]) {
+            [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:37]];
+            [mainInput setText:@""];
+            [References fadeLabelText:titleLabel newText:@"Nice!"];
+            [References fadeLabelText:titleInstruction newText:@"You're all set to get started."];
+            [References fadePlaceholderText:mainInput newText:@""];
+            [mainInput setKeyboardType:UIKeyboardTypeNumberPad];
+            currentPage = 4;
+        } else {
+            [References fullScreenToast:@"Something's not right with your code" inView:self withSuccess:NO andClose:NO];
+        }
+    }
+}
+
+-(void)emailCode {
+    code = [References randomIntWithLength:5];
+    NSURL *url = [NSURL URLWithString:@"http://104.236.94.16:5000/email"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    // NSError *actualerror = [[NSError alloc] init];
+    // Parameters
+    NSDictionary *tmp = [[NSDictionary alloc] init];
+    tmp = @{
+            @"code"     : code,
+            @"email"    : email,
+            @"name"     : name
+            };
+    
+    NSError *error;
+    NSData *postdata = [NSJSONSerialization dataWithJSONObject:tmp options:0 error:&error];
+    [request setHTTPBody:postdata];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response,
+                                               NSData *data,
+                                               NSError *error) {
+                               if (error) {
+                                   // Returned Error
+                                   NSLog(@"Unknown Error Occured");
+                               } else {
+                                   nil;
+                               }
+                           }];
+    
 }
 /*
 #pragma mark - Navigation
@@ -80,7 +228,7 @@
     // Pass the selected object to the new view controller.
 }
 */
-
+/*
 - (IBAction)continueButton:(id)sender {
     CKContainer *defaultContainer = [CKContainer defaultContainer];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"email = '%@'",[NSString stringWithFormat:@"%@",emailAddress.text]]];
@@ -126,15 +274,7 @@
     }];
 }
 
-- (IBAction)driver:(id)sender {
-    [emailAddress setText:@"driver"];
-    [name setText:@"driver"];
-}
 
-- (IBAction)rider:(id)sender {
-    [emailAddress setText:@"rider"];
-    [name setText:@"rider"];
-}
 
 - (IBAction)email:(id)sender {
     NSString *code = [References randomStringWithLength:5];
@@ -169,8 +309,17 @@
                            }];
     
 }
-
+*/
 -(UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
+}
+- (IBAction)toggleDog:(id)sender {
+    if (blurBack.hidden == true) {
+        [References fadeButtonText:toggleDogButton text:@"show the dog"];
+        [References fadeIn:blurBack];
+    } else {
+        [References fadeOut:blurBack];
+        [References fadeButtonText:toggleDogButton text:@"blur the dog"];
+    }
 }
 @end

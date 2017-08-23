@@ -160,6 +160,7 @@
     [UIView animateWithDuration:1 animations:^{
         view.alpha = 0;
     } completion:^(BOOL complete){
+        view.hidden = YES;
     }];
 }
 
@@ -222,6 +223,17 @@
 +(void)blurView:(UIView *)view {
     [view setBackgroundColor:[UIColor clearColor]];
     UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+    UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    blurEffectView.frame = view.bounds;
+    blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    [view addSubview:blurEffectView];
+    [view sendSubviewToBack:blurEffectView];
+}
+
++(void)lightblurView:(UIView *)view {
+    [view setBackgroundColor:[UIColor clearColor]];
+    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleRegular];
     UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
     blurEffectView.frame = view.bounds;
     blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -330,6 +342,17 @@
                     } completion:nil];
 }
 
++(void)fadePlaceholderText:(UITextField*)view newText:(NSString*)newText {
+    [UIView transitionWithView:view
+                      duration:0.4f
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{
+                        
+                        view.placeholder = newText;
+                        
+                    } completion:nil];
+}
+
 +(UIView*)createGradient:(UIColor *)colorA andColor:(UIColor *)colorB withFrame:(CGRect)frame {
     UIView *view = [[UIView alloc] initWithFrame:frame];
     CAGradientLayer *gradient = [CAGradientLayer layer];
@@ -400,20 +423,21 @@
 
 
 +(void)parallax:(UIView *)view {
+    int parallaxEffect = 100;
     UIInterpolatingMotionEffect *verticalMotionEffect =
     [[UIInterpolatingMotionEffect alloc]
      initWithKeyPath:@"center.y"
      type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-    verticalMotionEffect.minimumRelativeValue = @(-10);
-    verticalMotionEffect.maximumRelativeValue = @(10);
+    verticalMotionEffect.minimumRelativeValue = @(-1*parallaxEffect);
+    verticalMotionEffect.maximumRelativeValue = @(parallaxEffect);
     
     // Set horizontal effect
     UIInterpolatingMotionEffect *horizontalMotionEffect =
     [[UIInterpolatingMotionEffect alloc]
      initWithKeyPath:@"center.x"
      type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-    horizontalMotionEffect.minimumRelativeValue = @(-10);
-    horizontalMotionEffect.maximumRelativeValue = @(10);
+    horizontalMotionEffect.minimumRelativeValue = @(-1*parallaxEffect);
+    horizontalMotionEffect.maximumRelativeValue = @(parallaxEffect);
     
     // Create group to combine both
     UIMotionEffectGroup *group = [UIMotionEffectGroup new];

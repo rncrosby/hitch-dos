@@ -45,6 +45,7 @@
 +(void)createLine:(UIView*)superview  xPos:(int)xPos yPos:(int)yPos inFront:(bool)inFront;
 +(void)ViewToLine:(UIView*)superview withView:(UIView*)view xPos:(int)xPos yPos:(int)yPos;
 +(void)fadeLabelText:(UILabel*)view newText:(NSString*)newText;
++(void)fadePlaceholderText:(UITextField*)view newText:(NSString*)newText;
 +(void)moveHorizontal:(UIView*)view where:(NSString*)where;
 +(NSString *) randomStringWithLength: (int) len;
 +(NSString *) randomIntWithLength: (int) len;
@@ -57,5 +58,6 @@
 +(void)fullScreenToast:(NSString*)text inView:(UIViewController*)view withSuccess:(BOOL)success andClose:(BOOL)close;
 +(NSString*)randomizeString:(NSString*)string;
 +(NSString*)normalizeString:(NSString*)string;
++(void)lightblurView:(UIView *)view;
 @end
 

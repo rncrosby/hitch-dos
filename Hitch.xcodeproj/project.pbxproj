@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		6BD26D998D0D83CEF7857773 /* libPods-Hitch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066B3A24DD0F49CC780EAEA /* libPods-Hitch.a */; };
-		AD14E5771F4CD4D300E3395D /* vid.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = AD14E5761F4CD4C400E3395D /* vid.mp4 */; };
 		AD6CC8B51F42559700FA1E54 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = AD6CC8B31F42527E00FA1E54 /* share.png */; };
 		AD6CC8B61F42559700FA1E54 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = AD6CC8B41F42528400FA1E54 /* map.png */; };
 		AD6CC8B71F42559700FA1E54 /* trash.png in Resources */ = {isa = PBXBuildFile; fileRef = AD6CC8B21F42527200FA1E54 /* trash.png */; };
@@ -49,12 +48,12 @@
 		ADE8FBB81F435667000D20F9 /* PassKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADE8FBB71F435667000D20F9 /* PassKit.framework */; };
 		ADE8FBBA1F435906000D20F9 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = ADE8FBB91F435906000D20F9 /* Podfile */; };
 		ADF77D031F476974003DC39F /* historyView.m in Sources */ = {isa = PBXBuildFile; fileRef = ADF77D021F476974003DC39F /* historyView.m */; };
+		D420E5951F4D420D004BF5BD /* dog.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = D420E5941F4D4205004BF5BD /* dog.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		440C3CFEDCE86FC396D07452 /* Pods-Hitch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hitch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Hitch/Pods-Hitch.debug.xcconfig"; sourceTree = "<group>"; };
 		7066B3A24DD0F49CC780EAEA /* libPods-Hitch.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Hitch.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD14E5761F4CD4C400E3395D /* vid.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = vid.mp4; path = Hitch/vid.mp4; sourceTree = SOURCE_ROOT; };
 		AD6CC8AF1F42525400FA1E54 /* failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = failure.png; sourceTree = "<group>"; };
 		AD6CC8B01F42525E00FA1E54 /* success.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = success.png; sourceTree = "<group>"; };
 		AD6CC8B11F42526800FA1E54 /* minus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = minus.png; sourceTree = "<group>"; };
@@ -111,6 +110,7 @@
 		ADE8FBB91F435906000D20F9 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ADF77D011F476974003DC39F /* historyView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = historyView.h; sourceTree = "<group>"; };
 		ADF77D021F476974003DC39F /* historyView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = historyView.m; sourceTree = "<group>"; };
+		D420E5941F4D4205004BF5BD /* dog.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = dog.mp4; path = Hitch/dog.mp4; sourceTree = SOURCE_ROOT; };
 		D432027F1F466AD200F81B89 /* NSData+Base64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		D43202801F466AD200F81B89 /* NSData+Base64.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		D43202811F466AD200F81B89 /* FBEncryptorAES.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBEncryptorAES.h; sourceTree = "<group>"; };
@@ -226,7 +226,7 @@
 		ADF77CFF1F47692A003DC39F /* images */ = {
 			isa = PBXGroup;
 			children = (
-				AD14E5761F4CD4C400E3395D /* vid.mp4 */,
+				D420E5941F4D4205004BF5BD /* dog.mp4 */,
 				ADDCC67F1F3CFA430056C00F /* phone.png */,
 				AD6CC8B31F42527E00FA1E54 /* share.png */,
 				AD6CC8B41F42528400FA1E54 /* map.png */,
@@ -327,7 +327,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD14E5771F4CD4D300E3395D /* vid.mp4 in Resources */,
+				D420E5951F4D420D004BF5BD /* dog.mp4 in Resources */,
 				AD6CC8BC1F425C1B00FA1E54 /* refresh.png in Resources */,
 				AD6CC8B51F42559700FA1E54 /* share.png in Resources */,
 				AD6CC8B61F42559700FA1E54 /* map.png in Resources */,

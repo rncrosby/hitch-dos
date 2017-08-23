@@ -14,19 +14,27 @@
 #import <AVKit/AVKit.h>
 
 @interface startView : UIViewController <UITextFieldDelegate> {
-    
+    NSString *phone,*name,*email,*code;
+    NSArray *schoolEmails;
+    UILabel *blurBack;
+    int currentPage;
     UIView *bgVideo;
+    UIToolbar *numberToolbar;
     __weak IBOutlet UILabel *card;
+    
+    __weak IBOutlet UILabel *titleLabel;
+    __weak IBOutlet UILabel *titleInstruction;
+    __weak IBOutlet UITextField *mainInput;
+    __weak IBOutlet UIButton *toggleDogButton;
+    /*
     __weak IBOutlet UILabel *shadow;
     __weak IBOutlet UILabel *menuBar;
     __weak IBOutlet UITextField *emailAddress;
     __weak IBOutlet UITextField *name;
+     */
 }
 @property (nonatomic, strong) AVPlayer *avplayer;
-- (IBAction)continueButton:(id)sender;
-- (IBAction)driver:(id)sender;
-- (IBAction)rider:(id)sender;
-- (IBAction)email:(id)sender;
+- (IBAction)toggleDog:(id)sender;
 
 
 @end
