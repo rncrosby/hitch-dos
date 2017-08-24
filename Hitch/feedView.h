@@ -16,6 +16,7 @@
 #import "feedView.h"
 #import "postView.h"
 #import "historyView.h"
+#import "startView.h"
 
 @interface feedView : UIViewController <UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,CLLocationManagerDelegate> {
     CLLocationManager *location;
@@ -23,6 +24,7 @@
     CLPlacemark *start,*end;
     NSMutableArray *rides,*rideRecords;
     UINotificationFeedbackGenerator *feedback;
+    bool isRestrictedSearch;
     UISelectionFeedbackGenerator *selectionFeedback;
     // SEARCH PANEL
     __weak IBOutlet UITextField *startPoint;
@@ -33,6 +35,7 @@
     __weak IBOutlet UILabel *menuCard;
     __weak IBOutlet UIButton *postRide;
     
+    __weak IBOutlet UIButton *currentLocation;
     __weak IBOutlet UIButton *refreshButton;
     
     // OTHER VIEWS
@@ -44,5 +47,6 @@
 - (IBAction)postDrive:(id)sender;
 - (IBAction)more:(id)sender;
 - (IBAction)refreshButton:(id)sender;
+- (IBAction)currentLocation:(id)sender;
 
 @end

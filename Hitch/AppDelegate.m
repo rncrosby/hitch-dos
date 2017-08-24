@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "startView.h"
 
 @interface AppDelegate ()
 
@@ -17,7 +18,17 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
      [[STPPaymentConfiguration sharedConfiguration] setPublishableKey:@"pk_test_NChUHegmsfKqqrvMQansdJX2"];
-    NSLog(@"Launching...");
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"email"]) {
+        feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+        // show the storyboard
+        self.window.rootViewController = viewController;
+        [self.window makeKeyAndVisible];
+    } else {
+        startView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"startView"];
+        // show the storyboard
+        self.window.rootViewController = viewController;
+        [self.window makeKeyAndVisible];
+    }
     // Override point for customization after application launch.
     return YES;
 }

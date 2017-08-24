@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13156.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="vQL-M5-Det">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="vQL-M5-Det">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13137.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13147.4"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="DYZ-7s-a28">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" id="DYZ-7s-a28">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -60,6 +60,17 @@
                                             <outlet property="delegate" destination="vQL-M5-Det" id="WTg-cm-ecv"/>
                                         </connections>
                                     </textField>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="WO9-ah-IfP">
+                                        <rect key="frame" x="107" y="582" width="161" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="Test Account">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="testAccount:" destination="vQL-M5-Det" eventType="touchUpInside" id="QoH-w3-Iia"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -67,6 +78,7 @@
                     </view>
                     <connections>
                         <outlet property="mainInput" destination="UHP-mF-SI9" id="tYw-t5-ste"/>
+                        <outlet property="testAccount" destination="WO9-ah-IfP" id="mfv-NJ-MQ9"/>
                         <outlet property="titleInstruction" destination="iqn-y3-fbi" id="4Q8-HY-swE"/>
                         <outlet property="titleLabel" destination="Jdv-Rv-7Pz" id="x1k-H8-CBe"/>
                         <outlet property="toggleDogButton" destination="xTc-Z2-NfJ" id="f0e-Zn-Cnl"/>
@@ -125,7 +137,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" tag="1" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Start Location" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" id="FaA-o9-6Kx">
-                                <rect key="frame" x="16" y="36" width="351" height="30"/>
+                                <rect key="frame" x="16" y="36" width="300" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="textColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
@@ -195,11 +207,21 @@
                                     <action selector="refreshButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DDb-Dq-ka3"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="txU-KL-9gc">
+                                <rect key="frame" x="336" y="40" width="23" height="23"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" backgroundImage="location-arrow.png"/>
+                                <connections>
+                                    <action selector="currentLocation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zia-Cp-blX"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.94999999999999996" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <size key="freeformSize" width="375" height="667"/>
                     <connections>
+                        <outlet property="currentLocation" destination="txU-KL-9gc" id="00e-8G-X3E"/>
                         <outlet property="endPoint" destination="nvf-VL-Zok" id="wtw-2D-CZR"/>
                         <outlet property="menuCard" destination="Vle-je-cLf" id="Brs-vf-vL2"/>
                         <outlet property="noRides" destination="Nbr-q9-MrX" id="JPt-9q-fOS"/>
@@ -212,7 +234,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-670.5" y="-14.5"/>
+            <point key="canvasLocation" x="-765.5" y="-18.5"/>
         </scene>
         <!--Inbox View-->
         <scene sceneID="bZ7-PD-43f">
@@ -1175,6 +1197,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="location-arrow.png" width="512" height="512"/>
         <image name="map.png" width="100" height="100"/>
         <image name="refresh.png" width="50" height="50"/>
         <image name="share.png" width="100" height="100"/>

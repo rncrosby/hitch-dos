@@ -41,6 +41,7 @@
 		ADDCC67D1F3CE75D0056C00F /* messageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ADDCC67B1F3CE75D0056C00F /* messageCell.m */; };
 		ADDCC67E1F3CE75D0056C00F /* messageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADDCC67C1F3CE75D0056C00F /* messageCell.xib */; };
 		ADDCC6801F3CFB3F0056C00F /* phone.png in Resources */ = {isa = PBXBuildFile; fileRef = ADDCC67F1F3CFA430056C00F /* phone.png */; };
+		ADDE50411F4F2DFB006576A4 /* location-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = ADDE50401F4F2D9D006576A4 /* location-arrow.png */; };
 		ADE750691F3B6044001556AB /* inboxView.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE750681F3B6044001556AB /* inboxView.m */; };
 		ADE7506D1F3B6E93001556AB /* driveRequestsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE7506B1F3B6E93001556AB /* driveRequestsCell.m */; };
 		ADE7506E1F3B6E93001556AB /* driveRequestsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ADE7506C1F3B6E93001556AB /* driveRequestsCell.xib */; };
@@ -100,6 +101,7 @@
 		ADDCC67B1F3CE75D0056C00F /* messageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = messageCell.m; sourceTree = "<group>"; };
 		ADDCC67C1F3CE75D0056C00F /* messageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = messageCell.xib; sourceTree = "<group>"; };
 		ADDCC67F1F3CFA430056C00F /* phone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phone.png; sourceTree = "<group>"; };
+		ADDE50401F4F2D9D006576A4 /* location-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "location-arrow.png"; path = "Hitch/location-arrow.png"; sourceTree = SOURCE_ROOT; };
 		ADE750671F3B6044001556AB /* inboxView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = inboxView.h; sourceTree = "<group>"; };
 		ADE750681F3B6044001556AB /* inboxView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = inboxView.m; sourceTree = "<group>"; };
 		ADE7506A1F3B6E93001556AB /* driveRequestsCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = driveRequestsCell.h; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				AD6CC8B01F42525E00FA1E54 /* success.png */,
 				AD6CC8AF1F42525400FA1E54 /* failure.png */,
 				AD6CC8BB1F425AA400FA1E54 /* refresh.png */,
+				ADDE50401F4F2D9D006576A4 /* location-arrow.png */,
 			);
 			path = images;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADDE50411F4F2DFB006576A4 /* location-arrow.png in Resources */,
 				D420E5951F4D420D004BF5BD /* dog.mp4 in Resources */,
 				AD6CC8BC1F425C1B00FA1E54 /* refresh.png in Resources */,
 				AD6CC8B51F42559700FA1E54 /* share.png in Resources */,

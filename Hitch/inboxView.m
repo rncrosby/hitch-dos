@@ -56,6 +56,7 @@
     [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
         if (!error) {
                 dispatch_async(dispatch_get_main_queue(), ^(void){
+                    if (results.count > 0) {
                     CKRecord *record = results[0];
                     NSMutableArray *ridesToGet = [record valueForKey:@"myRides"];
                     if (ridesToGet.count > 0) {
@@ -108,7 +109,7 @@
                         noRidesLabel.hidden = NO;
                         rideTable.hidden = YES;
                     }
-                   
+                }
                 });
         } else {
             NSLog(@"%@",error.localizedDescription);

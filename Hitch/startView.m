@@ -15,6 +15,9 @@
 @implementation startView
 
 - (void)viewDidLoad {
+    ogTitle = titleLabel.frame;
+    ogTitleInstruct = titleInstruction.frame;
+    ogMainInput = mainInput.frame;
     schoolEmails = [[NSArray alloc] initWithObjects:@"@uoregon.edu",@"@ucsc.edu",@"@me.com", nil];
     blurBack = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [References screenWidth], [References screenHeight])];
     blurBack.backgroundColor = [UIColor clearColor];
@@ -40,7 +43,6 @@
     self.avplayer = [[AVPlayer alloc]initWithPlayerItem:avPlayerItem];
     AVPlayerLayer *avPlayerLayer =[AVPlayerLayer playerLayerWithPlayer:self.avplayer];
     [avPlayerLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    [self.avplayer setRate:0.1f];
     [avPlayerLayer setFrame:bgVideo.frame];
     [bgVideo.layer addSublayer:avPlayerLayer];
     [self.view addSubview:bgVideo];
@@ -66,6 +68,10 @@
                            nil];
     [numberToolbar sizeToFit];
     mainInput.inputAccessoryView = numberToolbar;
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [References fadeIn:titleLabel];
         [References fadeIn:titleInstruction];
@@ -135,6 +141,7 @@
                                                                    }
                                                                }
                                                                if (foundAccount == true) {
+                                                                   isSignIn = true;
                                                                    [self textCode];
                                                                    [mainInput setText:@""];
                                                                    [References moveDown:titleInstruction yChange:10];
@@ -208,30 +215,49 @@
                     [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:37]];
                     [mainInput setKeyboardType:UIKeyboardTypeNumberPad];
                     currentPage = 4;
-                    CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
-                    CKRecord *postRecord = [[CKRecord alloc] initWithRecordType:@"People" recordID:recordID];
-                    postRecord[@"email"] = [NSString stringWithFormat:@"%@",email];
-                    postRecord[@"name"] = [NSString stringWithFormat:@"%@",name];
-                    postRecord[@"phone"] = [NSString stringWithFormat:@"%@",phone];
-                    CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
-                    [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
-                        if(error) {
-                            NSLog(@"%@",error.localizedDescription);
-                        } else {
-                            dispatch_async(dispatch_get_main_queue(), ^(void){
-                                [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
-                                [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
-                                [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
-                                [[NSUserDefaults standardUserDefaults] synchronize];
-                            
-                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                                    feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
-                                    [self presentViewController:viewController animated:YES completion:nil];
+                    if (isSignIn == true) {
+                        [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
+                        [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
+                        [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
+                        
+                            feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+                            [self presentViewController:viewController animated:YES completion:^(){
+                                titleLabel.frame = ogTitle;
+                                titleInstruction.frame = ogTitleInstruct;
+                                mainInput.frame = ogMainInput;
+                            }];
+                    } else {
+                        CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
+                        CKRecord *postRecord = [[CKRecord alloc] initWithRecordType:@"People" recordID:recordID];
+                        postRecord[@"email"] = [NSString stringWithFormat:@"%@",email];
+                        postRecord[@"name"] = [NSString stringWithFormat:@"%@",name];
+                        postRecord[@"phone"] = [NSString stringWithFormat:@"%@",phone];
+                        CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+                        [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
+                            if(error) {
+                                NSLog(@"%@",error.localizedDescription);
+                            } else {
+                                dispatch_async(dispatch_get_main_queue(), ^(void){
+                                    [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
+                                    [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
+                                    [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
+                                    [[NSUserDefaults standardUserDefaults] synchronize];
+                                    
+                                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                                        feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+                                        [self presentViewController:viewController animated:YES completion:^(){
+                                            titleLabel.frame = ogTitle;
+                                            titleInstruction.frame = ogTitleInstruct;
+                                            mainInput.frame = ogMainInput;
+                                        }];
+                                    });
                                 });
-                            });
-                            
-                        }
-                    }];
+                                
+                            }
+                        }];
+                    }
+                   
             });
             
         } else {
@@ -408,6 +434,27 @@
     } else {
         [References fadeOut:blurBack];
         [References fadeButtonText:toggleDogButton text:@"blur the dog"];
+    }
+}
+- (IBAction)testAccount:(id)sender {
+    [[NSUserDefaults standardUserDefaults] setObject:@"Test" forKey:@"email"];
+    [[NSUserDefaults standardUserDefaults] setObject:@"Test" forKey:@"name"];
+    [[NSUserDefaults standardUserDefaults] setObject:@"Test" forKey:@"phone"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+        feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+    [self presentViewController:viewController animated:YES completion:nil];
+}
+
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event {
+    if (UIEventSubtypeMotionShake) {
+        feedback = [[UINotificationFeedbackGenerator alloc] init];
+        [feedback prepare];
+        [feedback notificationOccurred:UINotificationFeedbackTypeSuccess];
+        [References fadeIn:testAccount];
     }
 }
 @end

@@ -65,7 +65,10 @@
 }
 
 - (void)viewDidLoad {
+    isRestrictedSearch = NO;
     //[References cardshadow:searchCard];
+    [currentLocation setBackgroundColor:[UIColor clearColor]];
+    [References tintUIButton:currentLocation color:[UIColor blackColor]];
     [References createLine:self.view xPos:0 yPos:searchCard.frame.origin.y+searchCard.frame.size.height inFront:TRUE];
     [References createLine:self.view xPos:0 yPos:menuCard.frame.origin.y inFront:TRUE];
     refreshControl = [[UIRefreshControl alloc] init];
@@ -96,6 +99,13 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 155;
+}
+
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    if (textField.tag == 1) {
+        [References tintUIButton:currentLocation color:[UIColor lightGrayColor]];
+    }
+    return YES;
 }
 
 -(bool)textFieldShouldReturn:(UITextField *)textField {
@@ -143,6 +153,7 @@
                                          end = topResult;
                                          [endPoint setText:placemark.locality];
                                          [self getAllRides:YES];
+                                         isRestrictedSearch = YES;
                                      }
                                  }];
                                  
@@ -231,6 +242,9 @@
         if (!error) {
             if (results.count == 0) {
                 dispatch_async(dispatch_get_main_queue(), ^(void){
+                    if (isRestrictedSearch == NO) {
+                        [self getAllRides:NO];
+                    }
                     noRides.text = @"No Rides Found";
                     table.hidden = YES;
                     noRides.hidden = NO;
@@ -238,7 +252,6 @@
                     [refreshControl endRefreshing];
                 });
             } else {
-                
             [rides removeAllObjects];
             [rideRecords removeAllObjects];
                 for (int a = 0; a < results.count; a++) {
@@ -338,10 +351,11 @@
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
     }]];
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Sign Out" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-        [self dismissViewControllerAnimated:YES completion:^() {
-            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"email"];
-            [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"name"];
-        }];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"email"];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"phone"];
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"name"];
+        startView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"startView"];
+        [self presentViewController:viewController animated:YES completion:nil];
     }]];
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Transaction History" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         historyView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"historyView"];
@@ -357,5 +371,13 @@
     [endPoint setText:@""];
     [self getAllRides:NO];
     [self getMyDrives];
+}
+
+- (IBAction)currentLocation:(id)sender {
+    [References tintUIButton:currentLocation color:[UIColor blackColor]];
+    [endPoint setText:@""];
+    isRestrictedSearch = NO;
+    [location startUpdatingLocation];
+    [self getAllRides:NO];
 }
 @end
