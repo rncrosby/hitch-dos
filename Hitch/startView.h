@@ -15,7 +15,8 @@
 
 @interface startView : UIViewController <UITextFieldDelegate> {
     bool isSignIn;
-    NSString *phone,*name,*email,*code;
+    bool autoCreate;
+    NSString *phone,*name,*email,*code,*referralCode;
     NSArray *schoolEmails;
     UILabel *blurBack;
     int currentPage;

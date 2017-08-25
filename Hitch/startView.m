@@ -141,23 +141,106 @@
                                                                    }
                                                                }
                                                                if (foundAccount == true) {
-                                                                   isSignIn = true;
-                                                                   [self textCode];
-                                                                   [mainInput setText:@""];
-                                                                   [References moveDown:titleInstruction yChange:10];
-                                                                   [References moveDown:mainInput yChange:10];
-                                                                   [References fadeLabelText:titleLabel newText:[NSString stringWithFormat:@"Hey, %@!",name]];
-                                                                   [References fadeLabelText:titleInstruction newText:@"You'll be texted a code to sign in"];
-                                                                   [References fadePlaceholderText:mainInput newText:@"1234"];
-                                                                   currentPage = 3;
+                                                                   if (autoCreate == TRUE) {
+                                                                       [References fadePlaceholderText:mainInput newText:@""];
+                                                                       [mainInput setText:@""];
+                                                                       [References fadeLabelText:titleLabel newText:@"Nice!"];
+                                                                       [References fadeLabelText:titleInstruction newText:@"Finding rides around you..."];
+                                                                       [References fadeOut:mainInput];
+                                                                       [References moveDown:titleLabel yChange:250];
+                                                                       [References moveDown:titleInstruction yChange:240];
+                                                                       [References fadeOut:blurBack];
+                                                                       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                                                                           [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:37]];
+                                                                           [mainInput setKeyboardType:UIKeyboardTypeNumberPad];
+                                                                           currentPage = 4;
+                                                                           [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"email"];
+                                                                           [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"name"];
+                                                                           [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
+                                                                           [[NSUserDefaults standardUserDefaults] synchronize];
+                                                                           
+                                                                           feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+                                                                           [self presentViewController:viewController animated:YES completion:^(){
+                                                                               titleLabel.frame = ogTitle;
+                                                                               titleInstruction.frame = ogTitleInstruct;
+                                                                               mainInput.frame = ogMainInput;
+                                                                           }];
+                                                                       });
+                                                                   } else {
+                                                                       isSignIn = true;
+                                                                       [self textCode];
+                                                                       [mainInput setText:@""];
+                                                                       [References moveDown:titleInstruction yChange:10];
+                                                                       [References moveDown:mainInput yChange:10];
+                                                                       [References fadeLabelText:titleLabel newText:[NSString stringWithFormat:@"Hey, %@!",name]];
+                                                                       [References fadeLabelText:titleInstruction newText:@"You'll be texted a code to sign in"];
+                                                                       [References fadePlaceholderText:mainInput newText:@"1234"];
+                                                                       currentPage = 3;
+                                                                   }
                                                                } else {
-                                                                   [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:30]];
-                                                                   [mainInput setText:@""];
-                                                                   [References fadeLabelText:titleLabel newText:@"Welcome"];
-                                                                   [References fadeLabelText:titleInstruction newText:@"Enter your school email to continue"];
-                                                                   [References fadePlaceholderText:mainInput newText:@"useraccount@ucsc.edu"];
-                                                                   [mainInput setKeyboardType:UIKeyboardTypeEmailAddress];
-                                                                   currentPage = 1;
+                                                                   if (autoCreate == TRUE) {
+                                                                       UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Redeem Code" message:@"Enter a referral thing" preferredStyle:UIAlertControllerStyleAlert];
+                                                                       [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+                                                                           textField.placeholder = @"5 Character Code";
+                                                                       }];
+                                                                       UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+                                                                       }];
+                                                                       UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Redeem" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+                                                                           UITextField *code = alertController.textFields.firstObject;
+                                                                           referralCode = code.text;
+                                                                           [References fadePlaceholderText:mainInput newText:@""];
+                                                                           [mainInput setText:@""];
+                                                                           [References fadeLabelText:titleLabel newText:@"Nice!"];
+                                                                           [References fadeLabelText:titleInstruction newText:@"Finding rides around you..."];
+                                                                           [References fadeOut:mainInput];
+                                                                           [References moveDown:titleLabel yChange:250];
+                                                                           [References moveDown:titleInstruction yChange:240];
+                                                                           [References fadeOut:blurBack];
+                                                                           CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
+                                                                           CKRecord *postRecord = [[CKRecord alloc] initWithRecordType:@"People" recordID:recordID];
+                                                                           postRecord[@"email"] = [NSString stringWithFormat:@"%@",phone];
+                                                                           postRecord[@"name"] = [NSString stringWithFormat:@"%@",phone];
+                                                                           postRecord[@"phone"] = [NSString stringWithFormat:@"%@",phone];
+                                                                           postRecord[@"referredBy"] = [NSString stringWithFormat:@"%@",referralCode];
+                                                                           CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+                                                                           [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
+                                                                               if(error) {
+                                                                                   NSLog(@"%@",error.localizedDescription);
+                                                                               } else {
+                                                                                   dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                                                       [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
+                                                                                       [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
+                                                                                       [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
+                                                                                       [[NSUserDefaults standardUserDefaults] synchronize];
+                                                                                       
+                                                                                       dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                                                                                           feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+                                                                                           [self presentViewController:viewController animated:YES completion:^(){
+                                                                                               titleLabel.frame = ogTitle;
+                                                                                               titleInstruction.frame = ogTitleInstruct;
+                                                                                               mainInput.frame = ogMainInput;
+                                                                                           }];
+                                                                                       });
+                                                                                   });
+                                                                                   
+                                                                               }
+                                                                           }];
+                                                                       }];
+                                                                       
+                                                                       [alertController addAction:cancelAction];
+                                                                       [alertController addAction:okAction];
+                                                                       [self presentViewController:alertController animated: YES completion: nil];
+                                                                   } else {
+                                                                       [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:30]];
+                                                                       [mainInput setText:@""];
+                                                                       [References fadeLabelText:titleLabel newText:@"Welcome"];
+                                                                       [References fadeLabelText:titleInstruction newText:@"Enter your school email to continue"];
+                                                                       [References fadePlaceholderText:mainInput newText:@"useraccount@ucsc.edu"];
+                                                                       [mainInput setKeyboardType:UIKeyboardTypeEmailAddress];
+                                                                       isSignIn = false;
+                                                                       currentPage = 1;
+                                                                   }
+                                                                   
                                                                }
                                                            });
                                                            
@@ -203,6 +286,45 @@
         }
     } else if (currentPage == 3) {
         if ([mainInput.text isEqualToString:code]) {
+            if (isSignIn == false) {
+                [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:37]];
+                [mainInput setText:@""];
+                [References fadeLabelText:titleLabel newText:@"Referral Code"];
+                [References fadeLabelText:titleInstruction newText:@"Enter someones referral code and when you join a ride you save $5!"];
+                [References fadePlaceholderText:mainInput newText:@"1234"];
+                [mainInput setKeyboardType:UIKeyboardTypeNumberPad];
+                currentPage = 5;
+            } else {
+                [References fadePlaceholderText:mainInput newText:@""];
+                [mainInput setText:@""];
+                [References fadeLabelText:titleLabel newText:@"Nice!"];
+                [References fadeLabelText:titleInstruction newText:@"Finding rides around you..."];
+                [References fadeOut:mainInput];
+                [References moveDown:titleLabel yChange:250];
+                [References moveDown:titleInstruction yChange:240];
+                [References fadeOut:blurBack];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:37]];
+                    [mainInput setKeyboardType:UIKeyboardTypeNumberPad];
+                    currentPage = 4;
+                    [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
+                    [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
+                    [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    
+                    feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+                    [self presentViewController:viewController animated:YES completion:^(){
+                        titleLabel.frame = ogTitle;
+                        titleInstruction.frame = ogTitleInstruct;
+                        mainInput.frame = ogMainInput;
+                    }];
+                });
+            }
+        } else {
+            [References fullScreenToast:@"Something's not right with your code" inView:self withSuccess:NO andClose:NO];
+        }
+    } else if (currentPage == 5) {
+            referralCode = mainInput.text;
             [References fadePlaceholderText:mainInput newText:@""];
             [mainInput setText:@""];
             [References fadeLabelText:titleLabel newText:@"Nice!"];
@@ -211,60 +333,70 @@
             [References moveDown:titleLabel yChange:250];
             [References moveDown:titleInstruction yChange:240];
             [References fadeOut:blurBack];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    [mainInput setFont:[UIFont fontWithName:mainInput.font.fontName size:37]];
-                    [mainInput setKeyboardType:UIKeyboardTypeNumberPad];
-                    currentPage = 4;
-                    if (isSignIn == true) {
+            CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
+            CKRecord *postRecord = [[CKRecord alloc] initWithRecordType:@"People" recordID:recordID];
+            postRecord[@"email"] = [NSString stringWithFormat:@"%@",email];
+            postRecord[@"name"] = [NSString stringWithFormat:@"%@",name];
+            postRecord[@"phone"] = [NSString stringWithFormat:@"%@",phone];
+            postRecord[@"referredBy"] = [NSString stringWithFormat:@"%@",referralCode];
+            CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+            [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
+                if(error) {
+                    NSLog(@"%@",error.localizedDescription);
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^(void){
                         [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
                         [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
                         [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
                         [[NSUserDefaults standardUserDefaults] synchronize];
                         
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                             feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
                             [self presentViewController:viewController animated:YES completion:^(){
                                 titleLabel.frame = ogTitle;
                                 titleInstruction.frame = ogTitleInstruct;
                                 mainInput.frame = ogMainInput;
                             }];
-                    } else {
-                        CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
-                        CKRecord *postRecord = [[CKRecord alloc] initWithRecordType:@"People" recordID:recordID];
-                        postRecord[@"email"] = [NSString stringWithFormat:@"%@",email];
-                        postRecord[@"name"] = [NSString stringWithFormat:@"%@",name];
-                        postRecord[@"phone"] = [NSString stringWithFormat:@"%@",phone];
-                        CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
-                        [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
-                            if(error) {
-                                NSLog(@"%@",error.localizedDescription);
-                            } else {
-                                dispatch_async(dispatch_get_main_queue(), ^(void){
-                                    [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
-                                    [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
-                                    [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
-                                    [[NSUserDefaults standardUserDefaults] synchronize];
-                                    
-                                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                                        feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
-                                        [self presentViewController:viewController animated:YES completion:^(){
-                                            titleLabel.frame = ogTitle;
-                                            titleInstruction.frame = ogTitleInstruct;
-                                            mainInput.frame = ogMainInput;
-                                        }];
-                                    });
-                                });
-                                
-                            }
-                        }];
-                    }
-                   
-            });
-            
-        } else {
-            [References fullScreenToast:@"Something's not right with your code" inView:self withSuccess:NO andClose:NO];
+                        });
+                    });
+                    
+                }
+            }];
         }
-    }
 }
+
+/*
+ {
+ CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
+ CKRecord *postRecord = [[CKRecord alloc] initWithRecordType:@"People" recordID:recordID];
+ postRecord[@"email"] = [NSString stringWithFormat:@"%@",email];
+ postRecord[@"name"] = [NSString stringWithFormat:@"%@",name];
+ postRecord[@"phone"] = [NSString stringWithFormat:@"%@",phone];
+ CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+ [publicDatabase saveRecord:postRecord completionHandler:^(CKRecord *record, NSError *error) {
+ if(error) {
+ NSLog(@"%@",error.localizedDescription);
+ } else {
+ dispatch_async(dispatch_get_main_queue(), ^(void){
+ [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
+ [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
+ [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
+ [[NSUserDefaults standardUserDefaults] synchronize];
+ 
+ dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+ feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
+ [self presentViewController:viewController animated:YES completion:^(){
+ titleLabel.frame = ogTitle;
+ titleInstruction.frame = ogTitleInstruct;
+ mainInput.frame = ogMainInput;
+ }];
+ });
+ });
+ 
+ }
+ }];
+ }
+ */
 
 -(void)emailCode {
     code = [References randomIntWithLength:4];
@@ -437,12 +569,13 @@
     }
 }
 - (IBAction)testAccount:(id)sender {
-    [[NSUserDefaults standardUserDefaults] setObject:@"Test" forKey:@"email"];
-    [[NSUserDefaults standardUserDefaults] setObject:@"Test" forKey:@"name"];
-    [[NSUserDefaults standardUserDefaults] setObject:@"Test" forKey:@"phone"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-        feedView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"feedView"];
-    [self presentViewController:viewController animated:YES completion:nil];
+    if ([testAccount.titleLabel.text isEqualToString:@"Auto-Create Account"]) {
+        autoCreate = TRUE;
+        [testAccount setTitle:@"Manually Create Account" forState:UIControlStateNormal];
+    } else {
+        autoCreate = FALSE;
+        [testAccount setTitle:@"Auto-Create Account" forState:UIControlStateNormal];
+    }
 }
 
 - (BOOL)canBecomeFirstResponder {
