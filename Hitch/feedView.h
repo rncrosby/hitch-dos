@@ -46,7 +46,8 @@
     __weak IBOutlet UILabel *menuBarLine;
     __weak IBOutlet UIButton *postRideDestinationFrame;
     __weak IBOutlet UILabel *menuBlur;
-    
+    __weak IBOutlet UIButton *profileButton;
+    __weak IBOutlet UILabel *profileLabel;
     
     // OTHER VIEWS
     UIRefreshControl *refreshControl;

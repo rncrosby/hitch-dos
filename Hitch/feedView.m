@@ -65,6 +65,12 @@
 }
 
 - (void)viewDidLoad {
+    NSString *name = [[NSUserDefaults standardUserDefaults] objectForKey:@"name"];
+    profileLabel.text = name;
+    name = [name uppercaseString];
+    name = [NSString stringWithFormat:@"%c",[name characterAtIndex:0]];
+    [profileButton setTitle:name forState:UIControlStateNormal];
+    [References cornerRadius:profileButton radius:profileButton.frame.size.width/2];
     movement = [References screenHeight] - menuCard.frame.origin.y;
     movement = menuCard.frame.size.height - movement;
     menuShowing = false;
@@ -72,7 +78,7 @@
     isRestrictedSearch = NO;
     //[References cardshadow:searchCard];
     [currentLocation setBackgroundColor:[UIColor clearColor]];
-    [References tintUIButton:currentLocation color:[UIColor blackColor]];
+    [References tintUIButton:currentLocation color:[UIColor lightGrayColor]];
     [References tintUIButton:menuButton color:[UIColor blackColor]];
     [References createLine:self.view xPos:0 yPos:searchCard.frame.origin.y+searchCard.frame.size.height inFront:TRUE];
     refreshControl = [[UIRefreshControl alloc] init];
@@ -129,7 +135,7 @@
                                  [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
                                      if (placemarks && placemarks.count > 0) {
                                          CLPlacemark *topResult = [placemarks objectAtIndex:0];
-                                         
+                                         [References tintUIButton:currentLocation color:[UIColor lightGrayColor]];
                                          MKPlacemark *placemark = [[MKPlacemark alloc] initWithPlacemark:topResult];
                                          start = topResult;
                                          [startPoint setText:placemark.locality];
@@ -140,7 +146,11 @@
                              }
                          }
              ];
-        } } else if (textField.tag == 2) {
+        } else {
+            [location startUpdatingLocation];
+        }
+        
+    } else if (textField.tag == 2) {
         if (textField.text.length > 1) {
             CLGeocoder *geocoder = [[CLGeocoder alloc] init];
             [geocoder geocodeAddressString:textField.text
@@ -218,6 +228,7 @@
                 start = placemark;
                 [startPoint setText:placemark.locality];
                 [self getAllRides:NO];
+                [References tintUIButton:currentLocation color:[[self view] tintColor]];
             }
         }];
     }
@@ -357,8 +368,10 @@
         [References moveUp:menuBarLine yChange:fabs(movement)];
         [References moveUp:menuCard yChange:fabs(movement)];
         [References moveUp:menuButton yChange:fabs(movement)];
+        [References moveUp:profileButton yChange:fabs(movement)];
+        [References moveUp:profileLabel yChange:fabs(movement)];
         [References moveUp:forYou yChange:fabs(movement)];
-        [UIView animateWithDuration:.3 animations:^{
+        [UIView animateWithDuration:.25 animations:^{
             [postRide setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
             postRide.frame = CGRectMake(16, postRideDestinationFrame.frame.origin.y, postRide.frame.size.width, postRide.frame.size.height);
         }];
@@ -367,7 +380,7 @@
         menuShowing = TRUE;
     } else {
         [References moveDown:postRideDestinationFrame yChange:fabs(movement)];
-        [UIView animateWithDuration:.3 animations:^{
+        [UIView animateWithDuration:.25 animations:^{
             [postRide setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
             postRide.frame = ogPostRideFrame;
         }];
@@ -377,6 +390,9 @@
         [References moveDown:forYou yChange:fabs(movement)];
         [References moveDown:transactionHistory yChange:fabs(movement)];
         [References moveDown:signOut yChange:fabs(movement)];
+        [References moveDown:profileButton yChange:fabs(movement)];
+        [References moveDown:profileLabel yChange:fabs(movement)];
+        
         menuShowing = FALSE;
     }
     
@@ -389,7 +405,7 @@
 }
 
 - (IBAction)currentLocation:(id)sender {
-    [References tintUIButton:currentLocation color:[UIColor blackColor]];
+    [References tintUIButton:currentLocation color:[[self view] tintColor]];
     [endPoint setText:@""];
     isRestrictedSearch = NO;
     [location startUpdatingLocation];
