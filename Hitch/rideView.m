@@ -510,8 +510,46 @@
             [requestRide setEnabled:YES];
             [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
             [rideManagerTrash setEnabled:NO];
+            [self getReferralCode];
         }
     }
+}
+
+-(void)getReferralCode {
+    CKContainer *defaultContainer = [CKContainer defaultContainer];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"email = '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]]];
+    CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
+    CKQuery *query = [[CKQuery alloc] initWithRecordType:@"People" predicate:predicate];
+    [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+        if (!error) {
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                if (results.count > 0) {
+                    currentUser = results[0];
+                    referralCode = [currentUser valueForKey:@"referredBy"];
+                    if (referralCode.length > 0) {
+                        CKContainer *defaultContainer = [CKContainer defaultContainer];
+                        NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"referralCode = '%@'",referralCode]];
+                        CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
+                        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"People" predicate:predicate];
+                        [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+                            if (!error) {
+                                dispatch_async(dispatch_get_main_queue(), ^(void){
+                                    if (results.count > 0) {
+                                        CKRecord *person = results[0];
+                                        referredBy = [person valueForKey:@"email"];
+                                    }
+                                });
+                            } else {
+                                NSLog(@"%@",error.localizedDescription);
+                            }
+                        }];
+                    }
+                }
+            });
+        } else {
+            NSLog(@"%@",error.localizedDescription);
+        }
+    }];
 }
 
 -(void)isRideConfirmed {
@@ -811,6 +849,36 @@
                                                }
                                            }];
                                        }
+                                       if (usedReferralCode == true) {
+                                           currentUser[@"referredBy"] = @"";
+                                           [[CKContainer defaultContainer].publicCloudDatabase saveRecord:currentUser completionHandler:^(CKRecord *record, NSError *error) {
+                                               dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                   CKRecordID *recordID = [[CKRecordID alloc] initWithRecordName:[NSString stringWithFormat:@"%i",arc4random() %500]];
+                                                   CKRecord *record = [[CKRecord alloc] initWithRecordType:@"Invoices" recordID:recordID];
+                                                   int value = 5;
+                                                   record[@"amount"] = [NSString stringWithFormat:@"%i",value*100];
+                                                   record[@"from"] = @"Hitch";
+                                                   record[@"to"] = referredBy;
+                                                   record[@"rideID"] = @"REFERRAL";
+                                                   record[@"paymentID"] = @"REFERRAL";
+                                                   CKDatabase *publicDatabase = [[CKContainer defaultContainer] publicCloudDatabase];
+                                                   [publicDatabase saveRecord:record completionHandler:^(CKRecord *record, NSError *error) {
+                                                       if(error) {
+                                                           NSLog(@"%@",error.localizedDescription);
+                                                           dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                               [References fullScreenToast:@"Something Isn't Right" inView:self withSuccess:NO andClose:NO];
+                                                           });
+                                                       } else {
+                                                           dispatch_async(dispatch_get_main_queue(), ^(void){
+                                                               NSLog(@"rewarded other user");
+                                                           });
+                                                           
+                                                           
+                                                       }
+                                                   }];
+                                               });
+                                           }];
+                                       }
                                    }
                                    
                                }
@@ -842,20 +910,48 @@
     double cost = _ride.price.doubleValue + 1.00;
     if (currentBalance > 0) {
         cost = cost - currentBalance;
-        paymentRequest.paymentSummaryItems =
-        @[
-          [PKPaymentSummaryItem summaryItemWithLabel:@"Ride" amount:[NSDecimalNumber decimalNumberWithString:amount]],
-          [PKPaymentSummaryItem summaryItemWithLabel:@"Hitch Fee" amount:[NSDecimalNumber decimalNumberWithString:@"1"]],
-          [PKPaymentSummaryItem summaryItemWithLabel:@"Current Balance" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"-%.2f",currentBalance]]],
-          [PKPaymentSummaryItem summaryItemWithLabel:@"Total" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f",cost]]]
-          ];
+        if (referredBy.length > 0) {
+            usedReferralCode = true;
+            cost = cost - 5;
+            paymentRequest.paymentSummaryItems =
+            @[
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Ride" amount:[NSDecimalNumber decimalNumberWithString:amount]],
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Hitch Fee" amount:[NSDecimalNumber decimalNumberWithString:@"1"]],
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Referral Code" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"-5"]]],
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Current Balance" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"-%.2f",currentBalance]]],
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Total" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f",cost]]]
+              ];
+        } else {
+            usedReferralCode = false;
+            paymentRequest.paymentSummaryItems =
+            @[
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Ride" amount:[NSDecimalNumber decimalNumberWithString:amount]],
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Hitch Fee" amount:[NSDecimalNumber decimalNumberWithString:@"1"]],
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Current Balance" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"-%.2f",currentBalance]]],
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Total" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f",cost]]]
+              ];
+        }
+        
     } else {
+        if (referredBy.length > 0) {
+            usedReferralCode = true;
+            cost = cost - 5;
+            paymentRequest.paymentSummaryItems =
+            @[
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Ride" amount:[NSDecimalNumber decimalNumberWithString:amount]],
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Hitch Fee" amount:[NSDecimalNumber decimalNumberWithString:@"1"]],
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Referral Code" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"-5"]]],
+              [PKPaymentSummaryItem summaryItemWithLabel:@"Total" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f",cost]]]
+              ];
+        } else {
+            usedReferralCode = false;
     paymentRequest.paymentSummaryItems =
     @[
       [PKPaymentSummaryItem summaryItemWithLabel:@"Ride" amount:[NSDecimalNumber decimalNumberWithString:amount]],
       [PKPaymentSummaryItem summaryItemWithLabel:@"Hitch Fee" amount:[NSDecimalNumber decimalNumberWithString:@"1"]],
       [PKPaymentSummaryItem summaryItemWithLabel:@"Total" amount:[NSDecimalNumber decimalNumberWithString:[NSString stringWithFormat:@"%f",cost]]]
       ];
+        }
     }
     amountToCharge = cost;
     return paymentRequest;
@@ -906,5 +1002,7 @@
     currentBalance = value;
     }
 }
+
+
 
 @end

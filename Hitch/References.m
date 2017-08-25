@@ -320,8 +320,8 @@
 
 +(void)ViewToLine:(UIView*)superview withView:(UIView*)view xPos:(int)xPos yPos:(int)yPos{
     view = [[UIView alloc] initWithFrame:CGRectMake(xPos, yPos, 1000, 1)];
-    [view setBackgroundColor:[UIColor lightGrayColor]];
-    view.alpha = 0.8;
+    [view setBackgroundColor:[UIColor blackColor]];
+    view.alpha = 0.1;
     [superview addSubview:view];
 }
 

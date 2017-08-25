@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13156.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="vQL-M5-Det">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" colorMatched="YES" initialViewController="vQL-M5-Det">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13137.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13147.4"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -93,9 +93,13 @@
             <objects>
                 <viewController storyboardIdentifier="feedView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="feedView" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="pbc-yB-w9x">
+                                <rect key="frame" x="16" y="660" width="104" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </button>
                             <tableView opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" delaysContentTouches="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="XP0-7h-fqC">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -157,46 +161,20 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Vle-je-cLf">
-                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="623" width="375" height="177"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.97999999999999998" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zJh-jC-JtN">
-                                <rect key="frame" x="135" y="628" width="104" height="34"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="txU-KL-9gc">
+                                <rect key="frame" x="336" y="40" width="23" height="23"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal" title="Post Drive">
-                                    <color key="titleColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
+                                <color key="backgroundColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" backgroundImage="location-arrow.png"/>
                                 <connections>
-                                    <action selector="postDrive:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cJB-58-2Ho"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cTg-C7-l0R">
-                                <rect key="frame" x="281" y="628" width="78" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal" title="For You">
-                                    <color key="titleColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="inbox:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XZi-8f-Itn"/>
-                                    <segue destination="zHA-FC-UL5" kind="modal" id="uke-4e-JXm"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="tWv-ei-UJS">
-                                <rect key="frame" x="16" y="628" width="78" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal" title="More">
-                                    <color key="titleColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="inbox:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cNh-3I-PVV"/>
-                                    <action selector="more:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bwk-GW-rWL"/>
+                                    <action selector="currentLocation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zia-Cp-blX"/>
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6aL-xB-vWt">
@@ -207,34 +185,101 @@
                                     <action selector="refreshButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DDb-Dq-ka3"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="txU-KL-9gc">
-                                <rect key="frame" x="336" y="40" width="23" height="23"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Lu9-dr-WAm">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="625"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" backgroundImage="location-arrow.png"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zJh-jC-JtN">
+                                <rect key="frame" x="255" y="628" width="104" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="Post Drive">
+                                    <color key="titleColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
-                                    <action selector="currentLocation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zia-Cp-blX"/>
+                                    <action selector="postDrive:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cJB-58-2Ho"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="s4t-SH-RHO">
+                                <rect key="frame" x="16" y="633" width="25" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="menu.png"/>
+                                <connections>
+                                    <action selector="more:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WQs-pg-sBG"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cTg-C7-l0R">
+                                <rect key="frame" x="16" y="694" width="196" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="For You">
+                                    <color key="titleColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="inbox:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XZi-8f-Itn"/>
+                                    <segue destination="zHA-FC-UL5" kind="modal" id="uke-4e-JXm"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="aDl-Nh-HPf">
+                                <rect key="frame" x="16" y="726" width="190" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="Transaction History">
+                                    <color key="titleColor" red="0.1372351348400116" green="0.13726624846458435" blue="0.13723316788673401" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="transactionHistory:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZrR-O0-w9F"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="iF3-Sz-F3Y">
+                                <rect key="frame" x="16" y="760" width="190" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="Sign Out">
+                                    <color key="titleColor" red="0.13723513479999999" green="0.13726624849999999" blue="0.13723316790000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="signOut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="TGQ-u6-Gfe"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.10000000000000001" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nOc-tB-y9r">
+                                <rect key="frame" x="0.0" y="623" width="500" height="1"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.94999999999999996" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <size key="freeformSize" width="375" height="667"/>
+                    <size key="freeformSize" width="375" height="800"/>
                     <connections>
                         <outlet property="currentLocation" destination="txU-KL-9gc" id="00e-8G-X3E"/>
                         <outlet property="endPoint" destination="nvf-VL-Zok" id="wtw-2D-CZR"/>
+                        <outlet property="forYou" destination="cTg-C7-l0R" id="zXh-wQ-VCo"/>
+                        <outlet property="menuBarLine" destination="nOc-tB-y9r" id="XRj-bq-tun"/>
+                        <outlet property="menuBlur" destination="Lu9-dr-WAm" id="WOQ-Vd-MUv"/>
+                        <outlet property="menuButton" destination="s4t-SH-RHO" id="zPP-Q5-gUB"/>
                         <outlet property="menuCard" destination="Vle-je-cLf" id="Brs-vf-vL2"/>
                         <outlet property="noRides" destination="Nbr-q9-MrX" id="JPt-9q-fOS"/>
                         <outlet property="postRide" destination="zJh-jC-JtN" id="bxo-W1-lNs"/>
+                        <outlet property="postRideDestinationFrame" destination="pbc-yB-w9x" id="h9R-KG-yt0"/>
                         <outlet property="refreshButton" destination="6aL-xB-vWt" id="LS3-ph-6rD"/>
                         <outlet property="searchCard" destination="V9P-F2-lcz" id="qGV-X4-dZ6"/>
+                        <outlet property="signOut" destination="iF3-Sz-F3Y" id="lN5-4b-asY"/>
                         <outlet property="startPoint" destination="FaA-o9-6Kx" id="8SZ-48-ewV"/>
                         <outlet property="table" destination="XP0-7h-fqC" id="Gy5-XM-fst"/>
+                        <outlet property="transactionHistory" destination="aDl-Nh-HPf" id="c6d-Mj-Lzs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-765.5" y="-18.5"/>
+            <point key="canvasLocation" x="-765.5" y="-19"/>
         </scene>
         <!--Inbox View-->
         <scene sceneID="bZ7-PD-43f">
@@ -1199,6 +1244,7 @@
     <resources>
         <image name="location-arrow.png" width="512" height="512"/>
         <image name="map.png" width="100" height="100"/>
+        <image name="menu.png" width="48" height="48"/>
         <image name="refresh.png" width="50" height="50"/>
         <image name="share.png" width="100" height="100"/>
         <image name="trash.png" width="100" height="100"/>

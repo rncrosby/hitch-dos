@@ -65,12 +65,16 @@
 }
 
 - (void)viewDidLoad {
+    movement = [References screenHeight] - menuCard.frame.origin.y;
+    movement = menuCard.frame.size.height - movement;
+    menuShowing = false;
+    menuBarLine.frame = CGRectMake(0, menuCard.frame.origin.y, [References screenWidth], 1);
     isRestrictedSearch = NO;
     //[References cardshadow:searchCard];
     [currentLocation setBackgroundColor:[UIColor clearColor]];
     [References tintUIButton:currentLocation color:[UIColor blackColor]];
+    [References tintUIButton:menuButton color:[UIColor blackColor]];
     [References createLine:self.view xPos:0 yPos:searchCard.frame.origin.y+searchCard.frame.size.height inFront:TRUE];
-    [References createLine:self.view xPos:0 yPos:menuCard.frame.origin.y inFront:TRUE];
     refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventValueChanged];
     [References tintUIButton:refreshButton color:[UIColor lightGrayColor]];
@@ -86,6 +90,8 @@
     }
     [location startUpdatingLocation];
     [self getMyDrives];
+    ogPostRideFrame = postRide.frame;
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -346,25 +352,34 @@
 }
 
 - (IBAction)more:(id)sender {
-    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"More" message:@"Note: This page will be updated" preferredStyle:UIAlertControllerStyleActionSheet];
+    if (menuShowing == FALSE) {
+        [References moveUp:postRideDestinationFrame yChange:fabs(movement)];
+        [References moveUp:menuBarLine yChange:fabs(movement)];
+        [References moveUp:menuCard yChange:fabs(movement)];
+        [References moveUp:menuButton yChange:fabs(movement)];
+        [References moveUp:forYou yChange:fabs(movement)];
+        [UIView animateWithDuration:.3 animations:^{
+            [postRide setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+            postRide.frame = CGRectMake(16, postRideDestinationFrame.frame.origin.y, postRide.frame.size.width, postRide.frame.size.height);
+        }];
+        [References moveUp:transactionHistory yChange:fabs(movement)];
+        [References moveUp:signOut yChange:fabs(movement)];
+        menuShowing = TRUE;
+    } else {
+        [References moveDown:postRideDestinationFrame yChange:fabs(movement)];
+        [UIView animateWithDuration:.3 animations:^{
+            [postRide setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+            postRide.frame = ogPostRideFrame;
+        }];
+        [References moveDown:menuBarLine yChange:fabs(movement)];
+        [References moveDown:menuCard yChange:fabs(movement)];
+        [References moveDown:menuButton yChange:fabs(movement)];
+        [References moveDown:forYou yChange:fabs(movement)];
+        [References moveDown:transactionHistory yChange:fabs(movement)];
+        [References moveDown:signOut yChange:fabs(movement)];
+        menuShowing = FALSE;
+    }
     
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-    }]];
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Sign Out" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"email"];
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"phone"];
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"name"];
-        startView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"startView"];
-        [self presentViewController:viewController animated:YES completion:nil];
-    }]];
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Transaction History" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        historyView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"historyView"];
-        [self presentViewController:viewController animated:YES completion:nil];
-    }]];
-    
-    
-    // Present action sheet.
-    [self presentViewController:actionSheet animated:YES completion:nil];
 }
 
 - (IBAction)refreshButton:(id)sender {
@@ -379,5 +394,18 @@
     isRestrictedSearch = NO;
     [location startUpdatingLocation];
     [self getAllRides:NO];
+}
+
+- (IBAction)transactionHistory:(id)sender {
+    historyView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"historyView"];
+    [self presentViewController:viewController animated:YES completion:nil];
+}
+
+- (IBAction)signOut:(id)sender {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"email"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"phone"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"name"];
+    startView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"startView"];
+    [self presentViewController:viewController animated:YES completion:nil];
 }
 @end

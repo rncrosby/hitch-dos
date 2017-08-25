@@ -24,7 +24,9 @@
     CLPlacemark *start,*end;
     NSMutableArray *rides,*rideRecords;
     UINotificationFeedbackGenerator *feedback;
-    bool isRestrictedSearch;
+    float movement;
+    CGRect ogPostRideFrame;
+    bool isRestrictedSearch,menuShowing;
     UISelectionFeedbackGenerator *selectionFeedback;
     // SEARCH PANEL
     __weak IBOutlet UITextField *startPoint;
@@ -37,6 +39,14 @@
     
     __weak IBOutlet UIButton *currentLocation;
     __weak IBOutlet UIButton *refreshButton;
+    __weak IBOutlet UIButton *menuButton;
+    __weak IBOutlet UIButton *forYou;
+    __weak IBOutlet UIButton *transactionHistory;
+    __weak IBOutlet UIButton *signOut;
+    __weak IBOutlet UILabel *menuBarLine;
+    __weak IBOutlet UIButton *postRideDestinationFrame;
+    __weak IBOutlet UILabel *menuBlur;
+    
     
     // OTHER VIEWS
     UIRefreshControl *refreshControl;
@@ -48,5 +58,7 @@
 - (IBAction)more:(id)sender;
 - (IBAction)refreshButton:(id)sender;
 - (IBAction)currentLocation:(id)sender;
+- (IBAction)transactionHistory:(id)sender;
+- (IBAction)signOut:(id)sender;
 
 @end

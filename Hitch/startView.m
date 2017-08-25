@@ -100,6 +100,7 @@
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     AVPlayerItem *p = [notification object];
     [p seekToTime:kCMTimeZero];
+    [self.avplayer play];
 }
 
 - (void)playerStartPlaying

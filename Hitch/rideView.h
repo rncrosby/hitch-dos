@@ -21,6 +21,9 @@
 #import "transactionObject.h"
 
 @interface rideView : UIViewController <PKPaymentAuthorizationViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,MKMapViewDelegate,UITextFieldDelegate> {
+    NSString *referralCode,*referredBy;
+    CKRecord *currentUser;
+    bool usedReferralCode;
     UIView *line;
     CGRect keyboard;
     bool isRideConfirmed,isAwaitingPayment;
