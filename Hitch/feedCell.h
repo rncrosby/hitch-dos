@@ -10,16 +10,15 @@
 
 @interface feedCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *shadow;
-@property (weak, nonatomic) IBOutlet UILabel *card;
 @property (weak, nonatomic) IBOutlet UILabel *from;
 @property (weak, nonatomic) IBOutlet UILabel *to;
+@property (weak, nonatomic) IBOutlet UILabel *whiteBack;
+@property (weak, nonatomic) IBOutlet UILabel *redBack;
+@property (weak, nonatomic) IBOutlet UILabel *month;
 @property (weak, nonatomic) IBOutlet UILabel *date;
+@property (weak, nonatomic) IBOutlet UILabel *price;
 @property (weak, nonatomic) IBOutlet UILabel *seats;
-@property (weak, nonatomic) IBOutlet UIButton *chevron;
-@property (weak, nonatomic) IBOutlet UILabel *fromTag;
-@property (weak, nonatomic) IBOutlet UILabel *toTag;
-@property (weak, nonatomic) IBOutlet UILabel *leavesTag;
-@property (weak, nonatomic) IBOutlet UILabel *seatsTag;
+@property (weak, nonatomic) IBOutlet UILabel *kind;
+@property (weak, nonatomic) IBOutlet UIImageView *triptype;
 
 @end

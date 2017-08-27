@@ -110,7 +110,7 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 155;
+    return 130;
 }
 
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
@@ -196,18 +196,45 @@
         cell = [nib objectAtIndex:0];
     }
     rideObject *ride = rides[indexPath.row];
-    cell.from.text = ride.plainStart;
-    cell.to.text = ride.plainEnd;
-    cell.seats.text = [NSString stringWithFormat:@"%i",ride.seats.intValue];
+    NSArray *startArray = [ride.plainStart componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSInteger startCount = [startArray count];
+    if (startCount == 1) {
+        cell.from.text = [NSString stringWithFormat:@"%@",[ride.plainStart substringWithRange:NSMakeRange(0, 3)]];
+    } else if (startCount == 2) {
+        cell.from.text = [NSString stringWithFormat:@"%c%c",[startArray[0] characterAtIndex:0],[startArray[1] characterAtIndex:0]];
+    } else if (startCount == 3) {
+        cell.from.text = [NSString stringWithFormat:@"%c%c%c",[startArray[0] characterAtIndex:0],[startArray[1] characterAtIndex:0],[startArray[2] characterAtIndex:0]];
+    }
+    NSArray *endArray = [ride.plainEnd componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSInteger endCount = [endArray count];
+    if (endCount == 1) {
+        cell.to.text = [NSString stringWithFormat:@"%@",[ride.plainEnd substringWithRange:NSMakeRange(0, 3)]];
+    } else if (endCount == 2) {
+        cell.to.text = [NSString stringWithFormat:@"%c%c",[endArray[0] characterAtIndex:0],[endArray[1] characterAtIndex:0]];
+    } else if (endCount == 3) {
+        cell.to.text = [NSString stringWithFormat:@"%c%c%c",[endArray[0] characterAtIndex:0],[endArray[1] characterAtIndex:0],[endArray[2] characterAtIndex:0]];
+    }
+    cell.from.text = [cell.from.text uppercaseString];
+    cell.to.text = [cell.to.text uppercaseString];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"EEEE, MMMM d"];
+    [dateFormatter setDateFormat:@"MMM"];
     NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-    [timeFormatter setDateFormat:@"h a"];
-    cell.date.text = [NSString stringWithFormat:@"%@ around %@",[dateFormatter stringFromDate:ride.date],[timeFormatter stringFromDate:ride.date]];
-    [References tintUIButton:cell.chevron color:[[self view] tintColor]];
-    cell.backgroundColor = [UIColor clearColor];
-    [References cardshadow:cell.shadow];
-    [References cornerRadius:cell.card radius:8.0f];
+    [timeFormatter setDateFormat:@"d"];
+    cell.month.text = [dateFormatter stringFromDate:ride.date];
+    cell.date.text = [timeFormatter stringFromDate:ride.date];
+    cell.month.text = [cell.month.text uppercaseString];
+    [References cornerRadius:cell.whiteBack radius:9.0];
+    [References cornerRadius:cell.redBack radius:9.0];
+    if (indexPath.row % 2) {
+        [cell.contentView setBackgroundColor:[UIColor colorWithRed:0.98 green:0.98 blue:0.98 alpha:1.0]];
+    } else {
+        [cell.contentView setBackgroundColor:[UIColor colorWithRed:0.96 green:0.96 blue:0.96 alpha:1.0]];
+    }
+        [cell.triptype setImage:[UIImage imageNamed:@"round-trip.png"]];
+    [References cornerRadius:cell.kind radius:cell.price.frame.size.width/2];
+    [References cornerRadius:cell.price radius:cell.price.frame.size.width/2];
+    [References cornerRadius:cell.seats radius:cell.seats.frame.size.width/2];
+    //[References borderColor:cell.price color:[References colorFromHexString:@"#1abc9c"]];
     return cell;
 }
 
@@ -219,7 +246,6 @@
         [manager stopUpdatingLocation];
         [[NSUserDefaults standardUserDefaults] setDouble:newLocation.coordinate.latitude forKey:@"currentLatitude"];
         [[NSUserDefaults standardUserDefaults] setDouble:newLocation.coordinate.longitude forKey:@"currentLongitude"];
-        [self getAllRides:NO];
         CLGeocoder * geoCoder = [[CLGeocoder alloc] init];
         [geoCoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error) {
             if (placemarks && placemarks.count > 0) {
@@ -259,9 +285,6 @@
         if (!error) {
             if (results.count == 0) {
                 dispatch_async(dispatch_get_main_queue(), ^(void){
-                    if (isRestrictedSearch == NO) {
-                        [self getAllRides:NO];
-                    }
                     noRides.text = @"No Rides Found";
                     table.hidden = YES;
                     noRides.hidden = NO;

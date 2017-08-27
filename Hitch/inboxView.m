@@ -275,7 +275,7 @@
     if (tableView.tag == 1) {
     return 57;
     } else {
-        return 153;
+        return 130;
     }
 }
 
@@ -323,28 +323,32 @@
         }
 
         rideObject *ride = myRides[indexPath.row];
-        cell.from.text = ride.plainStart;
-        cell.to.text = ride.plainEnd;
-        cell.seats.text = [NSString stringWithFormat:@"%i",ride.seats.intValue];
+        NSArray *startArray = [ride.plainStart componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSInteger startCount = [startArray count];
+        if (startCount == 1) {
+            cell.from.text = [NSString stringWithFormat:@"%@",[ride.plainStart substringWithRange:NSMakeRange(0, 3)]];
+        } else if (startCount == 2) {
+            cell.from.text = [NSString stringWithFormat:@"%c%c",[startArray[0] characterAtIndex:0],[startArray[1] characterAtIndex:0]];
+        } else if (startCount == 3) {
+            cell.from.text = [NSString stringWithFormat:@"%c%c%c",[startArray[0] characterAtIndex:0],[startArray[1] characterAtIndex:0],[startArray[2] characterAtIndex:0]];
+        }
+        NSArray *endArray = [ride.plainEnd componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSInteger endCount = [endArray count];
+        if (endCount == 1) {
+            cell.to.text = [NSString stringWithFormat:@"%@",[ride.plainEnd substringWithRange:NSMakeRange(0, 3)]];
+        } else if (endCount == 2) {
+            cell.to.text = [NSString stringWithFormat:@"%c%c",[endArray[0] characterAtIndex:0],[endArray[1] characterAtIndex:0]];
+        } else if (endCount == 3) {
+            cell.to.text = [NSString stringWithFormat:@"%c%c%c",[endArray[0] characterAtIndex:0],[endArray[1] characterAtIndex:0],[endArray[2] characterAtIndex:0]];
+        }
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"EEEE, MMMM d"];
+        [dateFormatter setDateFormat:@"MMM"];
         NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-        [timeFormatter setDateFormat:@"h a"];
-        cell.date.text = [NSString stringWithFormat:@"%@ around %@",[dateFormatter stringFromDate:ride.date],[timeFormatter stringFromDate:ride.date]];
-        [References tintUIButton:cell.chevron color:[[self view] tintColor]];
-        cell.chevron.frame = CGRectMake(cell.chevron.frame.origin.x-10, cell.chevron.frame.origin.y, cell.chevron.frame.size.width, cell.chevron.frame.size.height);
-        cell.backgroundColor = [UIColor clearColor];
-        cell.fromTag.frame = CGRectMake(cell.fromTag.frame.origin.x, cell.fromTag.frame.origin.y-3, cell.fromTag.frame.size.width, cell.fromTag.frame.size.height);
-        cell.toTag.frame = CGRectMake(cell.toTag.frame.origin.x, cell.toTag.frame.origin.y-3, cell.toTag.frame.size.width, cell.toTag.frame.size.height);
-        cell.leavesTag.frame = CGRectMake(cell.leavesTag.frame.origin.x, cell.leavesTag.frame.origin.y-3, cell.leavesTag.frame.size.width, cell.leavesTag.frame.size.height);
-        cell.seatsTag.frame = CGRectMake(cell.seatsTag.frame.origin.x, cell.seatsTag.frame.origin.y-3, cell.seatsTag.frame.size.width, cell.seatsTag.frame.size.height);
-        cell.from.frame = CGRectMake(cell.from.frame.origin.x, cell.from.frame.origin.y-3, cell.from.frame.size.width, cell.from.frame.size.height);
-        cell.to.frame = CGRectMake(cell.to.frame.origin.x, cell.to.frame.origin.y-3, cell.to.frame.size.width, cell.to.frame.size.height);
-        cell.date.frame = CGRectMake(cell.date.frame.origin.x, cell.date.frame.origin.y-3, cell.date.frame.size.width, cell.date.frame.size.height);
-        cell.seats.frame = CGRectMake(cell.seats.frame.origin.x, cell.seats.frame.origin.y-3, cell.seats.frame.size.width, cell.seats.frame.size.height);
-        [cell setBackgroundColor:[UIColor clearColor]];
-        [cell.card setBackgroundColor:[UIColor clearColor]];
-        [cell.shadow setBackgroundColor:[UIColor clearColor]];
+        [timeFormatter setDateFormat:@"d"];
+        cell.month.text = [dateFormatter stringFromDate:ride.date];
+        cell.date.text = [timeFormatter stringFromDate:ride.date];
+        [References cornerRadius:cell.whiteBack radius:9.0];
+        [References cornerRadius:cell.redBack radius:9.0];
         return cell;
     }
     
