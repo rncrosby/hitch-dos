@@ -39,18 +39,17 @@
     NSMutableArray *passengers;
     __weak IBOutlet UILabel *menuBar;
     __weak IBOutlet UILabel *menuBarTitle;
-    __weak IBOutlet UILabel *mapShadow;
     __weak IBOutlet MKMapView *map;
     __weak IBOutlet UILabel *rideTitle;
-    __weak IBOutlet UILabel *card;
-    __weak IBOutlet UILabel *cardShadow;
     __weak IBOutlet UILabel *from;
     __weak IBOutlet UILabel *to;
     __weak IBOutlet UILabel *date;
     __weak IBOutlet UILabel *seats;
     __weak IBOutlet UIScrollView *scroll;
     __weak IBOutlet UILabel *price;
-    __weak IBOutlet UILabel *priceShadow;
+    __weak IBOutlet UILabel *trip;
+    
+    
     
     // contact
     __weak IBOutlet UILabel *contactShadow;
@@ -70,8 +69,6 @@
     __weak IBOutlet UITextField *ridePanelMessageField;
     __weak IBOutlet UIButton *ridePanelSendMessage;
     
-    __weak IBOutlet UILabel *rideManagerCard;
-    __weak IBOutlet UILabel *rideManagerShadow;
     __weak IBOutlet UIButton *rideManagerTrash;
     __weak IBOutlet UIButton *rideManagerMap;
     __weak IBOutlet UIButton *rideManagerShare;

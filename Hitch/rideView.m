@@ -15,6 +15,9 @@
 @implementation rideView
 
 - (void)viewDidLoad {
+    [References cornerRadius:price radius:price.frame.size.width/2];
+    [References cornerRadius:trip radius:trip.frame.size.width/2];
+    [References cornerRadius:seats radius:seats.frame.size.width/2];
     //[References ViewToLine:line withView:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y];
     [References createLine:self.view xPos:0 yPos:menuBar.frame.origin.y+menuBar.frame.size.height inFront:TRUE];
     //[scroll addSubview:line];
@@ -30,24 +33,16 @@
     NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
     [timeFormatter setDateFormat:@"h a"];
     date.text = [NSString stringWithFormat:@"%@ around %@",[dateFormatter stringFromDate:_ride.date],[timeFormatter stringFromDate:_ride.date]];
-    [References cardshadow:cardShadow];
-    [References cornerRadius:card radius:8.0f];
-    [References cardshadow:mapShadow];
-    [References cornerRadius:map radius:8.0f];
     [References cardshadow:contactShadow];
     [References cornerRadius:contactCard radius:8.0f];
     [References cardshadow:ridePanelShadow];
     [References cornerRadius:ridePanel radius:8.0f];
     [References cornerRadius:contactImage radius:contactImage.frame.size.width/2];
     if (_ride.price.intValue > 0) {
-        price.text = [NSString stringWithFormat:@"$%i",_ride.price.intValue];
+        price.text = [NSString stringWithFormat:@"%i",_ride.price.intValue];
     } else {
-        price.text = @"Free";
+        price.text = @"0";
     }
-    [References cornerRadius:price radius:8.0f];
-    [References cardshadow:priceShadow];
-    [References cornerRadius:rideManagerCard radius:8.0f];
-    [References cardshadow:rideManagerShadow];
     [self loadMap];
     contactName.text = _ride.name;
     seats.text = [NSString stringWithFormat:@"%i",_ride.seats.intValue];

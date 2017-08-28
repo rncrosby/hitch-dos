@@ -83,6 +83,7 @@
     [References createLine:self.view xPos:0 yPos:searchCard.frame.origin.y+searchCard.frame.size.height inFront:TRUE];
     refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshData) forControlEvents:UIControlEventValueChanged];
+    [References cornerRadius:notifications radius:notifications.frame.size.width/2];
     [References tintUIButton:refreshButton color:[UIColor lightGrayColor]];
     table.refreshControl = refreshControl;
     [super viewDidLoad];
@@ -95,9 +96,9 @@
         [location requestWhenInUseAuthorization];
     }
     [location startUpdatingLocation];
-    [self getMyDrives];
+    [self getMyDrive];
     ogPostRideFrame = postRide.frame;
-    
+    ogNotification = notifications.frame;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -223,6 +224,8 @@
     cell.month.text = [dateFormatter stringFromDate:ride.date];
     cell.date.text = [timeFormatter stringFromDate:ride.date];
     cell.month.text = [cell.month.text uppercaseString];
+    cell.price.text = ride.price.stringValue;
+    cell.seats.text = ride.seats.stringValue;
     [References cornerRadius:cell.whiteBack radius:9.0];
     [References cornerRadius:cell.redBack radius:9.0];
     if (indexPath.row % 2) {
@@ -328,26 +331,36 @@
     }];
 }
 
--(void)getMyDrives {
-        NSString *string = [NSString stringWithFormat:@"email = '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
-        CKContainer *defaultContainer = [CKContainer defaultContainer];
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:string];
-        CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
-        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Rides" predicate:predicate];
-        [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
-            if (!error) {
-                if (results.count > 0) {
-                    canMakeDrive = NO;
-                } else {
+-(void)getMyDrive {
+    NSString *string = [NSString stringWithFormat:@"email = '%@'",[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]];
+    CKContainer *defaultContainer = [CKContainer defaultContainer];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:string];
+    CKDatabase *publicDatabase = [defaultContainer publicCloudDatabase];
+    CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Rides" predicate:predicate];
+    [publicDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray *results, NSError *error) {
+        if (!error) {
+            if (results.count > 0) {
+                CKRecord *record = results[0];
+                NSMutableArray *requests = [record valueForKey:@"requests"];
+                if (requests.count > 0) {
                     dispatch_async(dispatch_get_main_queue(), ^(void){
-                        canMakeDrive = YES;
                         
+                        notifications.text = [NSString stringWithFormat:@"%lu",(unsigned long)requests.count];
+                        [References fadeIn:notifications];
+                        canMakeDrive = NO;
                     });
                 }
+                
             } else {
-                NSLog(@"%@",error.localizedDescription);
+                dispatch_async(dispatch_get_main_queue(), ^(void){
+                    [References fadeOut:notifications];
+                    canMakeDrive = YES;
+                });
             }
-        }];
+        } else {
+            NSLog(@"%@",error.localizedDescription);
+        }
+    }];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -365,7 +378,7 @@
 
 -(void)refreshData
 {
-    [self getMyDrives];
+    [self getMyDrive];
     [self getAllRides:NO];
     [endPoint setText:@""];
 }
@@ -393,10 +406,12 @@
         [References moveUp:menuButton yChange:fabs(movement)];
         [References moveUp:profileButton yChange:fabs(movement)];
         [References moveUp:profileLabel yChange:fabs(movement)];
+        [References moveUp:notifications yChange:fabs(movement)];
         [References moveUp:forYou yChange:fabs(movement)];
         [UIView animateWithDuration:.25 animations:^{
             [postRide setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
             postRide.frame = CGRectMake(16, postRideDestinationFrame.frame.origin.y, postRide.frame.size.width, postRide.frame.size.height);
+            notifications.frame = CGRectMake(forYou.frame.origin.x+forYou.frame.size.width+5, forYou.frame.origin.y+7, notifications.frame.size.width, notifications.frame.size.height);
         }];
         [References moveUp:transactionHistory yChange:fabs(movement)];
         [References moveUp:signOut yChange:fabs(movement)];
@@ -406,12 +421,15 @@
         [UIView animateWithDuration:.25 animations:^{
             [postRide setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
             postRide.frame = ogPostRideFrame;
+            notifications.frame = ogNotification;
         }];
+     
         [References moveDown:menuBarLine yChange:fabs(movement)];
         [References moveDown:menuCard yChange:fabs(movement)];
         [References moveDown:menuButton yChange:fabs(movement)];
         [References moveDown:forYou yChange:fabs(movement)];
         [References moveDown:transactionHistory yChange:fabs(movement)];
+        
         [References moveDown:signOut yChange:fabs(movement)];
         [References moveDown:profileButton yChange:fabs(movement)];
         [References moveDown:profileLabel yChange:fabs(movement)];
@@ -424,7 +442,7 @@
 - (IBAction)refreshButton:(id)sender {
     [endPoint setText:@""];
     [self getAllRides:NO];
-    [self getMyDrives];
+    [self getMyDrive];
 }
 
 - (IBAction)currentLocation:(id)sender {

@@ -25,7 +25,7 @@
     NSMutableArray *rides,*rideRecords;
     UINotificationFeedbackGenerator *feedback;
     float movement;
-    CGRect ogPostRideFrame;
+    CGRect ogPostRideFrame,ogNotification;
     bool isRestrictedSearch,menuShowing;
     UISelectionFeedbackGenerator *selectionFeedback;
     // SEARCH PANEL
@@ -48,6 +48,7 @@
     __weak IBOutlet UILabel *menuBlur;
     __weak IBOutlet UIButton *profileButton;
     __weak IBOutlet UILabel *profileLabel;
+    __weak IBOutlet UILabel *notifications;
     
     // OTHER VIEWS
     UIRefreshControl *refreshControl;
