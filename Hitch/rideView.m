@@ -15,13 +15,19 @@
 @implementation rideView
 
 - (void)viewDidLoad {
-    [References cornerRadius:price radius:price.frame.size.width/2];
-    [References cornerRadius:trip radius:trip.frame.size.width/2];
-    [References cornerRadius:seats radius:seats.frame.size.width/2];
-    //[References ViewToLine:line withView:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y];
-    [References createLine:self.view xPos:0 yPos:menuBar.frame.origin.y+menuBar.frame.size.height inFront:TRUE];
-    //[scroll addSubview:line];
-    //[scroll bringSubviewToFront:line];
+    [References cardshadow:from];
+    [References cardshadow:to];
+    [References cardshadow:date];
+    [References cardshadow:from];
+    [References cardshadow:rideManagerShare];
+    [References cardshadow:rideManagerMap];
+    [References cardshadow:rideManagerTrash];
+    [References cardshadow:statusBar];
+    [References cardshadow:seats];
+    [References cardshadow:price];
+    [References cornerRadius:requestRide radius:8.0f];
+    [References cornerRadius:messagesButton radius:8.0f];
+    [References cornerRadius:ridersButton radius:8.0f];
     [self IsMyDrive];
     [self isRidePending];
     [self isRideConfirmed];
@@ -33,25 +39,17 @@
     NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
     [timeFormatter setDateFormat:@"h a"];
     date.text = [NSString stringWithFormat:@"%@ around %@",[dateFormatter stringFromDate:_ride.date],[timeFormatter stringFromDate:_ride.date]];
-    [References cardshadow:contactShadow];
-    [References cornerRadius:contactCard radius:8.0f];
-    [References cardshadow:ridePanelShadow];
-    [References cornerRadius:ridePanel radius:8.0f];
-    [References cornerRadius:contactImage radius:contactImage.frame.size.width/2];
+
     if (_ride.price.intValue > 0) {
-        price.text = [NSString stringWithFormat:@"%i",_ride.price.intValue];
+        price.text = [NSString stringWithFormat:@"$%i for one way",_ride.price.intValue];
     } else {
-        price.text = @"0";
+        price.text = @"Free Ride for one way";
     }
     [self loadMap];
-    contactName.text = _ride.name;
-    seats.text = [NSString stringWithFormat:@"%i",_ride.seats.intValue];
+    seats.text = [NSString stringWithFormat:@"%i seats available",_ride.seats.intValue];
     [rideManagerMap setBackgroundColor:[UIColor clearColor]];
     [rideManagerShare setBackgroundColor:[UIColor clearColor]];
     [rideManagerTrash setBackgroundColor:[UIColor clearColor]];
-    [References tintUIButton:rideManagerTrash color:[[self view] tintColor]];
-    [References tintUIButton:rideManagerShare color:[[self view] tintColor]];
-    [References tintUIButton:rideManagerMap color:[[self view] tintColor]];
     [super viewDidLoad];
     if (_ride.messages.count > 0) {
             [rideTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_ride.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
@@ -60,9 +58,6 @@
         noRiders.hidden = NO;
     }
     riderColorMatch = [[NSMutableArray alloc] initWithArray:_ride.riders];
-    [contactImage setBackgroundColor:[References systemColor:@"BLUE"]];
-    contactInitial.text = [NSString stringWithFormat:@"%c",[_ride.name characterAtIndex:0]];
-    contactInitial.text = [contactInitial.text uppercaseString];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification
@@ -71,7 +66,7 @@
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-    
+
     // Do any additional setup after loading the view.
 }
 
@@ -84,7 +79,6 @@
     [References moveUp:ridePanelMessageField yChange:keyboardHeight];
     [References moveUp:ridePanelSendMessage yChange:keyboardHeight];
     [References moveUp:line yChange:keyboardHeight];
-    [References fadeColor:ridePanelMessage color:[References colorFromHexString:@"#D2D5DC"]];
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
@@ -94,7 +88,6 @@
     [References moveDown:ridePanelMessageField yChange:keyboardHeight];
     [References moveDown:ridePanelSendMessage yChange:keyboardHeight];
     [References moveDown:line yChange:keyboardHeight];
-    [References fadeColor:ridePanelMessage color:[UIColor whiteColor]];
     keyboardHeight = 0.0f;
     
 }
@@ -121,8 +114,8 @@
         noRiders.hidden = YES;
         noRiders.text = @"No Messages";
     }
-    [ridersButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    [messagesButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [ridersButton setTitleColor:[References colorFromHexString:@"#929292"] forState:UIControlStateNormal];
+    [messagesButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
      [rideTable reloadData];
     if (_ride.messages.count > 0) {
             [rideTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_ride.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
@@ -142,8 +135,8 @@
     
     ridePanelSendMessage.enabled = NO;
     ridePanelMessageField.enabled = NO;
-    [ridersButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [messagesButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    [messagesButton setTitleColor:[References colorFromHexString:@"#929292"] forState:UIControlStateNormal];
+    [ridersButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
      [rideTable reloadData];
     if (_ride.riders.count > 0) {
         [rideTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
@@ -357,35 +350,19 @@
     MKCoordinateRegion region;
     region.center.latitude = topLeftCoord.latitude - (topLeftCoord.latitude - bottomRightCoord.latitude) * 0.5;
     region.center.longitude = topLeftCoord.longitude + (bottomRightCoord.longitude - topLeftCoord.longitude) * 0.5;
-    region.span.latitudeDelta = fabs(topLeftCoord.latitude - bottomRightCoord.latitude) * 2.1; // Add a little extra space on the sides
-    region.span.longitudeDelta = fabs(bottomRightCoord.longitude - topLeftCoord.longitude) * 2.1; // Add a little extra space on the sides
+    region.span.latitudeDelta = fabs(topLeftCoord.latitude - bottomRightCoord.latitude) * 5.1; // Add a little extra space on the sides
+    region.span.longitudeDelta = fabs(bottomRightCoord.longitude - topLeftCoord.longitude) * 5.1; // Add a little extra space on the sides
     
     region = [mapView regionThatFits:region];
     [mapView setRegion:region animated:YES];
+    for(MKAnnotationView *annotation in mapView.annotations)
+    {
+        [mapView removeAnnotation:annotation];
+    }
 }
 
 - (IBAction)requestRide:(id)sender {
-    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"email"] isEqualToString:_ride.phone]) {
-        if (scroll.contentOffset.y == 0) {
-            [References fadeButtonText:requestRide text:@"See Drive Info"];
-            [scroll setContentOffset:CGPointMake(0, scroll.contentSize.height/2) animated:YES];
-            [References moveDown:requestRide yChange:49];
-        } else {
-            [References fadeButtonText:requestRide text:@"See Your Drive Messages"];
-            [References moveUp:requestRide yChange:49];
-            [scroll setContentOffset:CGPointMake(0, 0) animated:YES];
-        }
-    } else if (isRideConfirmed == YES) {
-        if (scroll.contentOffset.y == 0) {
-            [References fadeButtonText:requestRide text:@"See Drive Info"];
-            [scroll setContentOffset:CGPointMake(0, scroll.contentSize.height/2) animated:YES];
-            [References moveDown:requestRide yChange:49];
-        } else {
-            [References fadeButtonText:requestRide text:@"See Your Drive Messages"];
-            [References moveUp:requestRide yChange:49];
-            [scroll setContentOffset:CGPointMake(0, 0) animated:YES];
-        }
-    } else if (isAwaitingPayment == YES){
+    if (isAwaitingPayment == YES){
             [self tappedApplePay];
     } else {
         [self addToMyRides];
@@ -460,14 +437,13 @@
 
 -(void)IsMyDrive {
     if ([_ride.phone isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]]) {
+        requestRide.hidden = YES;
         isRideConfirmed = YES;
         [rideManagerTrash setEnabled:YES];
         [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
         [requestRide setTitle:@"See Your Drive Messages" forState:UIControlStateNormal];
-        scroll.contentSize = CGSizeMake([References screenWidth], scroll.frame.size.height);
-        scroll.frame = CGRectMake(0, menuBar.frame.origin.y+menuBar.frame.size.height, [References screenWidth], [References screenHeight]-menuBar.frame.size.height);
+        scroll.contentSize = CGSizeMake([References screenWidth], scroll.frame.size.height-20);
         [References createLine:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y inFront:TRUE];
-        menuBarTitle.text = @"Drive Info";
         if (_ride.messages.count > 0) {
                     [rideTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_ride.messages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
         }
@@ -487,10 +463,12 @@
 -(void)isRidePending {
     for (int a = 0; a < _ride.requests.count; a++) {
         if ([_ride.requests[a] isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]]) {
-            [requestRide setTitle:@"Ride Request Pending" forState:UIControlStateNormal];
+            [requestRide setTitle:@"Pending" forState:UIControlStateNormal];
             [requestRide setEnabled:NO];
             [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
             [rideManagerTrash setEnabled:NO];
+            [messagesButton setEnabled:NO];
+            [ridersButton setEnabled:NO];
         }
     }
 }
@@ -498,8 +476,11 @@
 -(void)isAwaitingPayment {
     for (int a = 0; a < _ride.payments.count; a++) {
         if ([_ride.payments[a] isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"email"]]) {
-            [requestRide setTitle:@"Ride Approved, Pay to Confirm" forState:UIControlStateNormal];
+            [requestRide setTitle:@"Apple Pay" forState:UIControlStateNormal];
             [self getTransactions];
+            [requestRide setEnabled:YES];
+            [messagesButton setEnabled:NO];
+            [ridersButton setEnabled:NO];
             isAwaitingPayment = YES;
             indexOfPayment = a;
             [requestRide setEnabled:YES];
@@ -553,10 +534,11 @@
             [requestRide setTitleColor:[[self view] tintColor] forState:UIControlStateNormal];
             isRideConfirmed = YES;
             [requestRide setEnabled:YES];
+            [messagesButton setEnabled:NO];
+            [ridersButton setEnabled:NO];
             [rideManagerTrash setEnabled:NO];
             [requestRide setTitle:@"See Your Ride Messages" forState:UIControlStateNormal];
             scroll.contentSize = CGSizeMake([References screenWidth], scroll.frame.size.height);
-            scroll.frame = CGRectMake(0, menuBar.frame.origin.y+menuBar.frame.size.height, [References screenWidth], [References screenHeight]-menuBar.frame.size.height);
             [References createLine:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y inFront:TRUE];
         }
     }
@@ -614,25 +596,25 @@
             cell.tag = indexPath.row;
             [cell.confirm addTarget:self action:@selector(callPerson:) forControlEvents:UIControlEventTouchUpInside];
         }
-            for (int a = 0; a < riderColorMatch.count; a++) {
-                if ([_ride.riders[indexPath.row] isEqualToString:riderColorMatch[a]]) {
-                    if (a == 0) {
-                        [cell.picutre setBackgroundColor:[References systemColor:@"RED"]];
-                    }
-                    if (a == 1) {
-                        [cell.picutre setBackgroundColor:[References systemColor:@"YELLOW"]];
-                    }
-                    if (a == 2) {
-                        [cell.picutre setBackgroundColor:[References systemColor:@"ORANGE"]];
-                    }
-                    if (a == 3) {
-                        [cell.picutre setBackgroundColor:[References systemColor:@"LBLUE"]];
-                    }
-                    if (a == 4) {
-                        [cell.picutre setBackgroundColor:[References systemColor:@"LRED"]];
-                    }
-                }
-        }
+//            for (int a = 0; a < riderColorMatch.count; a++) {
+//                if ([_ride.riders[indexPath.row] isEqualToString:riderColorMatch[a]]) {
+//                    if (a == 0) {
+//                        [cell.picutre setBackgroundColor:[References systemColor:@"RED"]];
+//                    }
+//                    if (a == 1) {
+//                        [cell.picutre setBackgroundColor:[References systemColor:@"YELLOW"]];
+//                    }
+//                    if (a == 2) {
+//                        [cell.picutre setBackgroundColor:[References systemColor:@"ORANGE"]];
+//                    }
+//                    if (a == 3) {
+//                        [cell.picutre setBackgroundColor:[References systemColor:@"LBLUE"]];
+//                    }
+//                    if (a == 4) {
+//                        [cell.picutre setBackgroundColor:[References systemColor:@"LRED"]];
+//                    }
+//                }
+//        }
         return cell;
     } else {
         static NSString *simpleTableIdentifier = @"messageCell";
@@ -654,29 +636,29 @@
         [References cornerRadius:cell.picture radius:cell.picture.frame.size.width/2];
         
         [cell setBackgroundColor:[UIColor clearColor]];
-        if ([messageBody[0] isEqualToString:_ride.name]) {
-            [cell.picture setBackgroundColor:[References systemColor:@"BLUE"]];
-        } else {
-        for (int a = 0; a < riderColorMatch.count; a++) {
-            if ([messageBody[0] isEqualToString:riderColorMatch[a]]) {
-                    if (a == 0) {
-                        [cell.picture setBackgroundColor:[References systemColor:@"RED"]];
-                    }
-                    if (a == 1) {
-                        [cell.picture setBackgroundColor:[References systemColor:@"YELLOW"]];
-                    }
-                if (a == 2) {
-                    [cell.picture setBackgroundColor:[References systemColor:@"ORANGE"]];
-                }
-                if (a == 3) {
-                    [cell.picture setBackgroundColor:[References systemColor:@"LBLUE"]];
-                }
-                if (a == 4) {
-                    [cell.picture setBackgroundColor:[References systemColor:@"LRED"]];
-                }
-                }
-            }
-        }
+//        if ([messageBody[0] isEqualToString:_ride.name]) {
+//            [cell.picture setBackgroundColor:[References systemColor:@"BLUE"]];
+//        } else {
+//        for (int a = 0; a < riderColorMatch.count; a++) {
+//            if ([messageBody[0] isEqualToString:riderColorMatch[a]]) {
+//                    if (a == 0) {
+//                        [cell.picture setBackgroundColor:[References systemColor:@"RED"]];
+//                    }
+//                    if (a == 1) {
+//                        [cell.picture setBackgroundColor:[References systemColor:@"YELLOW"]];
+//                    }
+//                if (a == 2) {
+//                    [cell.picture setBackgroundColor:[References systemColor:@"ORANGE"]];
+//                }
+//                if (a == 3) {
+//                    [cell.picture setBackgroundColor:[References systemColor:@"LBLUE"]];
+//                }
+//                if (a == 4) {
+//                    [cell.picture setBackgroundColor:[References systemColor:@"LRED"]];
+//                }
+//                }
+//            }
+//        }
         return cell;
     }
 }
@@ -796,7 +778,6 @@
                                                    [requestRide setEnabled:YES];
                                                    [requestRide setTitle:@"See Your Ride Messages" forState:UIControlStateNormal];
                                                    scroll.contentSize = CGSizeMake([References screenWidth], scroll.frame.size.height);
-                                                   scroll.frame = CGRectMake(0, menuBar.frame.origin.y+menuBar.frame.size.height, [References screenWidth], [References screenHeight]-menuBar.frame.size.height);
                                                    [References createLine:scroll xPos:0 yPos:ridePanelMessage.frame.origin.y inFront:TRUE];
                                                });
                                            };
@@ -998,6 +979,13 @@
     }
 }
 
-
+-(bool)prefersStatusBarHidden {
+    return YES;
+}
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView.contentOffset.y < -100) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
 
 @end

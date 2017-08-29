@@ -367,11 +367,24 @@
     selectionFeedback = [[UISelectionFeedbackGenerator alloc] init];
     [selectionFeedback prepare];
     [selectionFeedback selectionChanged];
+    fader = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [References screenWidth], [References screenHeight])];
+    fader.backgroundColor = [References colorFromHexString:@"#1D1D1D"];
+    fader.alpha = 0;
+    [self.view addSubview:fader];
+    [self.view bringSubviewToFront:fader];
     dispatch_async(dispatch_get_main_queue(), ^(void){
-        rideView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"rideView"];
-        viewController.ride = rides[indexPath.row];
-        viewController.rideRecord = rideRecords[indexPath.row];
-        [self presentViewController:viewController animated:YES completion:nil];
+        [UIView animateWithDuration:0.3 animations:^(void){
+            fader.alpha = 1;
+        } completion:^(bool finished) {
+            rideView *viewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"rideView"];
+            viewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            viewController.ride = rides[indexPath.row];
+            viewController.rideRecord = rideRecords[indexPath.row];
+            [self presentViewController:viewController animated:YES completion:^(void) {
+                fader.alpha = 0;
+                viewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+            }];
+        }];
     });
     
 }

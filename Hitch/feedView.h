@@ -53,6 +53,7 @@
     // OTHER VIEWS
     UIRefreshControl *refreshControl;
     __weak IBOutlet UITableView *table;
+    UILabel *fader;
 }
 @property (nonatomic, retain) NSString *rideToOpen;
 - (IBAction)inbox:(id)sender;

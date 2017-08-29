@@ -37,32 +37,20 @@
     NSMutableArray *messages;
     NSMutableArray *riderColorMatch;
     NSMutableArray *passengers;
-    __weak IBOutlet UILabel *menuBar;
-    __weak IBOutlet UILabel *menuBarTitle;
     __weak IBOutlet MKMapView *map;
-    __weak IBOutlet UILabel *rideTitle;
     __weak IBOutlet UILabel *from;
     __weak IBOutlet UILabel *to;
     __weak IBOutlet UILabel *date;
     __weak IBOutlet UILabel *seats;
     __weak IBOutlet UIScrollView *scroll;
     __weak IBOutlet UILabel *price;
-    __weak IBOutlet UILabel *trip;
     
     
     
     // contact
-    __weak IBOutlet UILabel *contactShadow;
-    __weak IBOutlet UILabel *contactCard;
-    __weak IBOutlet UIImageView *contactImage;
-    __weak IBOutlet UILabel *contactName;
-    __weak IBOutlet UIButton *contactMessage;
+
     __weak IBOutlet UIButton *requestRide;
-    __weak IBOutlet UILabel *contactInitial;
-    
-    // ismyride panel
-    __weak IBOutlet UILabel *ridePanel;
-    __weak IBOutlet UILabel *ridePanelShadow;
+
     __weak IBOutlet UITableView *rideTable;
     
     __weak IBOutlet UILabel *ridePanelMessage;
@@ -74,6 +62,7 @@
     __weak IBOutlet UIButton *rideManagerShare;
     
     
+    __weak IBOutlet UILabel *statusBar;
     __weak IBOutlet UIButton *ridersButton;
     __weak IBOutlet UIButton *messagesButton;
     __weak IBOutlet UILabel *noRiders;
